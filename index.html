@@ -2900,8 +2900,8 @@ VIEWS.files=()=>{const u=ui.user,cur=FD(FS.sel);const staff=u.role==='superadmin
   <input class="inp rsearch" placeholder="Buscar Recursos…" value="${esc(FS.q||'')}" data-ch="fsearch" aria-label="Buscar recursos">`;
  const crumb=cur?`<div class="crumb"><button data-a="fopen" data-id="">${FS.tab==='mine'?'Mi unidad':FS.tab==='all'?'Toda la red':'Compartido conmigo'}</button>${path.map((f,i)=>i<path.length-1?` / <button data-a="fopen" data-id="${f.id}">${esc(f.name)}</button>`:` / <b>${esc(f.name)}</b>`).join('')}</div>`:'';
  let body='';
- if(!fo.length&&!fi.length)body=`<div class="card" style="text-align:center;padding:40px"><div style="opacity:.6">${FOLDER_SVG}</div><p class="muted" style="margin-top:8px">${FS.q?'No hay recursos con esa búsqueda.':cur?'Esta carpeta está vacía.':FS.tab==='mine'?'Tu unidad está vacía. Agrega una carpeta, un archivo o un enlace.':FS.tab==='all'?'Los profesionales aún no tienen recursos.':'Nadie ha compartido recursos contigo todavía.'}</p></div>`;
- else if(FS.mode==='list')body=`${fo.length?`<div class="card flush"><div class="list">${fo.map(f=>`<div class="it" style="padding:10px 16px"><span style="width:34px">${viewersOfFolder(f).size?FOLDER_OPEN_SVG:FOLDER_SVG}</span><button class="grow" style="text-align:left;background:none;border:0;font:inherit;cursor:pointer" data-a="fopen" data-id="${f.id}"><b style="font-weight:600">${esc(f.name)}</b><div class="small muted">👁 ${viewersOfFolder(f).size} persona(s) · ${folderSize(f.id)} archivo(s)</div></button>${FS.pick?`<input type="checkbox" data-a="rpick" data-id="${f.id}" data-k="f" ${FS.picked.includes('f:'+f.id)?'checked':''} aria-label="Seleccionar">`:''}</div>`).join('')}</div></div>`:''}${fi.length?listFiles(fi):''}`;
+ if(!fo.length&&!fi.length)body=`<div class="card" style="text-align:center;padding:40px"><div style="opacity:.6;width:84px;height:68px;margin:0 auto">${FOLDER_SVG}</div><p class="muted" style="margin-top:8px">${FS.q?'No hay recursos con esa búsqueda.':cur?'Esta carpeta está vacía.':FS.tab==='mine'?'Tu unidad está vacía. Agrega una carpeta, un archivo o un enlace.':FS.tab==='all'?'Los profesionales aún no tienen recursos.':'Nadie ha compartido recursos contigo todavía.'}</p></div>`;
+ else if(FS.mode==='list')body=`${fo.length?`<div class="card flush"><div class="list">${fo.map(f=>`<div class="it" style="padding:10px 16px"><span style="width:34px;height:28px;display:inline-block">${viewersOfFolder(f).size?FOLDER_OPEN_SVG:FOLDER_SVG}</span><button class="grow" style="text-align:left;background:none;border:0;font:inherit;cursor:pointer" data-a="fopen" data-id="${f.id}"><b style="font-weight:600">${esc(f.name)}</b><div class="small muted">👁 ${viewersOfFolder(f).size} persona(s) · ${folderSize(f.id)} archivo(s)</div></button>${FS.pick?`<input type="checkbox" data-a="rpick" data-id="${f.id}" data-k="f" ${FS.picked.includes('f:'+f.id)?'checked':''} aria-label="Seleccionar">`:''}</div>`).join('')}</div></div>`:''}${fi.length?listFiles(fi):''}`;
  else body=`<div class="${FS.mode==='gallery'?'rgal':'rgrid'}">${fo.map(rcFolder).join('')}${fi.map(rcFile).join('')}</div>`;
  return `<div class="head"><div><h1>${staff?'Recursos':'Carpetas compartidas'}</h1><p>${staff?'Tu unidad de trabajo: crea, organiza y comparte carpetas, archivos y enlaces con el equipo o las familias.':'Documentos y enlaces que EduPsi comparte con tu familia.'}</p></div></div>${bar}${crumb}${body}
  ${add?`<div id="fdrop" data-id="${cur?cur.id:'__unit'}" class="card" style="border-style:dashed;text-align:center;padding:18px;color:var(--muted)">${ic('upload')} Arrastra archivos aquí (máximo 50 MB cada uno). Si subes uno con el mismo nombre, se guarda como versión nueva.</div>`:''}`};
@@ -2973,6 +2973,85 @@ ACT.receipt=async d=>{const x=(S.payouts||[]).find(y=>y.id===d.id);if(!x||!x.rec
 const _dpo25=FORMS.delpayout;FORMS.delpayout=async fd_=>{const x=(S.payouts||[]).find(y=>y.id===fd_.get('id'));if(x&&x.receipt){try{await SB.storage.from('receipts').remove([x.receipt])}catch(e){}}_dpo25(fd_)};
 // “Mis honorarios”: sesiones pendientes de pago
 const _fees25=feesView;feesView=function(pid){const h=_fees25(pid);const n=unpaidSessions(pid),t=sessionsBy(pid,null).length;return h.replace('<div class="grid g2">',`<div class="card row" style="justify-content:space-between;gap:10px"><span>Sesiones realizadas en total: <b>${t}</b> · ya pagadas: <b>${paidSessions(pid)}</b></span><span class="pill ${n?'warn':'good'}">${n} sesión(es) por pagar</span></div><div class="grid g2">`)};
+// ===== EduPsi Campus · Portal de familias estilo CloudCampus (6 secciones, selector de hijo, barra inferior en el celular) =====
+(function(){const st=document.createElement('style');st.textContent=`
+.kidbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 14px}
+.kidbar .kid{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 4px;background:var(--surface-2);font:inherit;cursor:pointer;color:inherit}
+.kidbar .kid.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.ftiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ftile{position:relative;border:0;border-radius:18px;padding:18px 14px;color:#fff;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:118px;text-align:left;box-shadow:0 6px 16px rgba(20,40,70,.12)}
+.ftile .ico{width:30px;height:30px}.ftile b{font-size:16px;font-weight:700}.ftile span.sub{font-size:12.5px;opacity:.92}
+.ftile .bdg{position:absolute;right:12px;top:12px;background:#fff;color:#C0453B;border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-weight:800;font-size:12.5px;padding:0 7px}
+.ftile:hover{filter:brightness(1.05)}.ftile:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.t1{background:linear-gradient(135deg,#5A9BCF,#3F7FB5)}.t2{background:linear-gradient(135deg,#A6B321,#7F8B12)}.t3{background:linear-gradient(135deg,#F2B705,#D99A00)}.t4{background:linear-gradient(135deg,#2E9E57,#1F7D42)}.t5{background:linear-gradient(135deg,#8A5CB8,#6B3F98)}.t6{background:linear-gradient(135deg,#E07A5F,#C0573D)}
+.fhero{background:linear-gradient(120deg,var(--brand),var(--leaf));color:#fff;border-radius:22px;padding:22px 24px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.fhero h1{color:#fff;font-size:26px}.fhero p{opacity:.92;margin-top:4px}
+.fhero .stage{background:rgba(255,255,255,.18);border-radius:14px;padding:10px 14px;min-width:220px}
+.botbar{display:none}
+@media (max-width:860px){.ftiles{grid-template-columns:repeat(2,minmax(0,1fr))}.fam .content{padding-bottom:96px}
+ .fam .botbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));justify-content:space-around;box-shadow:0 -6px 18px rgba(0,0,0,.08)}
+ .botbar button{background:none;border:0;font:inherit;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;position:relative;min-width:58px;cursor:pointer}
+ .botbar button.on{color:var(--brand);font-weight:700}.botbar .ico{width:24px;height:24px}
+ .botbar .bdg{position:absolute;top:0;right:10px;background:#C0453B;color:#fff;border-radius:999px;font-size:10px;min-width:17px;height:17px;display:grid;place-items:center;padding:0 4px}}
+`;document.head.appendChild(st)})();
+Object.assign(ICONS,{progress:'<path d="M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/>'});
+var FAM={kid:null};
+function famKids(){return kidsOf(ui.user.id).filter(k=>CASE(k.id))}
+function curKid(){const ks=famKids();let k=ks.find(x=>x.id===FAM.kid)||ks[0]||null;if(k)FAM.kid=k.id;return k}
+function famCounts(){const k=curKid();const c=k?CASE(k.id):null;const u=ui.user;
+ const tasks=c?(c.home||[]).filter(h=>!h.done).length:0,forms=c?(c.forms||[]).filter(f=>f.status==='pendiente').length:0;
+ const docs=c?(c.docs||[]).filter(d=>d.vis&&!d.ack).length:0;const citas=c?(c.sessions||[]).filter(x=>x.status==='Programada'&&String(x.date)>=TODAY).length:0;
+ const msgs=S.convs.filter(cv=>cv.m.includes(u.id)&&cv.msgs.length&&cv.msgs[cv.msgs.length-1].f!==u.id).length;const pays=(S.payments||[]).filter(p=>p.fam===u.id&&p.status==='pendiente').length;
+ return {tasks,forms,docs,citas,msgs,pays,home:tasks+forms}}
+// menú de familias: 6 secciones + "Más"
+NAV.guardian=[['Mi familia'],['home','Inicio','grid'],['progress','Progreso','progress'],['fdocs','Documentos','folder'],['citas','Citas','cal'],['messages','Mensajes','chat'],['finance','Pagos','wallet'],['Más'],['wall','Muro','mega'],['ffor','Formularios','form'],['library','Biblioteca','library']];
+// insignias y barra inferior
+const _shell26=shell;shell=function(body){let h=_shell26(body);const u=ui.user;if(!u||u.role!=='guardian')return h;const n=famCounts();
+ const bd={home:n.home,fdocs:n.docs,citas:n.citas,finance:n.pays,ffor:n.forms};
+ Object.entries(bd).forEach(([v,c])=>{if(!c)return;h=h.replace(new RegExp(`(data-a="go" data-v="${v}">[\\s\\S]*?<span>[^<]*</span>)`),`$1<span class="badge">${c}</span>`)});
+ const items=[['home','Inicio','grid',n.home],['progress','Progreso','progress',0],['citas','Citas','cal',n.citas],['messages','Mensajes','chat',n.msgs],['fdocs','Documentos','folder',n.docs]];
+ const bar=`<nav class="botbar" aria-label="Accesos principales">${items.map(([v,l,i,c])=>`<button class="${ui.view===v?'on':''}" data-a="go" data-v="${v}">${ic(i)}${l}${c?`<span class="bdg">${c}</span>`:''}</button>`).join('')}</nav>`;
+ return h.replace(/<div class="app( [^"]*)?">/,(m,c)=>`<div class="app fam${c||''}">`).replace(/<\/div>\s*$/,bar+'</div>')};
+// selector de hijo o hija (arriba de cada sección)
+function kidBar(){const ks=famKids();if(!ks.length)return '';const k=curKid();if(ks.length===1)return `<div class="kidbar">${av(k,'lg')}<div><b>${esc(k.name)}</b><div class="small muted">${esc(CASE(k.id).area||'')} · con ${esc(UP(CASE(k.id).prof).name)}</div></div></div>`;
+ return `<div class="kidbar"><span class="small muted">Ver a:</span>${ks.map(x=>`<button class="kid ${x.id===k.id?'on':''}" data-a="famkid" data-id="${x.id}">${av(x)}<b style="font-weight:600">${esc(short(x.name))}</b></button>`).join('')}</div>`}
+ACT.famkid=d=>{FAM.kid=d.id;ui.p=d.id;ui.tab=null;render()};
+function famWrap(inner){return kidBar()+inner}
+// ---------- Inicio ----------
+function famHome(){const u=ui.user,k=curKid();if(!k)return `<div class="card"><h2>Bienvenida a EduPsi</h2><p class="muted">Todavía no hay un estudiante vinculado a tu cuenta. Escríbenos y lo activamos.</p></div>`;
+ const c=CASE(k.id),n=famCounts(),ds=phaseDefs(),nx=nextSession(k.id),last=[...(c.sessions||[])].filter(x=>x.status==='Realizada').sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0];
+ const sal=(()=>{const h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches'})();
+ const tiles=[['progress','t1','progress','Progreso',`Etapa ${c.phase+1} de 4`,0],['fdocs','t2','folder','Documentos','Informes y archivos',n.docs],['citas','t3','cal','Citas',nx?'Próxima: '+fd(nx.date.slice(0,10)):'Reservar o solicitar',0],['messages','t4','chat','Mensajes','Escribe a '+short(UP(c.prof).name),n.msgs],['finance','t5','wallet','Pagos',n.pays?n.pays+' pendiente(s)':'Al día',n.pays],['ffor','t6','form','Formularios',n.forms?n.forms+' por completar':'Sin pendientes',n.forms]];
+ const notifs=S.notifs.filter(x=>x.u===u.id).slice(0,4);
+ return (typeof photoNudge==='function'?photoNudge():'')+`<section class="fhero"><div><h1>${sal}, ${esc(u.name.split(' ')[0])}</h1><p>¿Cómo va ${esc(k.name.split(' ')[0])}? Aquí tienes lo más importante de su proceso con EduPsi.</p></div><div class="stage"><div class="small" style="opacity:.85">Etapa actual</div><b>${esc(ds[c.phase]?.n||'')}</b></div></section>
+ ${kidBar()}
+ <div class="ftiles">${tiles.map(([v,cl,i,t,s,b])=>`<button class="ftile ${cl}" data-a="go" data-v="${v}">${b?`<span class="bdg">${b}</span>`:''}${ic(i)}<b>${t}</b><span class="sub">${esc(s)}</span></button>`).join('')}</div>
+ <div class="grid g2"><div class="card stack"><div class="card-h"><h2>Próxima cita</h2><button class="btn sm" data-a="go" data-v="citas">Ver citas</button></div>${nx?`<div class="row" style="gap:12px">${ic('cal')}<div><b style="font-size:16px">${sessDate(nx)}</b><div class="small muted">${esc(nx.mode||c.mode||'')} · con ${esc(UP(nx.prof||c.prof).name)}</div></div></div>`:`<p class="muted">No hay citas agendadas.</p><button class="btn pri sm" style="align-self:flex-start" data-a="book" data-s="${k.id}">${ic('cal')}Reservar una cita</button>`}</div>
+ <div class="card stack"><div class="card-h"><h2>Para hacer en casa</h2><span class="pill ${n.tasks?'warn':'good'}">${n.tasks} pendiente${n.tasks===1?'':'s'}</span></div>${homeList(k.id,c,true,true)}</div></div>
+ <div class="grid g2"><div class="card stack"><div class="card-h"><h2>Última sesión</h2><button class="btn sm" data-a="go" data-v="progress">Ver progreso</button></div>${last?`<div class="small muted">${fdl(last.date.slice(0,10))}</div>${sessionBody(last)}`:'<p class="muted">Aún no hay sesiones registradas.</p>'}</div>
+ <div class="card stack"><div class="card-h"><h2>Avisos</h2></div><div class="list">${notifs.map(x=>`<div class="it">${ic('bell')}<div class="grow small">${esc(x.t)}</div><span class="small muted">${fd(String(x.at||'').slice(0,10))}</span></div>`).join('')||'<span class="muted small">No tienes avisos nuevos.</span>'}</div>${n.forms?`<button class="btn pri sm" style="align-self:flex-start" data-a="go" data-v="ffor">${ic('form')}Completar formularios (${n.forms})</button>`:''}</div></div>`}
+const _home26=VIEWS.home;VIEWS.home=()=>ui.user.role==='guardian'?famHome():_home26();
+// ---------- Progreso ----------
+VIEWS.progress=()=>{const k=curKid();if(!k)return famHome();ui.p=k.id;if(!ui.tab||ui.tab==='docs')ui.tab='resumen';
+ return `<div class="head"><div><h1>Progreso</h1><p>Etapa del proceso, objetivos, sesiones y recomendaciones para casa.</p></div></div>${kidBar()}${caseView(k.id,true).replace(/<button class="[^"]*" data-a="tab" data-t="docs" role="tab">[^<]*<\/button>/,'')}`};
+// ---------- Documentos: informes + carpetas compartidas ----------
+VIEWS.fdocs=()=>{const k=curKid();const c=k?CASE(k.id):null;const docs=c?(c.docs||[]).filter(d=>d.vis).sort((a,b)=>String(b.date).localeCompare(String(a.date))):[];
+ FS.tab='shared';const files=VIEWS.files().replace(/<div class="head">[\s\S]*?<\/div><\/div>/,'');
+ return `<div class="head"><div><h1>Documentos</h1><p>Informes de EduPsi y archivos que el equipo comparte con tu familia.</p></div></div>${kidBar()}
+ <div class="card"><div class="card-h" style="margin-bottom:10px"><h2>Informes${k?' de '+esc(k.name.split(' ')[0]):''}</h2></div><div class="list">${docs.map(d=>`<div class="it" style="flex-wrap:wrap">${ic('file')}<div class="grow" style="min-width:180px"><b style="font-weight:500">${esc(d.t)}</b><div class="small muted">${esc(d.type||'')} · ${fdl(String(d.date).slice(0,10))}</div></div>${ackHtml(k.id,d,true)}<button class="btn sm pri" data-a="opendoc" data-s="${k.id}" data-id="${d.id}">Abrir</button></div>`).join('')||'<span class="muted">Aún no hay informes compartidos.</span>'}</div></div>
+ <h2 style="font-size:17px;margin-top:6px">Carpetas compartidas</h2>${files}`};
+// ---------- Citas ----------
+VIEWS.citas=()=>{const k=curKid();if(!k)return famHome();const c=CASE(k.id);const up=(c.sessions||[]).filter(x=>x.status==='Programada'&&String(x.date)>=TODAY).sort((a,b)=>String(a.date).localeCompare(String(b.date)));const past=(c.sessions||[]).filter(x=>x.status!=='Programada'||String(x.date)<TODAY).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,6);
+ if(!BUSY[c.prof]){BUSY[c.prof]=new Set();loadBusy(c.prof).then(()=>{if(ui.view==='citas')render()})}const sl=slotsFor(c.prof);
+ return `<div class="head"><div><h1>Citas</h1><p>Tus citas con ${esc(UP(c.prof).name)}. Puedes reservar en los horarios disponibles o enviar una solicitud.</p></div><button class="btn pri" data-a="book" data-s="${k.id}">${ic('cal')}${sl.length?'Reservar cita':'Solicitar cita'}</button></div>${kidBar()}
+ <div class="grid g2"><div class="card stack"><h2>Próximas citas</h2><div class="list">${up.map(x=>`<div class="it">${ic('cal')}<div class="grow"><b style="font-weight:500">${sessDate(x)}</b><div class="small muted">${esc(x.why||'Sesión')} · ${esc(x.mode||'')}</div></div><button class="btn sm danger" data-a="cancelbook" data-s="${k.id}" data-id="${x.id}">Cancelar</button></div>`).join('')||'<span class="muted">No hay citas agendadas.</span>'}</div></div>
+ <div class="card stack"><h2>Horarios disponibles</h2><div class="list">${sl.slice(0,5).map(([dd,w,ts])=>`<div class="it"><div class="grow">${WD[w]} ${fdl(dd)}</div><span class="small num">${ts.join(' · ')}</span></div>`).join('')||'<span class="muted">No hay horarios abiertos ahora. Usa “Solicitar cita” y te responderán por Mensajes.</span>'}</div></div></div>
+ <div class="card stack"><h2>Citas anteriores</h2><div class="list">${past.map(x=>`<div class="it">${statusPillS(x.status)}<div class="grow">${sessDate(x)}</div><span class="small muted">${esc(x.mode||'')}</span></div>`).join('')||'<span class="muted small">Todavía no hay citas anteriores.</span>'}</div><button class="btn sm" style="align-self:flex-start" data-a="go" data-v="calendar">${ic('cal')}Ver calendario completo</button></div>`};
+// mensajes y pagos con el selector arriba
+// redirecciones de secciones antiguas
+['docs','book'].forEach(v=>{const _o=VIEWS[v];VIEWS[v]=()=>ui.user.role==='guardian'?(v==='docs'?VIEWS.fdocs():VIEWS.citas()):_o()});
+// al entrar: tomar el primer hijo
+const _after26=afterBoot;afterBoot=function(acct){FAM.kid=null;_after26(acct)};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
