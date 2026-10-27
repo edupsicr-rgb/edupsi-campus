@@ -2835,6 +2835,118 @@ const _fshare23=ACT.fshare;ACT.fshare=d=>{_fshare23(d);const f=FD(d.id);if(f&&f.
 // ---------- menú ----------
 (function(){const add=(role,after,item)=>{const n=NAV[role];if(!n||n.some(x=>x[0]===item[0]))return;const i=n.findIndex(x=>x[0]===after);n.splice(i<0?n.length:i+1,0,item)};
  add('teacher','files',['myspace','Mi espacio','edit']);add('teacher','myspace',['fees','Mis honorarios','wallet']);add('superadmin','files',['myspace','Mi espacio','edit'])})();
+// ===== EduPsi Campus · Recursos estilo "Mi unidad / Compartido conmigo" =====
+Object.assign(ICONS,{link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+ gridv:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+ listv:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>',
+ image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
+ cloud:'<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 10 4 4 0 0 1 18 18z"/>'});
+Object.assign(FS,{tab:'mine',mode:'grid',sel:FS.sel||null,pick:false,picked:[],thumbs:{}});
+(function(){const st=document.createElement('style');st.textContent=`
+.rbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.rbar .sep{width:1px;height:26px;background:var(--line);margin:0 4px}
+.rb{border:0;border-radius:8px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:600;color:#fff;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.rb .ico{width:15px;height:15px}.rb.off{opacity:.55}.rb:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.rb.green{background:#2E9E57}.rb.blue{background:#2F6FD6}.rb.yellow{background:#F2C14E;color:#4A3A0B}.rb.sky{background:#5BB8DA}.rb.red{background:#C0453B}.rb.gray{background:#7A8794}
+.rb.ic{padding:8px 10px}
+.rsearch{max-width:680px;margin:4px auto 0;width:100%}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.rcard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 10px 12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:160px;font:inherit;color:inherit}
+.rcard:hover{border-color:var(--brand);box-shadow:var(--shadow)}
+.rcard .big{width:84px;height:68px;display:grid;place-items:center}
+.rcard .big svg{width:84px;height:68px}
+.rcard .seen{font-size:12px;color:var(--muted);font-weight:600}
+.rcard .nm{font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.01em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rcard .ft{display:grid;place-items:center;width:62px;height:72px;border-radius:8px;background:var(--surface-2);font-weight:800;font-size:13px;color:var(--brand);border:1px solid var(--line)}
+.rcard .thumb{width:100%;height:110px;object-fit:cover;border-radius:8px;background:var(--surface-2)}
+.rcard .pk{position:absolute;left:10px;top:10px;width:20px;height:20px}
+.rcard.on{outline:2px solid var(--brand)}
+.rgal{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+`;document.head.appendChild(st)})();
+const FOLDER_SVG=`<svg viewBox="0 0 84 68" aria-hidden="true"><path d="M4 12a6 6 0 0 1 6-6h20l7 8h37a6 6 0 0 1 6 6v38a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6z" fill="#F2B705"/><path d="M4 22h76v36a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6z" fill="#F7C325"/></svg>`;
+const FOLDER_OPEN_SVG=`<svg viewBox="0 0 84 68" aria-hidden="true"><path d="M4 10a6 6 0 0 1 6-6h20l7 8h31a6 6 0 0 1 6 6v8H18L4 58z" fill="#2B8FD9"/><path d="M16 28h66l-14 34H4z" fill="#3AA3EE"/></svg>`;
+function myUnit(create){let f=(S.folders||[]).find(x=>x.owner===ui.user.id&&x.unit);if(!f&&create){f={id:nid('fo'),name:'Mi unidad',owner:ui.user.id,student:null,parent:null,unit:true,shares:[],at:nowStr()};S.folders.push(f)}return f}
+function usersForShare(s){if(s.t==='user')return [s.id];return S.users.filter(u=>u.status==='activo'&&(u.role===s.id||u.spec===s.id)).map(u=>u.id)}
+function viewersOfFolder(f){const ids=new Set();let d=0,x=f;while(x&&d<25){(x.shares||[]).forEach(s=>usersForShare(s).forEach(i=>ids.add(i)));if(x.student){const c=CASE(x.student);if(c){if(c.prof)ids.add(c.prof);(c.team||[]).forEach(i=>ids.add(i))}if(x.family)famOf(x.student).forEach(g=>ids.add(g.id))}x=FD(x.parent);d++}ids.delete(f.owner);return ids}
+function viewersOfFile(x){const f=FD(x.folder);const ids=f&&!f.unit?viewersOfFolder(f):new Set();(x.shares||[]).forEach(s=>usersForShare(s).forEach(i=>ids.add(i)));ids.delete(x.by);return ids}
+function canFile(x,need){const f=FD(x.folder);if(f&&canFolder(f,need))return true;if(need!=='ver')return false;const u=ui.user;return (x.shares||[]).some(s=>(s.t==='user'&&s.id===u.id)||(s.t==='role'&&(s.id===u.role||(u.spec&&s.id===u.spec))))}
+function canFolderStrict(f,need){const u=ui.user;let d=0;while(f&&d<25){if(f.owner===u.id)return true;if(f.student){const c=CASE(f.student);const staff=c&&(c.prof===u.id||(c.team||[]).includes(u.id));if(staff&&(!isLimited(u)||need==='ver'))return true;if(need==='ver'&&f.family&&(S.guardians[u.id]||[]).includes(f.student))return true}
+ for(const s of (f.shares||[]))if((s.t==='user'&&s.id===u.id)||(s.t==='role'&&(s.id===u.role||(u.spec&&s.id===u.spec))))if(need==='ver'||s.perm==='editar')return true;f=FD(f.parent);d++}return false}
+function fileSharedToMe(x){const u=ui.user;return (x.shares||[]).some(s=>(s.t==='user'&&s.id===u.id)||(s.t==='role'&&(s.id===u.role||(u.spec&&s.id===u.spec))))}
+function isImg(x){return /^image\//.test(x.type||'')||/\.(png|jpe?g|gif|webp)$/i.test(x.name||'')}
+function fileIcon(x){return x.link?`<span class="ft" style="color:#2F6FD6">${ic('link')}</span>`:`<span class="ft">${extIcon(x.name)}</span>`}
+function itemsHere(){const u=ui.user,cur=FD(FS.sel),q=(FS.q||'').toLowerCase();let fo=[],fi=[];
+ if(q){fo=(S.folders||[]).filter(f=>!f.unit&&f.name.toLowerCase().includes(q));fi=(S.files||[]).filter(x=>x.name.toLowerCase().includes(q))}
+ else if(cur){fo=subFolders(cur.id);fi=filesIn(cur.id)}
+ else if(FS.tab==='mine'){const un=myUnit(false);fo=(S.folders||[]).filter(f=>!f.unit&&f.owner===u.id&&(!f.parent||!FD(f.parent)));fi=un?filesIn(un.id):[]}
+ else if(FS.tab==='all'){fo=(S.folders||[]).filter(f=>!f.unit&&f.owner!==u.id&&(!f.parent||!FD(f.parent)));fi=(S.files||[]).filter(x=>x.by!==u.id&&FD(x.folder)&&FD(x.folder).unit)}
+ else{const vis=f=>f&&!f.unit&&canFolderStrict(f,'ver');fo=(S.folders||[]).filter(f=>f.owner!==u.id&&vis(f)&&!vis(FD(f.parent)));fi=(S.files||[]).filter(x=>x.by!==u.id&&!vis(FD(x.folder))&&fileSharedToMe(x))}
+ return {fo:fo.sort((a,b)=>a.name.localeCompare(b.name)),fi:fi.sort((a,b)=>String(b.at).localeCompare(String(a.at)))}}
+function canAddHere(){const cur=FD(FS.sel);if(cur)return canFolder(cur,'editar');const u=ui.user;return FS.tab==='mine'&&(u.role==='superadmin'||u.role==='teacher')}
+function rcFolder(f){const n=viewersOfFolder(f).size,sh=n>0||(f.shares||[]).length>0||f.family;const on=FS.picked.includes('f:'+f.id);
+ return `<button type="button" class="rcard ${on?'on':''}" data-a="${FS.pick?'rpick':'fopen'}" data-id="${f.id}" data-k="f" title="${esc(f.name)}">${FS.pick?`<input type="checkbox" class="pk" ${on?'checked':''} tabindex="-1" aria-hidden="true">`:''}<span class="big">${sh?FOLDER_OPEN_SVG:FOLDER_SVG}</span><span class="seen">👁 ${n} persona(s)</span><span class="nm">${esc(f.name)}</span>${f.student?`<span class="small muted">${esc(short(UP(f.student).name))}</span>`:f.owner!==ui.user.id?`<span class="small muted">de ${esc(short(UP(f.owner).name))}</span>`:''}</button>`}
+function rcFile(x){const n=viewersOfFile(x).size;const on=FS.picked.includes('x:'+x.id);const th=FS.mode==='gallery'&&isImg(x)&&FS.thumbs[x.id];
+ return `<button type="button" class="rcard ${on?'on':''}" data-a="${FS.pick?'rpick':'ropen'}" data-id="${x.id}" data-k="x" title="${esc(x.name)}">${FS.pick?`<input type="checkbox" class="pk" ${on?'checked':''} tabindex="-1" aria-hidden="true">`:''}${th?`<img class="thumb" src="${th}" alt="">`:`<span class="big">${fileIcon(x)}</span>`}<span class="seen">👁 ${n} persona(s)</span><span class="nm">${esc(x.name)}</span><span class="small muted">${x.link?'Enlace':fsize(x.size||0)}${x.by!==ui.user.id?' · '+esc(short(UP(x.by).name)):''}</span></button>`}
+const _files24=VIEWS.files;
+VIEWS.files=()=>{const u=ui.user,cur=FD(FS.sel);const staff=u.role==='superadmin'||u.role==='teacher';if(!staff&&FS.tab==='mine')FS.tab='shared';
+ const {fo,fi}=itemsHere();const add=canAddHere()&&!FS.q;const path=cur?folderPath(cur):[];
+ if(FS.mode==='gallery')loadThumbs(fi);
+ const bar=`<div class="rbar" role="toolbar" aria-label="Recursos">${staff?`<button class="rb green ${FS.tab==='mine'&&!cur?'':'off'}" data-a="rtab" data-t="mine">${ic('folder')}Mi unidad</button>`:''}<button class="rb blue ${FS.tab==='shared'&&!cur?'':'off'}" data-a="rtab" data-t="shared">${ic('users')}Compartido conmigo</button>${isAdminU(u)?`<button class="rb gray ${FS.tab==='all'&&!cur?'':'off'}" data-a="rtab" data-t="all">${ic('cloud')}Toda la red</button>`:''}
+  <span class="sep"></span><button class="rb yellow ic ${FS.mode==='grid'?'':'off'}" data-a="rmode" data-m="grid" aria-label="Vista de cuadrícula">${ic('gridv')}</button><button class="rb blue ic ${FS.mode==='list'?'':'off'}" data-a="rmode" data-m="list" aria-label="Vista de lista">${ic('listv')}</button><button class="rb blue ic ${FS.mode==='gallery'?'':'off'}" data-a="rmode" data-m="gallery" aria-label="Vista de galería">${ic('image')}</button>
+  <span class="sep"></span>${staff?`<button class="rb green" data-a="rpickmode">${ic('check')}${FS.pick?'Cancelar selección':'Seleccionar'}</button>`:''}
+  ${add?`<label class="rb sky" style="cursor:pointer">${ic('upload')}agregar Archivo<input type="file" multiple data-ch="rupload" style="display:none"></label><button class="rb blue" data-a="rlink">${ic('link')}agregar Link externo</button><button class="rb yellow" data-a="fnew" data-p="${cur?cur.id:''}">${ic('folder')}agregar Carpeta</button>`:''}
+  ${cur&&canFolder(cur,'editar')?`<span class="sep"></span><button class="rb gray" data-a="fshare" data-id="${cur.id}">${ic('share')}Compartir carpeta</button>${canDelFolder(cur)?`<button class="rb red ic" data-a="fdelask" data-id="${cur.id}" aria-label="Eliminar carpeta">${ic('trash')}</button>`:''}`:''}
+  ${FS.pick&&FS.picked.length?`<span class="sep"></span><span class="small"><b>${FS.picked.length}</b> seleccionado(s)</span><button class="rb gray" data-a="rshareSel">${ic('share')}Compartir</button><button class="rb gray" data-a="rmoveSel">${ic('folder')}Mover</button><button class="rb red" data-a="rdelSel">${ic('trash')}Eliminar</button>`:''}</div>
+  <input class="inp rsearch" placeholder="Buscar Recursos…" value="${esc(FS.q||'')}" data-ch="fsearch" aria-label="Buscar recursos">`;
+ const crumb=cur?`<div class="crumb"><button data-a="fopen" data-id="">${FS.tab==='mine'?'Mi unidad':FS.tab==='all'?'Toda la red':'Compartido conmigo'}</button>${path.map((f,i)=>i<path.length-1?` / <button data-a="fopen" data-id="${f.id}">${esc(f.name)}</button>`:` / <b>${esc(f.name)}</b>`).join('')}</div>`:'';
+ let body='';
+ if(!fo.length&&!fi.length)body=`<div class="card" style="text-align:center;padding:40px"><div style="opacity:.6">${FOLDER_SVG}</div><p class="muted" style="margin-top:8px">${FS.q?'No hay recursos con esa búsqueda.':cur?'Esta carpeta está vacía.':FS.tab==='mine'?'Tu unidad está vacía. Agrega una carpeta, un archivo o un enlace.':FS.tab==='all'?'Los profesionales aún no tienen recursos.':'Nadie ha compartido recursos contigo todavía.'}</p></div>`;
+ else if(FS.mode==='list')body=`${fo.length?`<div class="card flush"><div class="list">${fo.map(f=>`<div class="it" style="padding:10px 16px"><span style="width:34px">${viewersOfFolder(f).size?FOLDER_OPEN_SVG:FOLDER_SVG}</span><button class="grow" style="text-align:left;background:none;border:0;font:inherit;cursor:pointer" data-a="fopen" data-id="${f.id}"><b style="font-weight:600">${esc(f.name)}</b><div class="small muted">👁 ${viewersOfFolder(f).size} persona(s) · ${folderSize(f.id)} archivo(s)</div></button>${FS.pick?`<input type="checkbox" data-a="rpick" data-id="${f.id}" data-k="f" ${FS.picked.includes('f:'+f.id)?'checked':''} aria-label="Seleccionar">`:''}</div>`).join('')}</div></div>`:''}${fi.length?listFiles(fi):''}`;
+ else body=`<div class="${FS.mode==='gallery'?'rgal':'rgrid'}">${fo.map(rcFolder).join('')}${fi.map(rcFile).join('')}</div>`;
+ return `<div class="head"><div><h1>${staff?'Recursos':'Carpetas compartidas'}</h1><p>${staff?'Tu unidad de trabajo: crea, organiza y comparte carpetas, archivos y enlaces con el equipo o las familias.':'Documentos y enlaces que EduPsi comparte con tu familia.'}</p></div></div>${bar}${crumb}${body}
+ ${add?`<div id="fdrop" data-id="${cur?cur.id:'__unit'}" class="card" style="border-style:dashed;text-align:center;padding:18px;color:var(--muted)">${ic('upload')} Arrastra archivos aquí (máximo 50 MB cada uno). Si subes uno con el mismo nombre, se guarda como versión nueva.</div>`:''}`};
+function listFiles(fi){return `<div class="card flush"><div class="tbl-wrap"><table><thead><tr>${FS.pick?'<th></th>':''}<th>Nombre</th><th>Compartido</th><th>Tamaño</th><th>Actualizado</th><th class="r"></th></tr></thead><tbody>${fi.map(x=>`<tr>${FS.pick?`<td><input type="checkbox" data-a="rpick" data-id="${x.id}" data-k="x" ${FS.picked.includes('x:'+x.id)?'checked':''} aria-label="Seleccionar"></td>`:''}<td><div class="row" style="gap:10px;flex-wrap:nowrap">${x.link?ic('link'):`<span class="ftype">${extIcon(x.name)}</span>`}<b style="font-weight:500;word-break:break-word">${esc(x.name)}</b></div></td><td class="small">👁 ${viewersOfFile(x).size}</td><td class="small num">${x.link?'Enlace':fsize(x.size||0)}</td><td class="small muted">${fd(String(x.at).slice(0,10))} · ${esc(short(UP(x.upby||x.by).name))}</td><td class="r"><div class="row end" style="flex-wrap:nowrap"><button class="btn sm" data-a="ropen" data-id="${x.id}">Abrir</button>${canFile(x,'editar')?`<button class="btn sm" data-a="rsharefile" data-id="${x.id}" aria-label="Compartir">${ic('share')}</button><button class="btn sm danger" data-a="fdelfile" data-id="${x.id}" aria-label="Eliminar">${ic('trash')}</button>`:''}</div></td></tr>`).join('')}</tbody></table></div></div>`}
+async function loadThumbs(fi){const need=fi.filter(x=>isImg(x)&&x.path&&!FS.thumbs[x.id]);if(!need.length)return;need.forEach(x=>FS.thumbs[x.id]='');try{const {data}=await SB.storage.from('files').createSignedUrls(need.map(x=>x.path),1800);(data||[]).forEach((d,i)=>{if(d&&d.signedUrl)FS.thumbs[need[i].id]=d.signedUrl});if(ui.view==='files')render()}catch(e){}}
+ACT.rtab=d=>{FS.tab=d.t;FS.sel=null;FS.q='';FS.picked=[];render()};
+ACT.rmode=d=>{FS.mode=d.m;render()};
+ACT.rpickmode=()=>{FS.pick=!FS.pick;FS.picked=[];render()};
+ACT.rpick=(d,el,e)=>{const k=d.k+':'+d.id;const i=FS.picked.indexOf(k);i<0?FS.picked.push(k):FS.picked.splice(i,1);render()};
+const _fopen24=ACT.fopen;ACT.fopen=d=>{if(d.id){const f=FD(d.id);if(f&&FS.tab==='mine'&&f.owner!==ui.user.id&&!FS.sel)FS.tab='shared'}else FS.sel=null;FS.picked=[];_fopen24(d)};
+ACT.ropen=d=>{const x=(S.files||[]).find(y=>y.id===d.id);if(!x)return;if(x.link){log('Abrió enlace',x.name);save();window.open(x.link,'_blank','noopener');return}ACT.fdl(d)};
+async function unitReady(){let f=myUnit(false);if(f&&SYNC.snap.folders&&SYNC.snap.folders[f.id])return f;f=myUnit(true);clearTimeout(SYNC.timer);await syncNow();return f}
+CH.rupload=async el=>{const files=[...el.files];el.value='';const cur=FD(FS.sel);const target=cur?cur.id:(await unitReady()).id;uploadFiles(target,files)};
+const _drop24=uploadFiles;uploadFiles=async function(fid,list){if(fid==='__unit')fid=(await unitReady()).id;return _drop24(fid,list)};
+// enlaces externos
+ACT.rlink=()=>openModal({title:'Agregar link externo',form:'rlink',ok:'Agregar',body:`<div class="form"><div class="field"><label for="lk1">Nombre</label><input id="lk1" name="n" class="inp" required data-autofocus placeholder="Ej.: Video de conciencia fonológica"></div><div class="field"><label for="lk2">Enlace</label><input id="lk2" name="u" type="text" inputmode="url" class="inp" required placeholder="https://"></div><p class="small muted">Sirve para videos de YouTube, carpetas de Drive, Canva, páginas o formularios.</p></div>`});
+FORMS.rlink=fd_=>{let url=fd_.get('u').trim();if(!/^https?:\/\//i.test(url))url='https://'+url;const cur=FD(FS.sel);const fid=cur?cur.id:myUnit(true).id;
+ S.files.push({id:nid('fi'),folder:fid,name:fd_.get('n').trim(),link:url,type:'link',size:0,at:nowStr(),by:ui.user.id,upby:ui.user.id,versions:[]});log('Agregó enlace',fd_.get('n').trim());save();ui.modal=null;toast('Enlace agregado');render()};
+// compartir archivos sueltos
+function shareTargets(){return S.users.filter(x=>x.id!==ui.user.id&&['activo','invitado'].includes(x.status)&&x.role!=='student').sort((a,b)=>a.name.localeCompare(b.name))}
+function shareBody(items){const sh=items.length===1?(items[0].shares||[]):[];return `<div class="stack">${items.length===1?`<div class="list">${sh.map((s,i)=>`<div class="it">${s.t==='user'?av(UP(s.id)):ic('users')}<div class="grow"><b style="font-weight:500">${esc(s.t==='user'?UP(s.id).name:(ROLE_SHARE.find(r=>r[0]===s.id)||[0,s.id])[1])}</b><div class="small muted">Puede ver y descargar</div></div><button type="button" class="btn sm" data-a="runsharefile" data-id="${items[0].id}" data-i="${i}">Quitar</button></div>`).join('')||'<p class="small muted">Todavía no se comparte con nadie.</p>'}</div>`:`<p>Compartir <b>${items.length}</b> archivo(s) seleccionados.</p>`}
+ <div class="field"><label for="rs1">Compartir con</label><select id="rs1" name="who" class="inp"><optgroup label="Personas">${shareTargets().map(x=>`<option value="user:${x.id}">${esc(x.name)} · ${roleLabel(x)}</option>`).join('')}</optgroup><optgroup label="Grupos">${ROLE_SHARE.map(r=>`<option value="role:${r[0]}">${r[1]}</option>`).join('')}</optgroup></select></div><p class="small muted">Las personas reciben un aviso y lo verán en “Compartido conmigo”.</p></div>`}
+ACT.rsharefile=d=>{const x=S.files.find(y=>y.id===d.id);openModal({title:'Compartir “'+x.name+'”',form:'rsharefile',ok:'Compartir',body:`<input type="hidden" name="ids" value="${x.id}">`+shareBody([x])})};
+FORMS.rsharefile=fd_=>{const ids=String(fd_.get('ids')).split(',');const [t,id]=String(fd_.get('who')).split(':');let n=0;
+ ids.forEach(fid=>{const x=S.files.find(y=>y.id===fid);if(!x||!canFile(x,'editar'))return;x.shares=x.shares||[];if(!x.shares.some(s=>s.t===t&&s.id===id)){x.shares.push({t,id,perm:'ver'});n++}});
+ if(n){if(t==='user')notify(id,`${short(ui.user.name)} compartió contigo ${n===1?'un recurso':n+' recursos'}`);log('Compartió recursos',`${n} · ${t==='user'?UP(id).name:id}`);save()}
+ ui.modal=null;toast(n?'Compartido':'Ya estaba compartido');render()};
+ACT.runsharefile=d=>{const x=S.files.find(y=>y.id===d.id);x.shares.splice(+d.i,1);save();ACT.rsharefile({id:x.id})};
+// acciones sobre la selección
+function pickedItems(){return FS.picked.map(k=>{const [t,id]=k.split(':');return t==='f'?{t,o:FD(id)}:{t,o:(S.files||[]).find(x=>x.id===id)}}).filter(x=>x.o)}
+ACT.rshareSel=()=>{const its=pickedItems();const fs=its.filter(x=>x.t==='x').map(x=>x.o).filter(x=>canFile(x,'editar'));const fo=its.filter(x=>x.t==='f');
+ if(fo.length===1&&!fs.length){ACT.fshare({id:fo[0].o.id});return}if(!fs.length){toast('Para compartir carpetas, ábrelas y usa “Compartir carpeta”');return}
+ openModal({title:'Compartir recursos',form:'rsharefile',ok:'Compartir',body:`<input type="hidden" name="ids" value="${fs.map(x=>x.id).join(',')}">`+shareBody(fs)})};
+ACT.rmoveSel=()=>{const dests=(S.folders||[]).filter(f=>!f.unit&&canFolder(f,'editar')&&!FS.picked.includes('f:'+f.id));openModal({title:'Mover a…',form:'rmove',ok:'Mover',body:`<div class="field"><label for="mv1">Carpeta de destino</label><select id="mv1" name="to" class="inp"><option value="">${FS.tab==='mine'?'Mi unidad (raíz)':'Mi unidad'}</option>${dests.map(f=>`<option value="${f.id}">${esc(folderPath(f).map(x=>x.name).join(' / '))}</option>`).join('')}</select></div>`})};
+FORMS.rmove=fd_=>{const to=fd_.get('to')||null;let n=0;pickedItems().forEach(it=>{if(it.t==='x'){if(!canFile(it.o,'editar'))return;it.o.folder=to||myUnit(true).id;n++}else{const f=it.o;if(!canDelFolder(f))return;if(to&&folderPath(FD(to)).some(x=>x.id===f.id))return;f.parent=to;n++}});
+ log('Movió recursos',`${n} elemento(s)`);FS.picked=[];FS.pick=false;save();ui.modal=null;toast(n?`${n} elemento(s) movidos`:'No se pudo mover');render()};
+ACT.rdelSel=()=>{const its=pickedItems();openModal({title:'Eliminar seleccionados',form:'rdel',ok:'Sí, eliminar',body:`<p>¿Eliminar ${its.length} elemento(s)${its.some(x=>x.t==='f')?' (las carpetas se eliminan con todo su contenido)':''}? No se puede deshacer.</p>`})};
+FORMS.rdel=async()=>{const its=pickedItems();const files=[],folders=[];its.forEach(it=>{if(it.t==='x'&&canFile(it.o,'editar'))files.push(it.o);if(it.t==='f'&&canDelFolder(it.o)){const ds=descendants(it.o.id);folders.push(...ds);(S.files||[]).filter(x=>ds.includes(x.folder)).forEach(x=>files.push(x))}});
+ const uniqF=[...new Map(files.map(x=>[x.id,x])).values()];
+ if(await hardDelete(uniqF,[...new Set(folders)])){
+  log('Eliminó recursos',`${uniqF.length} archivo(s), ${new Set(folders).size} carpeta(s)`);FS.picked=[];FS.pick=false;save();ui.modal=null;toast('Eliminado');render()}};
+// el menú: "Recursos" para el equipo
+(function(){['superadmin','teacher'].forEach(r=>(NAV[r]||[]).forEach(n=>{if(n[0]==='files'){n[1]='Recursos';n[2]='cloud'}}))})();
+// Mi espacio: acceso directo a la unidad
+const _ms24=VIEWS.myspace;VIEWS.myspace=()=>_ms24().replace('<h2>Documentos personales</h2>','<h2>Documentos personales</h2><button class="btn sm" data-a="go" data-v="files">'+ic('cloud')+'Ir a Recursos</button>');
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
