@@ -1819,11 +1819,13 @@ async function loadAll(acct){
  N.bank=R.question_bank.map(r=>r.data);N.certs=R.certificates.map(r=>r.data);
  N.folders=(R.folders||[]).map(r=>({...r.data,id:r.id,owner:r.owner_id,student:r.student_id||null,parent:r.parent_id||null}));
  N.files=(R.files||[]).map(r=>({...r.data,id:r.id,folder:r.folder_id}));
+ N.notes=(R.notes||[]).map(r=>({...r.data,id:r.id,owner:r.owner_id}));
+ N.payouts=N.payments.filter(p=>p.type==='payout');N.payments=N.payments.filter(p=>p.type!=='payout');
  N.sessionsMonthly=monthly(N);
  return N}
 function blankState(base){return {settings:base.settings,perms:base.perms,plans:base.plans,institutions:[{id:'i1',name:'EduPsi',code:'EP',domain:location.host,plan:'Propio',status:'activa',since:TODAY}],
  users:[],guardians:{},cases:{},courses:[],enroll:[],assess:[],subs:[],attendance:{},live:[],convs:[],forums:[],notifs:[],payments:[],revenue:[],weekly:[],leads:[],library:[],bank:[],certs:[],audit:[],
- posts:[],folders:[],files:[],avail:{},formT:[],surveys:[],reminded:[],seq:1,sessionsMonthly:[]}}
+ posts:[],folders:[],files:[],notes:[],payouts:[],avail:{},formT:[],surveys:[],reminded:[],seq:1,sessionsMonthly:[]}}
 function monthly(N){const out=[];const d=new Date(TODAY+'T12:00:00Z');for(let i=5;i>=0;i--){const m=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()-i,1)).toISOString().slice(0,7);
  out.push([MESL[+m.slice(5)-1].slice(0,3),Object.values(N.cases).flatMap(c=>c.sessions).filter(x=>x.status==='Realizada'&&String(x.date).startsWith(m)).length])}return out}
 
@@ -2714,6 +2716,125 @@ const _render22=render;render=function(){if(AUTH&&AUTH.recovery){applyBrand();ap
 FORMS.newpass=async fd_=>{const p=fd_.get('p')||'';if(p.length<8||!/[a-záéíóúñ]/i.test(p)||!/\d/.test(p)){toast('Usa al menos 8 caracteres, con letras y números');return}
  const {error}=await SB.auth.updateUser({password:p});if(error){toast(error.message.includes('session')?'El enlace venció. Pide uno nuevo con “Olvidé mi contraseña”.':'No se pudo guardar: '+error.message);return}
  AUTH.recovery=false;try{history.replaceState(null,'',APP_URL()+'/')}catch(e){}toast('Contraseña actualizada');AUTH.loading=true;render();boot()};
+// ===== EduPsi Campus · Pagos editables, honorarios de profesionales, entrar como otra cuenta y "Mi espacio" =====
+S.payouts=S.payouts||[];S.notes=S.notes||[];
+MAP.payments=()=>[...(S.payments||[]),...(S.payouts||[]).map(p=>({...p,type:'payout',fam:null}))].map(p=>({id:p.id,family_id:p.fam||null,prof_id:p.prof||null,data:p}));
+MAP.notes=()=>(S.notes||[]).map(n=>({id:n.id,owner_id:n.owner,data:omit(n,['id','owner'])}));
+if(!TABLES.includes('notes'))TABLES.push('notes');
+const curMonth=()=>TODAY.slice(0,7);
+function monthName(m){return MESL[+m.slice(5,7)-1]+' '+m.slice(0,4)}
+var FIN={m:null};
+
+// ---------- tarifas y cálculo de honorarios ----------
+const PAY_MODES={sesion:'por sesión realizada',hora:'por hora de sesión',porcentaje:'% de lo cobrado a sus familias'};
+function payOf(u){return (u&&u.pay&&u.pay.mode)?u.pay:{mode:'porcentaje',amount:70,def:true}}
+function payLabel(u){const r=payOf(u);return r.mode==='porcentaje'?`${r.amount} % de lo cobrado${r.def?' (predeterminada)':''}`:`${money(r.amount)} ${PAY_MODES[r.mode]}`}
+function sessionsBy(pid,month){return Object.entries(S.cases).flatMap(([sid,c])=>(c.sessions||[]).filter(x=>x.status==='Realizada'&&(x.prof||c.prof)===pid&&(!month||String(x.date).startsWith(month))).map(x=>({...x,sid})))}
+function familyPaidFor(pid,month){return (S.payments||[]).filter(p=>p.status==='pagado'&&p.prof===pid&&(!month||String(p.date).startsWith(month)))}
+function earned(pid,month){const r=payOf(UP(pid)),a=+r.amount||0;
+ if(r.mode==='sesion')return sessionsBy(pid,month).length*a;
+ if(r.mode==='hora')return sessionsBy(pid,month).reduce((t,x)=>t+(+x.dur||60)/60*a,0);
+ return familyPaidFor(pid,month).reduce((t,p)=>t+(+p.amount||0),0)*a/100}
+function paidTo(pid,month){return (S.payouts||[]).filter(p=>p.prof===pid&&(!month||String(p.date).startsWith(month))).reduce((t,p)=>t+(+p.amount||0),0)}
+function balanceOf(pid){return Math.max(0,Math.round(earned(pid,null)-paidTo(pid,null)))}
+function finMonths(){const s=new Set([curMonth()]);Object.values(S.cases).forEach(c=>(c.sessions||[]).forEach(x=>x.date&&s.add(String(x.date).slice(0,7))));(S.payments||[]).forEach(p=>p.date&&s.add(String(p.date).slice(0,7)));(S.payouts||[]).forEach(p=>p.date&&s.add(String(p.date).slice(0,7)));return [...s].filter(m=>m<=curMonth()).sort().reverse()}
+function monthSelect(){const m=FIN.m||curMonth();return `<select class="inp" style="width:auto" data-ch="finm" aria-label="Mes">${finMonths().map(x=>`<option value="${x}" ${x===m?'selected':''}>${monthName(x)}</option>`).join('')}</select>`}
+CH.finm=el=>{FIN.m=el.value;render()};
+function activePros(){return S.users.filter(u=>u.role==='teacher'&&u.status==='activo')}
+function payProsFor(){const xs=activePros();const ad=S.users.filter(u=>u.role==='superadmin'&&Object.values(S.cases).some(c=>c.prof===u.id));return [...xs,...ad.filter(a=>a.pay)]}
+
+// ---------- vista de Pagos ----------
+const _fin23=VIEWS.finance;
+VIEWS.finance=()=>{const u=ui.user;if(u.role==='guardian')return _fin23();if(u.role==='teacher')return feesView(u.id);
+ const m=FIN.m||curMonth();const fam=(S.payments||[]);const paidM=fam.filter(p=>p.status==='pagado'&&String(p.date).startsWith(m));const pend=fam.filter(p=>p.status==='pendiente');
+ const pros=payProsFor();const genM=pros.reduce((t,p)=>t+earned(p.id,m),0);const owed=pros.reduce((t,p)=>t+balanceOf(p.id),0);
+ const rows=[...fam].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ return `<div class="head"><div><h1>Pagos</h1><p>Cobros a familias y honorarios de la red de profesionales.</p></div><div class="row">${monthSelect()}<button class="btn" data-a="newpayout">${ic('users')}Pagar a profesional</button><button class="btn pri" data-a="newpayment">${ic('plus')}Registrar cobro</button></div></div>
+ <div class="grid g4">${kpi('Cobrado en '+monthName(m).split(' ')[0].toLowerCase(),money(paidM.reduce((t,p)=>t+(+p.amount||0),0)),`${paidM.length} pago${paidM.length===1?'':'s'}`,'wallet')}${kpi('Pendiente de cobro',money(pend.reduce((t,p)=>t+(+p.amount||0),0)),`${pend.length} cobro${pend.length===1?'':'s'}`,'alert')}${kpi('Honorarios del mes',money(genM),'generados por la red','chart')}${kpi('Por pagar a profesionales',money(owed),'saldo acumulado','users')}</div>
+ <div class="card flush"><div class="card-h" style="padding:16px 18px 0"><h2>Honorarios de profesionales · ${monthName(m)}</h2></div><div class="tbl-wrap"><table><thead><tr><th>Profesional</th><th>Tarifa</th><th class="r">Sesiones</th><th class="r">Generado</th><th class="r">Pagado</th><th class="r">Saldo total</th><th class="r"></th></tr></thead><tbody>
+ ${pros.map(p=>{const bal=balanceOf(p.id);return `<tr><td><div class="who">${av(p)}<div><b>${esc(p.name)}</b><span>${roleLabel(p)}</span></div></div></td><td class="small">${esc(payLabel(p))}</td><td class="r num">${sessionsBy(p.id,m).length}</td><td class="r num">${money(earned(p.id,m))}</td><td class="r num">${money(paidTo(p.id,m))}</td><td class="r num"><b class="${bal>0?'down':''}">${money(bal)}</b></td>
+  <td class="r"><div class="row end" style="flex-wrap:nowrap"><button class="btn sm" data-a="setrate" data-id="${p.id}">Tarifa</button><button class="btn sm pri" data-a="newpayout" data-id="${p.id}">Pagar</button>${p.id!==u.id&&!isAdminU(p)?`<button class="btn sm" data-a="impersonate" data-id="${p.id}" title="Entrar como ${esc(p.name)}">${ic('eye')}</button>`:''}</div></td></tr>`}).join('')||'<tr><td colspan="7" class="muted">Aún no hay profesionales activos.</td></tr>'}</tbody></table></div></div>
+ <div class="grid g-main"><div class="card flush"><div class="card-h" style="padding:16px 18px 0"><h2>Cobros a familias</h2></div><div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Familia</th><th>Concepto</th><th class="r">Monto</th><th>Estado</th><th class="r"></th></tr></thead><tbody>
+ ${rows.map(p=>`<tr><td class="small num">${fd(String(p.date).slice(0,10))}</td><td><b style="font-weight:500">${esc(short(UP(p.fam).name))}</b><div class="small muted">${esc(p.kid?short(UP(p.kid).name):'')}${p.prof?' · '+esc(short(UP(p.prof).name)):''}</div></td><td class="small">${esc(p.concept||'')}</td><td class="r num">${money(+p.amount||0)}</td><td>${statusPill(p.status)}${p.reported?'<div class="small muted">La familia reportó el pago</div>':''}</td>
+  <td class="r"><div class="row end" style="flex-wrap:nowrap">${p.status==='pendiente'?`<button class="btn sm" data-a="markpaid" data-id="${p.id}">Marcar pagado</button>`:''}<button class="btn sm" data-a="editpay" data-id="${p.id}">Editar</button><button class="btn sm danger" data-a="delpay" data-id="${p.id}" aria-label="Eliminar cobro">${ic('trash')}</button></div></td></tr>`).join('')||'<tr><td colspan="6" class="muted">Aún no hay cobros registrados.</td></tr>'}</tbody></table></div></div>
+ <div class="card"><h2 style="margin-bottom:12px">Pagos a profesionales</h2><div class="list">${[...(S.payouts||[])].sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,40).map(p=>`<div class="it">${av(UP(p.prof))}<div class="grow"><b style="font-weight:500">${esc(short(UP(p.prof).name))}</b><div class="small muted">${fd(String(p.date).slice(0,10))} · ${esc(p.method||'')}${p.note?' · '+esc(p.note):''}</div></div><b class="num">${money(+p.amount||0)}</b><button class="btn sm" data-a="editpayout" data-id="${p.id}" aria-label="Editar pago">${ic('edit')}</button><button class="btn sm danger" data-a="delpayout" data-id="${p.id}" aria-label="Eliminar pago">${ic('trash')}</button></div>`).join('')||'<span class="muted small">Aún no hay pagos registrados a profesionales.</span>'}</div></div></div>`};
+
+// ---------- “Mis honorarios” para cada profesional ----------
+function feesView(pid){const p=UP(pid),m=FIN.m||curMonth();const r=payOf(p);const bal=balanceOf(pid);const ms=finMonths().slice(0,6);const ses=sessionsBy(pid,m).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ return `<div class="head"><div><h1>Mis honorarios</h1><p>Lo que has generado con EduPsi y lo que ya se te ha pagado.</p></div>${monthSelect()}</div>
+ <div class="grid g4">${kpi('EduPsi te debe',money(bal),'saldo pendiente','wallet')}${kpi('Generado en '+monthName(m).split(' ')[0].toLowerCase(),money(earned(pid,m)),`${sessionsBy(pid,m).length} sesiones realizadas`,'chart')}${kpi('Pagado en '+monthName(m).split(' ')[0].toLowerCase(),money(paidTo(pid,m)),'transferencias recibidas','check')}${kpi('Tu tarifa',r.mode==='porcentaje'?r.amount+' %':money(r.amount),PAY_MODES[r.mode],'userplus')}</div>
+ <div class="grid g2"><div class="card flush"><div class="card-h" style="padding:16px 18px 0"><h2>Resumen por mes</h2></div><div class="tbl-wrap"><table><thead><tr><th>Mes</th><th class="r">Sesiones</th><th class="r">Generado</th><th class="r">Pagado</th></tr></thead><tbody>${ms.map(x=>`<tr><td>${monthName(x)}</td><td class="r num">${sessionsBy(pid,x).length}</td><td class="r num">${money(earned(pid,x))}</td><td class="r num">${money(paidTo(pid,x))}</td></tr>`).join('')}</tbody></table></div></div>
+ <div class="card"><h2 style="margin-bottom:12px">Pagos recibidos</h2><div class="list">${(S.payouts||[]).filter(x=>x.prof===pid).sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`<div class="it">${ic('check')}<div class="grow">${fdl(String(x.date).slice(0,10))}<div class="small muted">${esc(x.method||'')}${x.note?' · '+esc(x.note):''}</div></div><b class="num">${money(+x.amount||0)}</b></div>`).join('')||'<span class="muted small">Todavía no hay pagos registrados.</span>'}</div></div></div>
+ <div class="card"><h2 style="margin-bottom:12px">${r.mode==='porcentaje'?'Cobros a tus familias':'Sesiones realizadas'} · ${monthName(m)}</h2><div class="list">${r.mode==='porcentaje'?familyPaidFor(pid,m).map(x=>`<div class="it"><div class="grow">${esc(UP(x.kid||x.fam).name)}<div class="small muted">${fd(String(x.date).slice(0,10))} · ${esc(x.concept||'')}</div></div><span class="small muted num">${money(+x.amount||0)} → </span><b class="num">${money((+x.amount||0)*r.amount/100)}</b></div>`).join('')||'<span class="muted small">Sin cobros pagados este mes.</span>':ses.map(x=>`<div class="it">${ic('cal')}<div class="grow">${esc(UP(x.sid).name)}<div class="small muted">${sessDate(x)} · ${x.dur||60} min · ${esc(x.mode||'')}</div></div><b class="num">${money(r.mode==='hora'?(+x.dur||60)/60*r.amount:r.amount)}</b></div>`).join('')||'<span class="muted small">Sin sesiones realizadas este mes.</span>'}</div>
+ <p class="small muted" style="margin-top:10px">Las sesiones cuentan cuando están marcadas como “Realizada” en la bitácora. Si ves algo que no coincide, escribe a la administración por Mensajes.</p></div>`}
+VIEWS.fees=()=>feesView(ui.user.id);
+
+// ---------- tarifa ----------
+ACT.setrate=d=>{const p=U(d.id),r=payOf(p);openModal({title:'Tarifa de '+short(p.name),form:'setrate',ok:'Guardar tarifa',body:`<input type="hidden" name="id" value="${p.id}"><div class="form"><div class="field"><label for="rt1">Cómo se calcula</label><select id="rt1" name="mode" class="inp">${Object.entries(PAY_MODES).map(([k,v])=>`<option value="${k}" ${r.mode===k?'selected':''}>${v[0].toUpperCase()+v.slice(1)}</option>`).join('')}</select></div>
+ <div class="field"><label for="rt2">Monto (₡) o porcentaje (%)</label><input id="rt2" name="amount" type="number" min="0" step="any" class="inp num" required value="${r.amount}"></div><p class="small muted">Ejemplos: ₡15.000 por sesión realizada, ₡12.000 por hora, o 70 % de lo que pagan sus familias. La profesional ve su tarifa y su saldo en “Mis honorarios”.</p></div>`})};
+FORMS.setrate=fd_=>{const p=U(fd_.get('id'));p.pay={mode:fd_.get('mode'),amount:+fd_.get('amount')};log('Asignó tarifa',`${p.name} · ${payLabel(p)}`);notify(p.id,`Tu tarifa en EduPsi: ${payLabel(p)}`);save();ui.modal=null;toast('Tarifa guardada');render()};
+
+// ---------- pagos a profesionales ----------
+function payoutForm(x={}){const pros=payProsFor();return `<div class="form">${x.id?`<input type="hidden" name="id" value="${x.id}">`:''}<div class="field"><label for="po1">Profesional</label><select id="po1" name="prof" class="inp" data-ch="poprof">${pros.map(p=>`<option value="${p.id}" ${x.prof===p.id?'selected':''}>${esc(p.name)} · saldo ${money(balanceOf(p.id))}</option>`).join('')}</select></div>
+ <div class="two"><div class="field"><label for="po2">Monto (₡)</label><input id="po2" name="amount" type="number" min="0" class="inp num" required value="${x.amount??(x.prof?balanceOf(x.prof):'')}"></div><div class="field"><label for="po3">Fecha</label><input id="po3" name="date" type="date" class="inp" required value="${esc(String(x.date||TODAY).slice(0,10))}"></div></div>
+ <div class="two"><div class="field"><label for="po4">Método</label><select id="po4" name="method" class="inp">${['SINPE','Transferencia','Efectivo'].map(v=>`<option ${x.method===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label for="po5">Nota (opcional)</label><input id="po5" name="note" class="inp" value="${esc(x.note||'')}" placeholder="Ej.: Honorarios de octubre"></div></div></div>`}
+CH.poprof=el=>{const a=document.getElementById('po2');if(a)a.value=balanceOf(el.value)};
+ACT.newpayout=d=>{const pros=payProsFor();if(!pros.length){toast('No hay profesionales activos');return}const prof=d.id||pros[0].id;openModal({title:'Registrar pago a profesional',form:'payout',ok:'Registrar pago',body:payoutForm({prof})})};
+ACT.editpayout=d=>{const x=S.payouts.find(y=>y.id===d.id);openModal({title:'Editar pago a profesional',form:'payout',ok:'Guardar cambios',body:payoutForm(x)})};
+FORMS.payout=fd_=>{const id=fd_.get('id');const v={prof:fd_.get('prof'),amount:+fd_.get('amount'),date:fd_.get('date'),method:fd_.get('method'),note:fd_.get('note').trim(),status:'pagado',concept:'Pago de honorarios'};
+ if(id){Object.assign(S.payouts.find(y=>y.id===id),v);log('Editó pago a profesional',`${UP(v.prof).name} · ${money(v.amount)}`)}
+ else{S.payouts.push({id:nid('po'),...v});notify(v.prof,`EduPsi registró un pago de honorarios: ${money(v.amount)}`);log('Pagó a profesional',`${UP(v.prof).name} · ${money(v.amount)}`)}
+ save();ui.modal=null;toast(id?'Pago actualizado':'Pago registrado');render()};
+ACT.delpayout=d=>{const x=S.payouts.find(y=>y.id===d.id);openModal({title:'Eliminar pago a profesional',form:'delpayout',ok:'Sí, eliminar',body:`<input type="hidden" name="id" value="${x.id}"><p>¿Eliminar el pago de <b>${money(+x.amount||0)}</b> a <b>${esc(UP(x.prof).name)}</b> del ${fdl(String(x.date).slice(0,10))}? Su saldo volverá a aumentar.</p>`})};
+FORMS.delpayout=fd_=>{const x=S.payouts.find(y=>y.id===fd_.get('id'));S.payouts=S.payouts.filter(y=>y.id!==x.id);log('Eliminó pago a profesional',`${UP(x.prof).name} · ${money(+x.amount||0)}`);save();ui.modal=null;toast('Pago eliminado');render()};
+
+// ---------- editar y eliminar cobros a familias ----------
+ACT.editpay=d=>{const p=S.payments.find(x=>x.id===d.id);const fams=S.users.filter(u=>u.role==='guardian');const pros=[...activePros(),...S.users.filter(u=>u.role==='superadmin')];
+ openModal({title:'Editar cobro',form:'editpay',ok:'Guardar cambios',body:`<input type="hidden" name="id" value="${p.id}"><div class="form"><div class="field"><label for="ep1">Familia</label><select id="ep1" name="fam" class="inp">${fams.map(f=>`<option value="${f.id}" ${p.fam===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select></div>
+ <div class="field"><label for="ep2">Concepto</label><input id="ep2" name="concept" class="inp" required value="${esc(p.concept||'')}"></div>
+ <div class="two"><div class="field"><label for="ep3">Monto (₡)</label><input id="ep3" name="amount" type="number" min="0" class="inp num" required value="${+p.amount||0}"></div><div class="field"><label for="ep4">Fecha</label><input id="ep4" name="date" type="date" class="inp" required value="${esc(String(p.date).slice(0,10))}"></div></div>
+ <div class="two"><div class="field"><label for="ep5">Método</label><select id="ep5" name="method" class="inp">${['SINPE','Transferencia','Efectivo','Tarjeta'].map(v=>`<option ${p.method===v?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label for="ep6">Estado</label><select id="ep6" name="status" class="inp"><option value="pagado" ${p.status==='pagado'?'selected':''}>Pagado</option><option value="pendiente" ${p.status==='pendiente'?'selected':''}>Pendiente</option></select></div></div>
+ <div class="field"><label for="ep7">Profesional que atendió</label><select id="ep7" name="prof" class="inp"><option value="">Sin asignar</option>${pros.map(x=>`<option value="${x.id}" ${p.prof===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select><span class="small muted">Se usa para calcular honorarios cuando la tarifa es por porcentaje.</span></div></div>`})};
+FORMS.editpay=fd_=>{const p=S.payments.find(x=>x.id===fd_.get('id'));Object.assign(p,{fam:fd_.get('fam'),concept:fd_.get('concept').trim(),amount:+fd_.get('amount'),date:fd_.get('date'),method:fd_.get('method'),status:fd_.get('status'),prof:fd_.get('prof')||null});
+ log('Editó cobro',`${UP(p.fam).name} · ${p.concept} · ${money(p.amount)}`);save();ui.modal=null;toast('Cobro actualizado');render()};
+ACT.delpay=d=>{const p=S.payments.find(x=>x.id===d.id);openModal({title:'Eliminar cobro',form:'delpay',ok:'Sí, eliminar',body:`<input type="hidden" name="id" value="${p.id}"><p>¿Eliminar el cobro <b>${esc(p.concept||'')}</b> de <b>${esc(UP(p.fam).name)}</b> por <b>${money(+p.amount||0)}</b>? La familia ya no lo verá. No se puede deshacer.</p>`})};
+FORMS.delpay=fd_=>{const p=S.payments.find(x=>x.id===fd_.get('id'));S.payments=S.payments.filter(x=>x.id!==p.id);log('Eliminó cobro',`${UP(p.fam).name} · ${p.concept} · ${money(+p.amount||0)}`);save();ui.modal=null;toast('Cobro eliminado');render()};
+
+// ---------- entrar como otra cuenta (administración) ----------
+ACT.impersonate=d=>{const me=ui.real||ui.user;if(!isAdminU(me)){toast('Solo la administración puede hacer esto');return}const u=U(d.id);if(!u||isAdminU(u)){toast('No se puede entrar como otra cuenta de administración');return}
+ log('Entró a la plataforma como',`${u.name} (${roleLabel(u)})`);ui.real=me;ui.user=u;ui.view='home';ui.p=null;ui.tab=null;ui.pop=null;ui.modal=null;save();render();window.scrollTo(0,0);toast('Ahora ves la plataforma como '+short(u.name))};
+ACT.unimpersonate=()=>{const r=ui.real;if(!r)return;log('Volvió a su cuenta',`dejó de actuar como ${ui.user.name}`);ui.user=U(r.id)||r;ui.real=null;ui.view='home';ui.tab=null;save();render();toast('Volviste a tu cuenta')};
+const _shell23=shell;shell=function(body){let h=_shell23(body);if(ui.real&&!h.includes('data-a="unimpersonate"')){const b=`<div class="card row" style="justify-content:space-between;gap:12px;background:#FFF4DB;border-color:#E0A93B;margin-bottom:14px">${ic('eye')}<span class="grow">Estás usando la plataforma como <b>${esc(ui.user.name)}</b> (${roleLabel(ui.user)}). Lo que hagas queda registrado a tu nombre en la auditoría.</span><button class="btn sm pri" data-a="unimpersonate">Volver a mi cuenta</button></div>`;h=h.replace(/(<main[^>]*>)/,'$1'+b)}return h};
+// botón en Profesionales
+const _pros23=VIEWS.pros;VIEWS.pros=()=>_pros23().replace(/<button class="btn sm" data-a="msgto" data-id="([^"]+)">/g,(m,id)=>`<button class="btn sm" data-a="impersonate" data-id="${id}">${ic('eye')}Entrar como</button><button class="btn sm" data-a="setrate" data-id="${id}">${ic('wallet')}Tarifa</button>`+m);
+
+// ---------- Mi espacio: notas y documentos personales ----------
+var NQ={q:''};const NCOL=['#FFF7D6','#E6F1FB','#EEF3D6','#FBE7E4','#EFE7F8','#E4F3F1'];
+function myNotes(){const o=ui.user.id;return (S.notes||[]).filter(n=>n.owner===o)}
+function personalFolder(){return (S.folders||[]).find(f=>f.owner===ui.user.id&&f.personal&&!f.parent)}
+VIEWS.myspace=()=>{const q=NQ.q.toLowerCase();const ns=myNotes().filter(n=>!q||(n.t+' '+n.b).toLowerCase().includes(q)).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||String(b.upd).localeCompare(String(a.upd)));const pf=personalFolder();const fs=pf?filesIn(pf.id).sort((a,b)=>String(b.at).localeCompare(String(a.at))):[];
+ return `<style>.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}.note{border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;color:#1E2A36;border:1px solid rgba(0,0,0,.06);min-height:130px}.note p{white-space:pre-wrap;font-size:13.5px;margin:0;flex:1}.note .row .btn{background:rgba(255,255,255,.7)}</style>
+ <div class="head"><div><h1>Mi espacio</h1><p>Tus notas de trabajo y documentos personales. Los ves tú${ui.real?'':' y la administración de EduPsi'}.</p></div><div class="row"><input class="inp" style="width:200px" placeholder="Buscar en notas…" value="${esc(NQ.q)}" data-ch="nq" aria-label="Buscar notas"><button class="btn pri" data-a="newnote">${ic('plus')}Nueva nota</button></div></div>
+ <div class="ngrid">${ns.map(n=>`<div class="note" style="background:${n.c||NCOL[0]}"><div class="row" style="justify-content:space-between;gap:6px"><b style="font-weight:600">${n.pin?'📌 ':''}${esc(n.t||'Sin título')}</b></div>${n.s?`<span class="small" style="opacity:.75">${ic('users','ico sm')} ${esc(UP(n.s).name)}</span>`:''}<p>${esc(n.b||'')}</p><div class="row" style="justify-content:space-between"><span class="small" style="opacity:.65">${fd(String(n.upd||'').slice(0,10))}</span><div class="row" style="gap:4px"><button class="btn sm" data-a="pinnote" data-id="${n.id}" aria-label="Fijar">${n.pin?'Desfijar':'Fijar'}</button><button class="btn sm" data-a="editnote" data-id="${n.id}" aria-label="Editar nota">${ic('edit')}</button><button class="btn sm danger" data-a="delnote" data-id="${n.id}" aria-label="Eliminar nota">${ic('trash')}</button></div></div></div>`).join('')||`<div class="card"><span class="muted">${q?'No hay notas con esa búsqueda.':'Aún no tienes notas. Úsalas para ideas de actividades, pendientes o recordatorios.'}</span></div>`}</div>
+ <div class="card stack"><div class="card-h"><h2>Documentos personales</h2><div class="row">${pf?`<label class="btn pri sm" style="cursor:pointer">${ic('upload')}Subir archivos<input type="file" multiple data-ch="fupload" data-id="${pf.id}" style="display:none"></label><button class="btn sm" data-a="fopen" data-id="${pf.id}">${ic('folder')}Abrir carpeta</button>`:`<button class="btn pri sm" data-a="mkpersonal">${ic('folder')}Crear mi carpeta personal</button>`}</div></div>
+ <p class="small muted">Para tu currículum, títulos, carné profesional, contratos, planillas o materiales propios. Máximo 50 MB por archivo.</p>${pf?fileTable(fs,false,true):''}</div>`};
+CH.nq=el=>{NQ.q=el.value;render()};
+function noteForm(n={}){const sts=myCases();return `<div class="form">${n.id?`<input type="hidden" name="id" value="${n.id}">`:''}<div class="field"><label for="nt1">Título</label><input id="nt1" name="t" class="inp" value="${esc(n.t||'')}" data-autofocus></div><div class="field"><label for="nt2">Nota</label><textarea id="nt2" name="b" class="inp" style="min-height:160px">${esc(n.b||'')}</textarea></div>
+ <div class="two"><div class="field"><label for="nt3">Relacionada con (opcional)</label><select id="nt3" name="s" class="inp"><option value="">Ningún estudiante</option>${sts.map(s=>`<option value="${s}" ${n.s===s?'selected':''}>${esc(UP(s).name)}</option>`).join('')}</select></div><div class="field"><label>Color</label><div class="row">${NCOL.map((c,i)=>`<label class="check"><input type="radio" name="c" value="${c}" ${(n.c||NCOL[0])===c?'checked':''}><span style="display:inline-block;width:20px;height:20px;border-radius:6px;background:${c};border:1px solid rgba(0,0,0,.15)"></span></label>`).join('')}</div></div></div></div>`}
+ACT.newnote=()=>openModal({title:'Nueva nota',form:'note',ok:'Guardar nota',body:noteForm()});
+ACT.editnote=d=>openModal({title:'Editar nota',form:'note',ok:'Guardar cambios',body:noteForm(S.notes.find(n=>n.id===d.id))});
+FORMS.note=fd_=>{const id=fd_.get('id');const v={t:fd_.get('t').trim(),b:fd_.get('b'),s:fd_.get('s')||null,c:fd_.get('c'),upd:nowStr()};if(!v.t&&!v.b.trim()){toast('Escribe un título o un texto');return}
+ if(id)Object.assign(S.notes.find(n=>n.id===id),v);else S.notes.push({id:nid('nt'),owner:ui.user.id,pin:false,...v});save();ui.modal=null;toast('Nota guardada');render()};
+ACT.pinnote=d=>{const n=S.notes.find(x=>x.id===d.id);n.pin=!n.pin;save();render()};
+ACT.delnote=d=>{const n=S.notes.find(x=>x.id===d.id);openModal({title:'Eliminar nota',form:'delnote',ok:'Sí, eliminar',body:`<input type="hidden" name="id" value="${n.id}"><p>¿Eliminar la nota <b>${esc(n.t||'Sin título')}</b>? No se puede deshacer.</p>`})};
+FORMS.delnote=fd_=>{S.notes=S.notes.filter(n=>n.id!==fd_.get('id'));save();ui.modal=null;toast('Nota eliminada');render()};
+ACT.mkpersonal=()=>{if(personalFolder())return;S.folders.push({id:nid('fo'),name:'Documentos personales — '+short(ui.user.name),color:'#8A5CB8',owner:ui.user.id,student:null,parent:null,personal:true,shares:[],at:nowStr()});log('Creó su carpeta personal','');save();toast('Carpeta personal creada');render()};
+// las carpetas personales no se pueden compartir sin querer: avisa al compartir
+const _fshare23=ACT.fshare;ACT.fshare=d=>{_fshare23(d);const f=FD(d.id);if(f&&f.personal&&ui.modal){ui.modal.body=ui.modal.body.replace('<div class="stack">','<div class="stack"><div class="ai-note">'+ic('lock')+'<div>Es una carpeta personal. Solo compártela si de verdad lo necesitas.</div></div>');render()}};
+
+// ---------- menú ----------
+(function(){const add=(role,after,item)=>{const n=NAV[role];if(!n||n.some(x=>x[0]===item[0]))return;const i=n.findIndex(x=>x[0]===after);n.splice(i<0?n.length:i+1,0,item)};
+ add('teacher','files',['myspace','Mi espacio','edit']);add('teacher','myspace',['fees','Mis honorarios','wallet']);add('superadmin','files',['myspace','Mi espacio','edit'])})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
