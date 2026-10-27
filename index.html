@@ -1720,6 +1720,7 @@ VIEWS.satisf=()=>{const rs=allForms().filter(x=>x.tpl==='ft5'&&x.status==='compl
 ACT.copytesti=d=>copy(`“${d.t}” — Familia EduPsi`);
 // ===== EduPsi Campus · versión real conectada a Supabase =====
 function APP_URL(){return location.origin+location.pathname.replace(/index\.html$/,"").replace(/\/$/,"")}
+var RECOVERY_URL=/type=recovery/.test(location.hash+location.search);
 var SB=null, SYNC={on:false,snap:{},timer:null,busy:false,again:false,errShown:false};
 const CFG=window.EDUPSI_CFG;
 SB=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -2707,6 +2708,12 @@ function photoNudge(){const u=ui.user;if(!u||u.photo)return '';try{if(localStora
  return `<div class="card row" style="justify-content:space-between;gap:12px;flex-wrap:wrap"><div class="row" style="gap:12px">${av(u,'lg')}<div><b>Agrega tu foto de perfil</b><div class="small muted">Así el equipo de EduPsi y las familias te reconocen en mensajes y en el muro.</div></div></div><div class="row"><label class="btn pri" style="cursor:pointer">${ic('userplus')}Subir foto<input type="file" accept="image/*" data-ch="photofile" style="display:none"></label><button class="btn ghost sm" data-a="nophoto">Ahora no</button></div></div>`}
 ACT.nophoto=()=>{try{localStorage.setItem('edupsi-nophoto-'+ui.user.id,'1')}catch(e){}render()};
 const _home21=VIEWS.home;VIEWS.home=()=>photoNudge()+_home21();
+// ===== EduPsi Campus · Recuperar contraseña: siempre pedir la contraseña nueva al abrir el enlace del correo =====
+if(RECOVERY_URL){AUTH.recovery=true}
+const _render22=render;render=function(){if(AUTH&&AUTH.recovery){applyBrand();app.innerHTML=viewLogin()+(ui.modal?modalHtml():'');const f=document.querySelector('[data-autofocus]');if(f)f.focus();return}_render22()};
+FORMS.newpass=async fd_=>{const p=fd_.get('p')||'';if(p.length<8||!/[a-záéíóúñ]/i.test(p)||!/\d/.test(p)){toast('Usa al menos 8 caracteres, con letras y números');return}
+ const {error}=await SB.auth.updateUser({password:p});if(error){toast(error.message.includes('session')?'El enlace venció. Pide uno nuevo con “Olvidé mi contraseña”.':'No se pudo guardar: '+error.message);return}
+ AUTH.recovery=false;try{history.replaceState(null,'',APP_URL()+'/')}catch(e){}toast('Contraseña actualizada');AUTH.loading=true;render();boot()};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
