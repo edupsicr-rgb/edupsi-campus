@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-GD3FWO8JW2zugxMKc6RZsDrDJ9OKnwMK66b3kYeiOkg='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-NIC3k6HZ8NBcChiTXZd8Mzed79C01hyP7EITtfuBF40='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4391,6 +4391,34 @@ favHtml34=(function(prev){return function(){return prev().replace(/<span class="
 (function(){const st=document.createElement('style');st.textContent=`:root{--go:#A2B536;--go-h:#93A62C;--go-ink:#1D2B36}
 .btn.pri{background:var(--go);border-color:var(--go);color:var(--go-ink);font-weight:600}.btn.pri:hover{background:var(--go-h);border-color:var(--go-h);filter:none}.btn.pri .ico{color:var(--go-ink)}
 .qtabs button.on,.gs34-tabs button.on{background:var(--go);border-color:var(--go);color:var(--go-ink)}.qtabs button.on .ico,.gs34-tabs button.on .ico{color:var(--go-ink)}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 37: botón «Atrás» en todo el campus (y gesto o botón atrás del celular) =====
+const NAV37={stack:[],last:null,lastKey:'',restoring:false,uid:null};
+function snap37(){const m=typeof MAIL!=='undefined'?MAIL:{};return {v:ui.view,p:ui.p,tab:ui.tab,ht:ui.hometab||null,kid:ui.kid||null,
+ mb:m.box||null,mf:m.folder||null,ms:m.sel||null,fs:typeof FS!=='undefined'?FS.sel:null,ft:typeof FS!=='undefined'?FS.tab:null,gs:typeof GS34!=='undefined'?GS34.tab:null}}
+const key37=s=>JSON.stringify(s);
+function track37(){if(!ui.user){NAV37.stack=[];NAV37.last=null;NAV37.lastKey='';NAV37.uid=null;return}
+ if(NAV37.uid!==ui.user.id){NAV37.uid=ui.user.id;NAV37.stack=[];NAV37.last=snap37();NAV37.lastKey=key37(NAV37.last);return}
+ const s=snap37(),k=key37(s);if(k===NAV37.lastKey)return;
+ if(!NAV37.restoring&&NAV37.last){NAV37.stack.push(NAV37.last);if(NAV37.stack.length>60)NAV37.stack.shift();try{history.pushState({e36:NAV37.stack.length},'')}catch(e){}}
+ NAV37.last=s;NAV37.lastKey=k}
+function back37(){const s=NAV37.stack.pop();if(!s)return false;NAV37.restoring=true;
+ try{ui.q='';ui.modal=null;go(s.v,s.p,s.tab);ui.hometab=s.ht;if('kid' in ui||s.kid)ui.kid=s.kid;
+  if(typeof MAIL!=='undefined'){MAIL.box=s.mb||MAIL.box;MAIL.folder=s.mf;MAIL.sel=s.ms}
+  if(typeof FS!=='undefined'){FS.sel=s.fs;if(s.ft)FS.tab=s.ft;FS.picked=[]}if(typeof GS34!=='undefined'&&s.gs)GS34.tab=s.gs;render()}catch(e){console.warn(e)}
+ NAV37.last=snap37();NAV37.lastKey=key37(NAV37.last);NAV37.restoring=false;return true}
+// el botón visible usa el historial del navegador para que el gesto del celular y el botón coincidan
+ACT.back37=()=>{if(!NAV37.stack.length)return;try{history.back()}catch(e){back37()}};
+window.addEventListener('popstate',()=>{
+ if(document.getElementById('rep33')){reportClose33();try{history.pushState({e36:'rep'},'')}catch(e){}return}
+ if(ui.modal){ui.modal=null;render();try{history.pushState({e36:'m'},'')}catch(e){}return}
+ back37()});
+function backBtn37(){const top=document.querySelector('header.top');if(!top)return;let b=top.querySelector('.back37');
+ if(!NAV37.stack.length){if(b)b.remove();return}
+ if(!b){const h=`<button class="iconbtn back37" data-a="back37" aria-label="Volver atrás" title="Volver atrás">${ic('back')}<span>Atrás</span></button>`;const bg=top.querySelector('.burger');if(bg)bg.insertAdjacentHTML('afterend',h);else top.insertAdjacentHTML('afterbegin',h)}}
+const _render37=render;render=function(){_render37();try{track37();backBtn37()}catch(e){}};
+(function(){const st=document.createElement('style');st.textContent=`.top .back37{width:auto;padding:0 12px 0 8px;gap:4px;display:inline-flex;align-items:center;font:inherit;font-weight:600;font-size:14px}
+.top .back37 .ico{width:18px;height:18px}
+@media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
