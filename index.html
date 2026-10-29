@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-7zCrR12tVs7xNYda94wai38u32TA88cMBaesi59CskM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-gm+mKyj3F5FRc8yGNwTYhxxkGD0wRUySCbR7wzzCZzw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -3965,8 +3965,8 @@ function mailDecorate(){const D=MAIL.draft;if(!D||!ui.modal||ui.modal.form!=='ma
  const fi=document.getElementById('mbfile');if(fi)fi.addEventListener('change',()=>mailUpload([...fi.files]))}
 async function mailUpload(files){const D=MAIL.draft;mailSync();const room=5-D.files.length;if(files.length>room)toast('Puedes adjuntar hasta 5 archivos');files=files.slice(0,room);
  for(const f of files){if(f.size>10*1024*1024){toast(`${f.name} supera los 10 MB`);continue}D.busy=true;mailComposeOpen();
-  const path=`${D.id}/${Date.now().toString(36)}-${f.name.replace(/[^\w.\-]+/g,'_').slice(-80)}`;const {error}=await SB.storage.from('mail').upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false});
-  if(error)toast('No se pudo subir '+f.name);else D.files.push({path,name:f.name,size:f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(f.size/1024))+' KB',mime:f.type||''})}
+  const path=`${D.id.replace(/~/g,'.')}/${Date.now().toString(36)}-${f.name.replace(/[^\w.\-]+/g,'_').slice(-80)}`;const {error}=await SB.storage.from('mail').upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false});
+  if(error){console.warn('mail upload',error);toast('No se pudo subir '+f.name+(error.message?' ('+error.message+')':''))}else D.files.push({path,name:f.name,size:f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(f.size/1024))+' KB',mime:f.type||''})}
  D.busy=false;mailComposeOpen()}
 ACT.mailrm=d=>{mailSync();MAIL.draft.to.delete(d.id);mailComposeOpen()};
 ACT.mailrmfile=async d=>{mailSync();const D=MAIL.draft;const f=D.files[+d.i];if(!f)return;D.files.splice(+d.i,1);if(!f.copied)try{await SB.storage.from('mail').remove([f.path])}catch(e){}mailComposeOpen()};
@@ -3985,7 +3985,7 @@ ACT.mailreply=d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(!r)return;const 
  if(d.all)to=[...new Set([r.sender_id,...(r.data.to||[])])].filter(x=>x!==me);const s=r.data.subject||'';
  mailCompose({to,subject:/^re:/i.test(s)?s:'RE: '+s,body:'',reply_of:r.mail_id,orig:{who:r.sender_name||'EduPsi',at:r.at,body:String(r.data.body||'')}})};
 ACT.mailfwd=async d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(!r)return;const id=mailNewId();const files=[];
- for(const f of (r.data.files||[])){const np=`${id}/${f.path.split('/').pop()}`;try{const {error}=await SB.storage.from('mail').copy(f.path,np);if(!error)files.push({...f,path:np})}catch(e){}}
+ for(const f of (r.data.files||[])){const np=`${id.replace(/~/g,'.')}/${f.path.split('/').pop()}`;try{const {error}=await SB.storage.from('mail').copy(f.path,np);if(!error)files.push({...f,path:np})}catch(e){}}
  if(files.length<(r.data.files||[]).length)toast('Algunos adjuntos no se pudieron incluir');const s=r.data.subject||'';
  mailCompose({id,subject:/^rv:/i.test(s)?s:'RV: '+s,body:`\n\n— Mensaje reenviado —\nDe: ${r.sender_name||''}\nFecha: ${mailWhenLong(r.at)}\nAsunto: ${s}\n\n${r.data.body||''}`,files,fwd_of:r.mail_id})};
 const _closeM31=ACT.closemodal;ACT.closemodal=(...a)=>{if(ui.modal&&ui.modal.form==='mailsend'&&MAIL.draft){mailSync();const D=MAIL.draft;if((D.subject.trim()||D.body.trim()||D.files.length)&&!D.existing){if(confirmLeave())return}MAIL.draft=null}return _closeM31?_closeM31(...a):closeModal()};
@@ -4068,7 +4068,7 @@ ACT.periodreport=d=>{const sid=d.s,kind=d.k==='month'?'month':'week';if(!canRepo
   <div class="field"><label>Incluir en el informe</label>${[['asist','Resumen de asistencia'],['ses','Detalle de sesiones'],['goals','Avance de objetivos'],['cond','Registro de conducta']].map(([v,l])=>`<label class="check"><input type="checkbox" name="inc" value="${v}" ${v==='cond'&&!(P.cond.pos+P.cond.neg)?'':'checked'}> ${l}</label>`).join('')}</div>
   <div class="field"><label>Compartir</label><label class="check"><input type="checkbox" name="vis" value="1" ${fam.length?'checked':'disabled'}> Compartir con la familia${fam.length?` (${esc(fam.map(f=>short(f.name)).join(', '))}) y avisarle por el buzón y el correo`:' (no hay familia vinculada)'}</label>
    ${ext?`<label class="check"><input type="checkbox" name="ext" value="1"> Compartir también con el equipo externo del centro educativo</label>`:''}
-   <label class="check"><input type="checkbox" name="pdf" value="1" checked> Abrir el informe para descargarlo en PDF</label></div></div>`})};
+   <label class="check"><input type="checkbox" name="pdf" value="1" checked> Abrir el informe al guardarlo (para revisarlo o descargar el PDF)</label></div></div>`})};
 CH.prperiod=el=>{ACT.periodreport({s:el.dataset.s,k:el.dataset.k,i:el.value})};
 
 FORMS.periodreport=fd_=>{const sid=fd_.get('s'),kind=fd_.get('k')==='month'?'month':'week';const p=periods32(kind)[+fd_.get('i')||0];const c=CASE(sid);if(!c||!p)return;
@@ -4076,15 +4076,14 @@ FORMS.periodreport=fd_=>{const sid=fd_.get('s'),kind=fd_.get('k')==='month'?'mon
  const rep={kind,from:p.from,to:p.to,by:ui.user.id,at:nowStr(),inc:fd_.getAll('inc'),data:P,txt:{sint:fd_.get('sint')||'',logros:fd_.get('logros')||'',fort:fd_.get('fort')||'',casa:fd_.get('casa')||'',next:fd_.get('next')||''}};
  const title=`Informe ${kind==='week'?'semanal':'mensual'} · ${kind==='week'?`${fd(p.from)} al ${fd(p.to)}`:p.label.replace(' (mes en curso)','')}`;
  const doc={id:nid('d'),t:title,type:kind==='week'?'Informe semanal':'Informe mensual',date:TODAY,size:'—',vis,ext:!!fd_.get('ext'),rep};
- // la ventana se abre antes de cualquier espera para que el navegador no la bloquee
- let w=null;if(fd_.get('pdf')){w=window.open('','_blank');if(!w)toast('Permite las ventanas emergentes para descargar el PDF')}
+ const showIt=!!fd_.get('pdf');
  (c.docs=c.docs||[]).unshift(doc);log(`Generó ${doc.type.toLowerCase()}`,`${UP(sid).name} · ${fd(p.from)} al ${fd(p.to)}`);
  if(vis){famOf(sid).forEach(x=>notify(x.id,`Nuevo ${doc.type.toLowerCase()} de ${short(UP(sid).name)}`));
   const to=famOf(sid).filter(x=>x.status==='activo').map(x=>x.id);
   if(to.length&&typeof mailNewId==='function')SB.rpc('mail_send',{p_id:mailNewId(),p_to:to,p_data:{subject:`${doc.type} de ${UP(sid).name.split(' ')[0]} · ${kind==='week'?`${fd(p.from)} al ${fd(p.to)}`:p.label.replace(' (mes en curso)','')}`,
    body:`Hola:\n\nYa está disponible el ${doc.type.toLowerCase()} de ${UP(sid).name.split(' ')[0]} con lo trabajado ${kind==='week'?'durante la semana':'durante el mes'}.\n\nPuedes leerlo y descargarlo en el campus, en la sección Documentos.\n\nCualquier consulta, con gusto la conversamos.\n\n${ui.user.name}`,files:[]},p_draft:false}).then(r=>{if(r&&r.error)console.warn(r.error.message);if(typeof mailLoad==='function')mailLoad(true)}).catch(()=>{})}
  save();ui.modal=null;toast(vis?'Informe guardado y compartido con la familia':'Informe guardado en Documentos (solo para el equipo)');render();
- if(w)reportWin32(w,sid,doc)};
+ if(showIt)reportView33(sid,doc)};
 
 // documento imprimible
 function reportHtml32(sid,doc){const r=doc.rep,c=CASE(sid)||{},k=UP(sid),f=c.ficha||{},pro=UP(r.by||c.prof),P=r.data||{},T=r.txt||{};const E=s=>esc(s||'');const inc=r.inc||[];
@@ -4096,8 +4095,7 @@ function reportHtml32(sid,doc){const r=doc.rep,c=CASE(sid)||{},k=UP(sid),f=c.fic
  h2{font-size:14px;color:#1F3B57;border-left:4px solid #A6B321;padding-left:8px;margin:18px 0 8px}table{width:100%;border-collapse:collapse;margin:6px 0}td,th{border:1px solid #c9d3db;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eef4f9;font-weight:600}
  .bar{height:9px;background:#e8eef3;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:#5A9BCF}.kp{display:flex;gap:10px}.kp div{flex:1;border:1px solid #c9d3db;border-radius:8px;padding:8px;text-align:center}.kp b{display:block;font-size:18px;color:#1F3B57}
  .pre{white-space:pre-wrap;margin:0}.sig{margin-top:40px;display:flex;justify-content:space-between;gap:30px}.sig div{flex:1;border-top:1px solid #1d2b36;padding-top:6px;text-align:center;font-size:11.5px}.conf{margin-top:22px;font-size:10px;color:#6b7b88;border-top:1px solid #dde3e8;padding-top:8px}
- .bar-top{background:#EEF4F9;padding:10px;text-align:center;font-family:Arial;font-size:13px}.bar-top button{margin-left:8px;padding:7px 14px;border-radius:8px;border:0;background:#4F93C7;color:#fff;font-weight:600;cursor:pointer}@media print{.noprint{display:none}}</style></head><body>
- <div class="noprint bar-top">Para guardarlo en PDF, toca “Imprimir / Guardar PDF” y elige “Guardar como PDF”. <button data-print="1">Imprimir / Guardar PDF</button></div>
+ .bar-top{background:#EEF4F9;padding:10px;text-align:center;font-family:Arial;font-size:13px}.bar-top button{margin-left:8px;padding:7px 14px;border-radius:8px;border:0;background:#4F93C7;color:#fff;font-weight:600;cursor:pointer}@media screen{body{padding:22px 24px}}@media screen and (max-width:520px){body{padding:16px 12px;font-size:12px}header img{height:44px}header h1{font-size:17px}.kp{flex-wrap:wrap}.kp div{flex:1 1 40%}}@media print{.noprint{display:none}}</style></head><body>
  <header><img src="${logo}" alt="EduPsi"><div class="t"><h1>${r.kind==='week'?'Informe semanal':'Informe mensual'} de lo trabajado</h1><p>EduPsi · Servicios en Educación y Psicopedagogía</p><p>Periodo: ${fdl(r.from)} al ${fdl(r.to)} · Emitido el ${fdl(String(doc.date))}</p></div></header>
  <table><tr><th style="width:28%">Estudiante</th><td>${E(k.name)}${f.birth&&typeof ageOf==='function'?` · ${ageOf(f.birth)}`:''}</td></tr>${f.school||f.level?`<tr><th>Centro educativo</th><td>${E([f.school,f.level].filter(Boolean).join(' · '))}</td></tr>`:''}<tr><th>Área de apoyo</th><td>${E(c.area)}</td></tr><tr><th>Profesional</th><td>${E(pro.name)}</td></tr>${ds[c.phase]?`<tr><th>Etapa del proceso</th><td>${E(ds[c.phase].n)}</td></tr>`:''}</table>
  ${inc.includes('asist')?`<h2>Asistencia del periodo</h2><div class="kp"><div><b>${(P.done||[]).length}</b>sesiones realizadas</div><div><b>${P.abs||0}</b>ausencias</div><div><b>${P.canc||0}</b>canceladas</div><div><b>${asis===null?'—':asis+' %'}</b>asistencia</div></div>`:''}
@@ -4113,12 +4111,111 @@ function reportHtml32(sid,doc){const r=doc.rep,c=CASE(sid)||{},k=UP(sid),f=c.fic
  <p class="conf">Documento confidencial. Contiene información protegida por la Ley N.° 8968. Su uso está limitado al acompañamiento del estudiante y no debe compartirse sin autorización de la familia.</p></body></html>`}
 function reportWin32(w,sid,doc){try{w.document.open();w.document.write(reportHtml32(sid,doc));w.document.close();w.document.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>w.print()))}catch(e){toast('No se pudo abrir el informe')}}
 // abrir un informe guardado (equipo y familia): se muestra listo para imprimir o guardar en PDF
-const _od32=ACT.opendoc;ACT.opendoc=d=>{const c=CASE(d.s);const doc=c&&(c.docs||[]).find(x=>x.id===d.id);if(doc&&doc.rep){const w=window.open('','_blank');if(!w){toast('Permite las ventanas emergentes para ver el informe');return}reportWin32(w,d.s,doc);try{log('Abrió informe',`${doc.t} · ${short(UP(d.s).name)}`);save()}catch(e){}return}return _od32(d)};
+const _od32=ACT.opendoc;ACT.opendoc=d=>{const c=CASE(d.s);const doc=c&&(c.docs||[]).find(x=>x.id===d.id);if(doc&&doc.rep){reportView33(d.s,doc);try{log('Abrió informe',`${doc.t} · ${short(UP(d.s).name)}`);save()}catch(e){}return}return _od32(d)};
 
 // botones en el expediente
 const _cv32=caseView;caseView=function(sid,family){let h=_cv32(sid,family);if(family||!canReport32(sid)||h.includes('data-a="periodreport"'))return h;
  const b=`<button class="btn sm" data-a="periodreport" data-s="${sid}" data-k="week">${ic('cal')}Informe semanal</button><button class="btn sm" data-a="periodreport" data-s="${sid}" data-k="month">${ic('chart')}Informe mensual</button>`;
  return h.includes('data-a="report"')?h.replace(/(<button class="btn sm" data-a="report")/,b+'$1').replace(/>([^<]*)Informe PDF</,'>$1Informe de avance<'):h.replace('<div class="tabs" role="tablist">',`<div class="row" style="margin:-4px 0 12px;gap:6px;flex-wrap:wrap">${b}</div><div class="tabs" role="tablist">`)};
+const PDFW33={r:[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584,350,556,350,222,556,333,1000,556,556,333,1000,667,333,1000,350,611,350,350,222,222,333,333,350,556,1000,333,1000,500,333,944,350,500,667,278,333,556,556,556,556,260,556,333,737,370,556,584,333,737,333,400,584,333,333,333,556,537,278,333,333,365,556,834,834,834,611,667,667,667,667,667,667,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,500,556,556,556,556,278,278,278,278,556,556,556,556,556,556,556,584,611,556,556,556,556,500,556,500],b:[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584,350,556,350,278,556,500,1000,556,556,333,1000,667,333,1000,350,611,350,350,278,278,500,500,350,556,1000,333,1000,556,333,944,350,500,667,278,333,556,556,556,556,280,556,333,737,370,556,584,333,737,333,400,584,333,333,333,611,556,278,333,333,365,556,834,834,834,611,722,722,722,722,722,722,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,556,556,556,556,556,278,278,278,278,611,611,611,611,611,611,611,584,611,611,611,611,611,556,611,556]};
+// ===== EduPsi Campus · parte 33: visor de informes dentro del campus + PDF real (sirve en iPhone/app) =====
+const CP33={8364:128,8218:130,402:131,8222:132,8230:133,8224:134,8225:135,710:136,8240:137,352:138,8249:139,338:140,381:142,8216:145,8217:146,8220:147,8221:148,8226:149,8211:150,8212:151,732:152,8482:153,353:154,8250:155,339:156,382:158,376:159};
+function pdfEnc33(s){let o='';for(const ch of String(s==null?'':s)){const c=ch.codePointAt(0);if(c===9)o+=' ';else if((c>=32&&c<127)||(c>=160&&c<=255))o+=String.fromCharCode(c);else if(CP33[c])o+=String.fromCharCode(CP33[c]);else if(c===0x2010||c===0x2011||c===0x2212)o+='-';else if(c===0x202F||c===0x2009)o+=' ';else if(c>=0x1F000||(c>=0x2600&&c<0x2800)||c===0xFE0F||c===0x200D)continue;else o+='?'}return o}
+function pdfW33(s,z,b){const t=b?PDFW33.b:PDFW33.r;let w=0;for(let i=0;i<s.length;i++)w+=t[s.charCodeAt(i)-32]||556;return w*z/1000}
+function pdfWrap33(text,z,b,max){const out=[];String(text==null?'':text).replace(/\r/g,'').split('\n').forEach(par=>{const ws=pdfEnc33(par).split(' ');let line='';
+ ws.forEach(w=>{while(pdfW33(w,z,b)>max){let k=w.length;while(k>1&&pdfW33(w.slice(0,k),z,b)>max)k--;if(line){out.push(line);line=''}out.push(w.slice(0,k));w=w.slice(k)}
+  const t=line?line+' '+w:w;if(pdfW33(t,z,b)<=max)line=t;else{out.push(line);line=w}});out.push(line)});return out}
+const PC33={ink:'0.114 0.169 0.212',brand:'0.122 0.231 0.341',blue:'0.353 0.608 0.812',green:'0.651 0.702 0.129',muted:'0.357 0.420 0.471',line:'0.788 0.827 0.859',th:'0.933 0.957 0.976',track:'0.910 0.933 0.953'};
+function Pdf33(){const P={pages:[],cur:null,y:0,W:612,H:792,M:48,lh:1.42};const X0=P.M,CW=P.W-2*P.M;P.X0=X0;P.CW=CW;
+ const e=s=>s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');const n=v=>(+v).toFixed(2);
+ P.add=()=>{P.cur=[];P.pages.push(P.cur);P.y=P.H-P.M};P.add();
+ P.need=h=>{if(P.y-h<P.M+18){P.add();return true}return false};
+ P.text=(x,y,s,z,b,c)=>P.cur.push(`BT /${b?'F2':'F1'} ${z} Tf ${c||PC33.ink} rg ${n(x)} ${n(y)} Td (${e(s)}) Tj ET`);
+ P.fill=(x,y,w,h,c)=>P.cur.push(`${c} rg ${n(x)} ${n(y)} ${n(w)} ${n(h)} re f`);
+ P.box=(x,y,w,h,c,lw)=>P.cur.push(`${c||PC33.line} RG ${lw||0.6} w ${n(x)} ${n(y)} ${n(w)} ${n(h)} re S`);
+ P.hline=(x1,x2,y,c,lw)=>P.cur.push(`${c||PC33.line} RG ${lw||0.6} w ${n(x1)} ${n(y)} m ${n(x2)} ${n(y)} l S`);
+ P.para=(t,z,o)=>{o=o||{};z=z||10;const L=pdfWrap33(t,z,o.b,o.w||CW);L.forEach(l=>{P.need(z*P.lh);P.y-=z*P.lh;P.text(o.x||X0,P.y+z*0.28,l,z,o.b,o.c)})};
+ P.h2=t=>{P.need(52);P.y-=16;P.fill(X0,P.y-3,3.2,15,PC33.green);P.text(X0+9,P.y,pdfEnc33(t),12.5,true,PC33.brand);P.y-=9};
+ // tabla: cols = anchos relativos; head = encabezados o null; rows = celdas (texto o {bar:%,text})
+ P.table=(cols,head,rows,o)=>{o=o||{};const z=o.z||9.5,pad=5,tot=cols.reduce((a,b)=>a+b,0),ws=cols.map(c=>c/tot*CW);P.y-=4;
+  const draw=(cells,isHead)=>{const L=cells.map((c,i)=>{const t=c&&typeof c==='object'?c.text:c;return pdfWrap33(t,z,isHead||(o.thCol0&&i===0),ws[i]-2*pad)});
+   const bar=cells.some(c=>c&&typeof c==='object'&&c.bar!=null);let h=Math.max(...L.map(l=>l.length))*z*P.lh+2*pad+(bar?9:0);
+   if(P.need(h)&&head&&!isHead)draw(head,true);const top=P.y;let x=X0;
+   cells.forEach((c,i)=>{if(isHead||(o.thCol0&&i===0))P.fill(x,top-h,ws[i],h,PC33.th);P.box(x,top-h,ws[i],h);let yy=top-pad;
+    if(c&&typeof c==='object'&&c.bar!=null){const bw=ws[i]-2*pad;P.fill(x+pad,yy-6,bw,5,PC33.track);P.fill(x+pad,yy-6,bw*Math.max(0,Math.min(100,c.bar))/100,5,PC33.blue);yy-=9}
+    L[i].forEach(l=>{yy-=z*P.lh;P.text(x+pad,yy+z*0.3,l,z,isHead||(o.thCol0&&i===0),isHead?PC33.brand:PC33.ink)});x+=ws[i]});P.y=top-h};
+  if(head){P.need(z*P.lh*4+4*pad);draw(head,true)}rows.forEach(r=>draw(r,false));P.y-=4};
+ P.kpis=items=>{const h=46,g=8,w=(CW-g*(items.length-1))/items.length;P.need(h+8);P.y-=4;items.forEach((it,i)=>{const x=X0+i*(w+g);P.box(x,P.y-h,w,h);const v=pdfEnc33(it[0]),l=pdfEnc33(it[1]);
+  P.text(x+(w-pdfW33(v,16,true))/2,P.y-22,v,16,true,PC33.brand);P.text(x+(w-pdfW33(l,8.5))/2,P.y-36,l,8.5,false,PC33.muted)});P.y-=h+4};
+ P.out=(title,foot)=>{const objs=[];const add=s=>{objs.push(s);return objs.length};
+  add('');add('');add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+  const kids=[];const N=P.pages.length;P.pages.forEach((pg,i)=>{const f=pdfEnc33(`${foot} · Página ${i+1} de ${N}`);
+   const s=pg.concat([`${PC33.line} RG 0.5 w ${P.M} 34 m ${P.W-P.M} 34 l S`,`BT /F1 8 Tf ${PC33.muted} rg ${P.M} 22 Td (${e(f)}) Tj ET`]).join('\n');
+   const c=add(`<< /Length ${s.length} >>\nstream\n${s}\nendstream`);kids.push(add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${P.W} ${P.H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${c} 0 R >>`))});
+  objs[0]='<< /Type /Catalog /Pages 2 0 R >>';objs[1]=`<< /Type /Pages /Kids [${kids.map(k=>k+' 0 R').join(' ')}] /Count ${kids.length} >>`;
+  const info=add(`<< /Title (${e(pdfEnc33(title))}) /Author (EduPsi) /Producer (EduPsi Campus) >>`);
+  let out='%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';const off=[];objs.forEach((o,i)=>{off.push(out.length);out+=`${i+1} 0 obj\n${o}\nendobj\n`});
+  const xr=out.length;out+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+off.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objs.length+1} /Root 1 0 R /Info ${info} 0 R >>\nstartxref\n${xr}\n%%EOF`;
+  const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;return u};
+ return P}
+
+// el mismo contenido del informe, en PDF
+function reportPdf33(sid,doc){const r=doc.rep,c=CASE(sid)||{},k=UP(sid)||{},f=c.ficha||{},pro=UP(r.by||c.prof)||{},Pd=r.data||{},T=r.txt||{},inc=r.inc||[];
+ const ds=typeof phaseDefs==='function'?phaseDefs():[];const asis=Pd.done&&(Pd.done.length+Pd.abs)?Math.round(Pd.done.length/(Pd.done.length+Pd.abs)*100):null;
+ const P=Pdf33(),X0=P.X0,CW=P.CW;const kindT=r.kind==='week'?'Informe semanal':'Informe mensual';
+ // encabezado
+ P.y-=6;P.text(X0,P.y-14,pdfEnc33('EduPsi'),22,true,PC33.blue);const sub=pdfEnc33('Servicios en Educación y Psicopedagogía');P.text(X0+pdfW33(pdfEnc33('EduPsi'),22,true)+10,P.y-12,sub,9,false,PC33.muted);
+ P.y-=36;P.text(X0,P.y,pdfEnc33(kindT+' de lo trabajado'),17,true,PC33.brand);P.y-=16;
+ P.text(X0,P.y,pdfEnc33(`Periodo: ${fdl(r.from)} al ${fdl(r.to)} · Emitido el ${fdl(String(doc.date))}`),9.5,false,PC33.muted);P.y-=10;
+ P.fill(X0,P.y-2.5,CW,2.5,PC33.blue);P.y-=10;
+ const rows=[['Estudiante',(k.name||'')+(f.birth&&typeof ageOf==='function'?' · '+ageOf(f.birth):'')]];
+ if(f.school||f.level)rows.push(['Centro educativo',[f.school,f.level].filter(Boolean).join(' · ')]);rows.push(['Área de apoyo',c.area||'—'],['Profesional',pro.name||'—']);
+ if(ds[c.phase])rows.push(['Etapa del proceso',ds[c.phase].n]);P.table([28,72],null,rows,{thCol0:true,z:10});
+ const block=(t,v)=>{if(v&&String(v).trim()){P.h2(t);P.para(v,10.5)}};
+ if(inc.includes('asist')){P.h2('Asistencia del periodo');P.kpis([[String((Pd.done||[]).length),'sesiones realizadas'],[String(Pd.abs||0),'ausencias'],[String(Pd.canc||0),'canceladas'],[asis===null?'—':asis+' %','asistencia']])}
+ block('Síntesis del periodo',T.sint);
+ if(inc.includes('ses')&&(Pd.done||[]).length){P.h2('Lo que trabajamos');P.table([15,42,43],['Fecha','Qué trabajamos','Logros y observaciones'],Pd.done.map(x=>[fd(x.date),x.worked||'',x.ach||'']))}
+ block('Logros observados',T.logros);
+ const C=Pd.cond;if(inc.includes('cond')&&C&&(C.pos+C.neg)){P.h2('Registro de conducta');
+  P.para(`${C.pos} registro${C.pos===1?'':'s'} positivo${C.pos===1?'':'s'}${C.posAreas.length?` (${C.posAreas.join(', ')})`:''} · ${C.neg} por fortalecer${C.negAreas.length?` (${C.negAreas.join(', ')})`:''}.`,10.5);
+  if(C.items.length)P.table([15,22,63],['Fecha','Tipo','Situación'],C.items.map(x=>[fd(x.date),(x.type==='positivo'?'Positivo':'Por fortalecer')+(x.area?' · '+x.area:''),(x.txt||'')+(x.s?`\nEstrategia que funcionó: ${x.s}`:'')]))}
+ if(inc.includes('goals')&&(Pd.goals||[]).length){P.h2('Avance de objetivos');P.table([22,52,26],['Área','Objetivo','Avance'],Pd.goals.map(g=>[g.area||'',g.t||'',{bar:g.p,text:`${g.p} %${g.p>=100?' · Logrado':''}`}]))}
+ block('Aspectos por fortalecer',T.fort);block('Recomendaciones para casa',T.casa);
+ if(Pd.home&&Pd.home.n)P.para(`Tareas para casa del periodo: ${Pd.home.done} de ${Pd.home.n} completadas.`,9.5,{c:PC33.muted});
+ block(r.kind==='week'?'Próximos pasos para la próxima semana':'Próximos pasos para el siguiente mes',T.next);
+ // firmas
+ P.need(90);P.y-=56;const sw=(CW-40)/2;[[pro.name||'',typeof roleLabel==='function'?roleLabel(pro):'Profesional'],['Ana Carolina Hidalgo Madrigal','Dirección EduPsi']].forEach((s,i)=>{const x=X0+i*(sw+40);P.hline(x,x+sw,P.y,PC33.ink,0.7);
+  s.forEach((t,j)=>{const v=pdfEnc33(t);P.text(x+(sw-pdfW33(v,9.5,j===0))/2,P.y-13-j*12,v,9.5,j===0,j?PC33.muted:PC33.ink)})});P.y-=40;
+ P.need(40);P.y-=6;P.hline(X0,X0+CW,P.y,PC33.line,0.5);P.para('Documento confidencial. Contiene información protegida por la Ley N.° 8968. Su uso está limitado al acompañamiento del estudiante y no debe compartirse sin autorización de la familia.',8,{c:PC33.muted});
+ return P.out(`${doc.t} · ${k.name||''}`,`EduPsi · ${kindT} · ${k.name||''}`)}
+
+function pdfName33(sid,doc){const k=UP(sid)||{};return (`${doc.type||'Informe'} ${k.name||''} ${doc.rep&&doc.rep.from||''}`).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-')+'.pdf'}
+function pdfSave33(bytes,name){const file=new File([bytes],name,{type:'application/pdf'});
+ const dl=()=>{const u=URL.createObjectURL(file);const a=document.createElement('a');a.href=u;a.download=name;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)};
+ const touch=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+ try{if(touch&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:name.replace(/\.pdf$/,'')}).catch(e=>{if(!e||e.name!=='AbortError')dl()});return}}catch(e){}
+ dl();toast('PDF descargado')}
+
+// visor a pantalla completa dentro del campus (sin ventanas nuevas)
+function reportClose33(){const o=document.getElementById('rep33');if(o){o.remove();document.documentElement.style.overflow='';document.removeEventListener('keydown',rep33Key)}}
+function rep33Key(e){if(e.key==='Escape')reportClose33()}
+function reportView33(sid,doc){reportClose33();const ov=document.createElement('div');ov.id='rep33';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label',doc.t||'Informe');
+ ov.innerHTML=`<div class="rep33-bar"><button type="button" class="btn ghost" data-r33="close">${ic('x')}Cerrar</button><span class="rep33-t">${esc(doc.t||'Informe')}</span><button type="button" class="btn ghost rep33-print" data-r33="print">Imprimir</button><button type="button" class="btn pri" data-r33="pdf">${ic('download')}Descargar PDF</button></div><div class="rep33-sc"><iframe sandbox="allow-same-origin allow-modals" title="${esc(doc.t||'Informe')}"></iframe></div>`;
+ document.body.appendChild(ov);document.documentElement.style.overflow='hidden';document.addEventListener('keydown',rep33Key);
+ const fr=ov.querySelector('iframe');const fit=()=>{try{const d=fr.contentDocument;if(d&&d.documentElement)fr.style.height=(d.documentElement.scrollHeight+8)+'px'}catch(e){}};
+ fr.addEventListener('load',()=>{fit();try{fr.contentDocument.querySelectorAll('img').forEach(i=>i.addEventListener('load',fit))}catch(e){}setTimeout(fit,400)});
+ fr.srcdoc=reportHtml32(sid,doc);
+ ov.addEventListener('click',e=>{const b=e.target.closest('[data-r33]');if(!b)return;const a=b.dataset.r33;
+  if(a==='close')reportClose33();
+  else if(a==='print'){try{fr.contentWindow.focus();fr.contentWindow.print()}catch(err){toast('Usa “Descargar PDF” para guardarlo o imprimirlo')}}
+  else if(a==='pdf'){try{pdfSave33(reportPdf33(sid,doc),pdfName33(sid,doc))}catch(err){console.warn(err);toast('No se pudo crear el PDF')}}});
+ setTimeout(()=>{const b=ov.querySelector('[data-r33="close"]');if(b)b.focus()},30)}
+(function(){const st=document.createElement('style');st.textContent=`#rep33{position:fixed;inset:0;z-index:95;background:var(--bg,#F3F6F9);display:flex;flex-direction:column}
+.rep33-bar{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--surface,#fff);border-bottom:1px solid var(--line,#dde3e8);box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.rep33-t{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rep33-sc{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px 10px calc(env(safe-area-inset-bottom,0px) + 18px)}
+#rep33 iframe{display:block;width:100%;max-width:840px;min-height:70vh;margin:0 auto;border:0;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+@media (pointer:coarse){.rep33-print{display:none}}@media (max-width:600px){.rep33-t{display:none}.rep33-bar .btn.pri{margin-left:auto}}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
