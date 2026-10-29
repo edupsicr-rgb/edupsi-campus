@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-U4Dtd0vWOK7zriEfk5ULd7PJ8FEcvrIy2C5QYZJfQ6A='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-vhfeZGz1ddc9BqhA2Kfh4S67bKCR8bPOanELZLrSdQw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4363,6 +4363,30 @@ const _render35=render;render=function(){_render35();try{footInsert35()}catch(e)
 .foot35 nav{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.foot35 nav button,.foot35 nav a{background:none;border:0;padding:2px 0;font:inherit;color:var(--muted);cursor:pointer;text-decoration:none}.foot35 nav button:hover,.foot35 nav a:hover{color:var(--brand-ink);text-decoration:underline}
 #app > .foot35,.login-form > .foot35{border-top:0;background:transparent;padding-bottom:26px}.login-form > .foot35{margin-top:28px;padding-top:0}.contact35 .btn{justify-content:center;text-decoration:none}.legal35 p{margin:0 0 12px;line-height:1.6}.legal35 b{color:var(--ink)}
 @media (max-width:700px){.foot35{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 90px)}}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 36: menú y barra superior en celeste EduPsi con letras oscuras; favoritos con iconos de colores =====
+(function(){const st=document.createElement('style');st.textContent=`
+:root:not([data-theme="dark"]){--nav-bg:#DCEEF9;--nav-fg:#1D2B36;--nav-muted:#4E6577}
+:root:not([data-theme="dark"]) .campus .side{border-right:1px solid #C7E0F2}
+:root:not([data-theme="dark"]) .campus .side .brand{border-bottom:2px solid #B9D8EE}
+:root:not([data-theme="dark"]) .campus .brandcard{box-shadow:0 4px 14px rgba(31,59,87,.10)}
+:root:not([data-theme="dark"]) .campus .nav button:hover{background:rgba(255,255,255,.65);color:#1D2B36}
+:root:not([data-theme="dark"]) .campus .nav button.on{background:#fff;color:#1F3B57;font-weight:600;box-shadow:inset 3px 0 0 var(--leaf),0 2px 8px rgba(31,59,87,.08)}
+:root:not([data-theme="dark"]) .campus .nav .badge{color:#fff}
+:root:not([data-theme="dark"]) .campus .side-foot{border-top:1px solid #C7E0F2}
+:root:not([data-theme="dark"]) .campus .side-foot .who b{color:#1D2B36}
+:root:not([data-theme="dark"]) .campus .side-foot .iconbtn{background:#fff;border-color:#B9D8EE;color:#1F3B57}
+:root:not([data-theme="dark"]) .campus .top{color:#1D2B36;border-bottom:1px solid #C7E0F2}
+:root:not([data-theme="dark"]) .campus .top .orgname{color:#1D2B36}
+:root:not([data-theme="dark"]) .campus .top .search{border:1px solid #C7E0F2}
+:root:not([data-theme="dark"]) .campus .top .iconbtn{background:#fff;border-color:#C7E0F2;color:#1F3B57}
+:root:not([data-theme="dark"]) .campus .top .burger{color:#1D2B36;border-color:#9FC3DE}
+:root:not([data-theme="dark"]) .campus #savestate{background:#fff;color:#1F3B57}
+.fav34-c{padding:14px}.fav34-c .ic{width:44px;height:44px}
+.fav34-c.k0 .ic{background:#E3F0FA;color:#3C7DB4}.fav34-c.k1 .ic{background:#EEF3D6;color:#6E7C12}.fav34-c.k2 .ic{background:#FDF0DA;color:#B7741A}.fav34-c.k3 .ic{background:#EFE7F8;color:#7B55A8}
+.fav34-c.k4 .ic{background:#DFF3F1;color:#2D8279}.fav34-c.k5 .ic{background:#FBE6E3;color:#B5503F}.fav34-c.k6 .ic{background:#E6ECF5;color:#3F5B82}.fav34-c.k7 .ic{background:#F4EFD9;color:#8A7420}
+@media (max-width:700px){.fav34-c{padding:12px}}`;document.head.appendChild(st)})();
+// favoritos: cada tarjeta con su propio icono y color, sin estrellas
+favHtml34=(function(prev){return function(){return prev().replace(/<span class="st" aria-hidden="true">[\s\S]*?<\/span>(?=<\/button>)/g,'').replace(/class="fav34-c"/g,(()=>{let i=0;return ()=>`class="fav34-c k${(i++)%8}"`})())}})(favHtml34);
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
