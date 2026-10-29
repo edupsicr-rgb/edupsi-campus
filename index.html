@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-xMRGn1SFPbe/b6R69cADzfLDxOLOMkZ7JmMC51W8ZSs='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-6OD5oo4oO2R44b6D5PIAZJtzRTcmVDhBVzKtOd4OD7A='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4011,6 +4011,111 @@ const _ab31=afterBoot;afterBoot=function(acct){_ab31(acct);MAIL.loaded=false;MAI
 const _lo31=ACT.logout;ACT.logout=async(...a)=>{MAIL.rows=[];MAIL.loaded=false;MAIL.sel=null;MAIL.draft=null;return _lo31(...a)};
 setInterval(()=>{if(ui.user&&!document.hidden&&!(ui.modal&&ui.modal.form==='mailsend'))mailLoad(true)},60000);
 const _render31=render;render=function(){_render31();try{mailDecorate();mailSearchDecorate()}catch(e){}};
+// ===== EduPsi Campus · Informes semanales y mensuales de lo trabajado =====
+// La profesional genera el informe desde el expediente: el campus arma el borrador con lo registrado en el periodo
+// (sesiones, logros, conducta, objetivos y tareas para casa), ella lo revisa y completa, y se guarda en Documentos.
+// Si se comparte, la familia lo ve en su portal y recibe un aviso en el buzón y por correo.
+const MESL32=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function d32(s){const [y,m,d]=String(s).slice(0,10).split('-').map(Number);return new Date(Date.UTC(y,m-1,d))}
+function iso32(dt){return dt.toISOString().slice(0,10)}
+function addDays32(s,n){const d=d32(s);d.setUTCDate(d.getUTCDate()+n);return iso32(d)}
+function weekStart32(s){const d=d32(s);const wd=(d.getUTCDay()+6)%7;d.setUTCDate(d.getUTCDate()-wd);return iso32(d)}
+function periods32(kind){const out=[];if(kind==='week'){let w=weekStart32(TODAY);for(let i=0;i<8;i++){const from=w,to=addDays32(w,6);out.push({from,to,label:(i===0?'Esta semana · ':i===1?'Semana anterior · ':'')+`${fd(from)} al ${fd(to)}`});w=addDays32(w,-7)}}
+ else{let [y,m]=TODAY.slice(0,7).split('-').map(Number);for(let i=0;i<8;i++){const from=`${y}-${String(m).padStart(2,'0')}-01`;const last=new Date(Date.UTC(y,m,0)).getUTCDate();const to=`${y}-${String(m).padStart(2,'0')}-${last}`;
+  out.push({from,to,label:`${MESL32[m-1][0].toUpperCase()+MESL32[m-1].slice(1)} ${y}${i===0?' (mes en curso)':''}`});m--;if(!m){m=12;y--}}}return out}
+function canReport32(sid){const u=ui.user,c=CASE(sid);if(!u||!c||isLimited(u))return false;return isAdminU(u)||c.prof===u.id||((c.team||[]).includes(u.id)&&u.role==='teacher')}
+function inP(x,from,to){const d=String(x||'').slice(0,10);return d>=from&&d<=to}
+
+// datos del periodo
+function periodData32(sid,from,to){const c=CASE(sid)||{};const ses=(c.sessions||[]).filter(x=>inP(x.date,from,to));
+ const done=ses.filter(x=>x.status==='Realizada').sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+ const abs=ses.filter(x=>['Ausente','No realizada','No asistió'].includes(x.status)).length,canc=ses.filter(x=>x.status==='Cancelada').length,next=ses.filter(x=>x.status==='Programada').length;
+ const cond=(c.conduct||[]).filter(x=>inP(x.date,from,to));const pos=cond.filter(x=>x.type==='positivo'),neg=cond.filter(x=>x.type!=='positivo');
+ const areas=a=>{const m={};a.forEach(x=>{if(x.area)m[x.area]=(m[x.area]||0)+1});return Object.entries(m).sort((p,q)=>q[1]-p[1]).map(([k,n])=>k+(n>1?` (${n})`:''))};
+ const home=(c.home||[]).filter(h=>inP(h.due,from,to)||inP(h.at,from,to));const homeDone=home.filter(h=>h.done).length;
+ const goals=(c.goals||[]).map(g=>({area:g.area,t:g.t,p:+g.p||0}));
+ return {done:done.map(x=>({date:String(x.date).slice(0,10),mode:x.mode||'',worked:x.worked||'',ach:x.ach||'',home:x.home||''})),abs,canc,next,
+  cond:{pos:pos.length,neg:neg.length,posAreas:areas(pos),negAreas:areas(neg),items:cond.slice(-6).map(x=>({date:String(x.date).slice(0,10),type:x.type,area:x.area||'',txt:x.abc?(x.abc.b||''):(x.note||''),s:x.abc?x.abc.s||'':''}))},
+  home:{n:home.length,done:homeDone,list:home.map(h=>({t:h.t,done:!!h.done}))},goals}}
+function draftTexts32(sid,kind,P,pr){const k=UP(sid),n=k.name.split(' ')[0];const cur=pr&&TODAY>=pr.from&&TODAY<=pr.to;const per=kind==='week'?(cur?'esta semana':`la semana del ${fd(pr.from)} al ${fd(pr.to)}`):(cur?'este mes':MESL32[+pr.from.slice(5,7)-1]+' de '+pr.from.slice(0,4));
+ const temas=[...new Set(P.done.map(x=>String(x.worked).split(/\n|\.|;/)[0].trim()).filter(Boolean))].slice(0,5);
+ let sint=P.done.length?`Durante ${per}, ${n} participó en ${P.done.length} sesi${P.done.length===1?'ón':'ones'} de acompañamiento psicopedagógico.`:`Durante ${per} no hubo sesiones realizadas con ${n}.`;if(temas.length)sint+=` Trabajamos: ${temas.join('; ')}.`;
+ if(P.cond.pos)sint+=` Se registraron ${P.cond.pos} conducta${P.cond.pos===1?'':'s'} positiva${P.cond.pos===1?'':'s'}${P.cond.posAreas.length?` (${P.cond.posAreas.join(', ')})`:''}.`;
+ if(P.home.n)sint+=` Completó ${P.home.done} de ${P.home.n} tarea${P.home.n===1?'':'s'} para casa.`;
+ const logros=P.done.map(x=>x.ach).filter(Boolean).map(t=>'• '+String(t).trim()).slice(-6).join('\n');
+ const fort=P.cond.negAreas.length?`• Seguiremos acompañando: ${P.cond.negAreas.join(', ')}.`:'';
+ const casa=[...new Set(P.done.map(x=>x.home).filter(Boolean).map(t=>'• '+String(t).trim()))].slice(-5).join('\n');
+ return {sint,logros,fort,casa}}
+
+// formulario
+ACT.periodreport=d=>{const sid=d.s,kind=d.k==='month'?'month':'week';if(!canReport32(sid)){toast('Solo la profesional a cargo puede generar este informe');return}const ps=periods32(kind);const pi=Math.min(+(d.i||0),ps.length-1);const p=ps[pi];
+ const P=periodData32(sid,p.from,p.to);const T=draftTexts32(sid,kind,P,p);const k=UP(sid);const fam=famOf(sid);const ext=(CASE(sid).team||[]).some(t=>isLimited(U(t)));
+ const prev=(CASE(sid).docs||[]).find(x=>x.rep&&x.rep.kind===kind&&x.rep.from===p.from);
+ openModal({title:`Informe ${kind==='week'?'semanal':'mensual'} · ${k.name}`,form:'periodreport',ok:'Guardar informe',wide:true,body:`<input type="hidden" name="s" value="${sid}"><input type="hidden" name="k" value="${kind}"><div class="form">
+  <div class="field"><label for="pr0">Periodo</label><select id="pr0" name="i" class="inp" data-ch="prperiod" data-s="${sid}" data-k="${kind}">${ps.map((x,i)=>`<option value="${i}" ${i===pi?'selected':''}>${esc(x.label)}</option>`).join('')}</select>
+   ${prev?`<p class="small" style="color:#B7791F;margin-top:6px">Ya existe un informe de este periodo (${esc(prev.t)}). Si guardas, se creará uno nuevo.</p>`:''}</div>
+  <div class="card stack" style="background:var(--surface-2);gap:8px"><b>Lo que registró el equipo en el periodo</b>
+   <div class="row" style="gap:8px;flex-wrap:wrap"><span class="pill good">${P.done.length} sesión${P.done.length===1?'':'es'} realizada${P.done.length===1?'':'s'}</span>${P.abs?`<span class="pill warn">${P.abs} ausencia${P.abs===1?'':'s'}</span>`:''}${P.canc?`<span class="pill">${P.canc} cancelada${P.canc===1?'':'s'}</span>`:''}<span class="pill">${P.cond.pos+P.cond.neg} registro${P.cond.pos+P.cond.neg===1?'':'s'} de conducta</span><span class="pill">${P.home.done}/${P.home.n} tareas para casa</span></div>
+   ${P.done.length?`<ul class="small" style="margin:0;padding-left:18px">${P.done.map(x=>`<li><b>${fd(x.date)}:</b> ${esc(String(x.worked||'Sesión realizada').slice(0,140))}</li>`).join('')}</ul>`:'<p class="small muted">No hay sesiones realizadas en este periodo. Puedes escribir el informe igualmente.</p>'}</div>
+  <div class="field"><label for="pr1">Síntesis del periodo</label><textarea id="pr1" name="sint" class="inp" rows="5" maxlength="4000">${esc(T.sint)}</textarea></div>
+  <div class="field"><label for="pr2">Logros observados</label><textarea id="pr2" name="logros" class="inp" rows="4" maxlength="4000" placeholder="• ...">${esc(T.logros)}</textarea></div>
+  <div class="field"><label for="pr3">Aspectos por fortalecer</label><textarea id="pr3" name="fort" class="inp" rows="3" maxlength="3000" placeholder="• ...">${esc(T.fort)}</textarea></div>
+  <div class="field"><label for="pr4">Recomendaciones para casa</label><textarea id="pr4" name="casa" class="inp" rows="4" maxlength="3000" placeholder="• ...">${esc(T.casa)}</textarea></div>
+  <div class="field"><label for="pr5">Próximos pasos ${kind==='month'?'para el siguiente mes':'para la próxima semana'}</label><textarea id="pr5" name="next" class="inp" rows="3" maxlength="3000" placeholder="Qué trabajaremos a continuación"></textarea></div>
+  <div class="field"><label>Incluir en el informe</label>${[['asist','Resumen de asistencia'],['ses','Detalle de sesiones'],['goals','Avance de objetivos'],['cond','Registro de conducta']].map(([v,l])=>`<label class="check"><input type="checkbox" name="inc" value="${v}" ${v==='cond'&&!(P.cond.pos+P.cond.neg)?'':'checked'}> ${l}</label>`).join('')}</div>
+  <div class="field"><label>Compartir</label><label class="check"><input type="checkbox" name="vis" value="1" ${fam.length?'checked':'disabled'}> Compartir con la familia${fam.length?` (${esc(fam.map(f=>short(f.name)).join(', '))}) y avisarle por el buzón y el correo`:' (no hay familia vinculada)'}</label>
+   ${ext?`<label class="check"><input type="checkbox" name="ext" value="1"> Compartir también con el equipo externo del centro educativo</label>`:''}
+   <label class="check"><input type="checkbox" name="pdf" value="1" checked> Abrir el informe para descargarlo en PDF</label></div></div>`})};
+CH.prperiod=el=>{ACT.periodreport({s:el.dataset.s,k:el.dataset.k,i:el.value})};
+
+FORMS.periodreport=fd_=>{const sid=fd_.get('s'),kind=fd_.get('k')==='month'?'month':'week';const p=periods32(kind)[+fd_.get('i')||0];const c=CASE(sid);if(!c||!p)return;
+ const P=periodData32(sid,p.from,p.to);const vis=!!fd_.get('vis')&&famOf(sid).length>0;
+ const rep={kind,from:p.from,to:p.to,by:ui.user.id,at:nowStr(),inc:fd_.getAll('inc'),data:P,txt:{sint:fd_.get('sint')||'',logros:fd_.get('logros')||'',fort:fd_.get('fort')||'',casa:fd_.get('casa')||'',next:fd_.get('next')||''}};
+ const title=`Informe ${kind==='week'?'semanal':'mensual'} · ${kind==='week'?`${fd(p.from)} al ${fd(p.to)}`:p.label.replace(' (mes en curso)','')}`;
+ const doc={id:nid('d'),t:title,type:kind==='week'?'Informe semanal':'Informe mensual',date:TODAY,size:'—',vis,ext:!!fd_.get('ext'),rep};
+ // la ventana se abre antes de cualquier espera para que el navegador no la bloquee
+ let w=null;if(fd_.get('pdf')){w=window.open('','_blank');if(!w)toast('Permite las ventanas emergentes para descargar el PDF')}
+ (c.docs=c.docs||[]).unshift(doc);log(`Generó ${doc.type.toLowerCase()}`,`${UP(sid).name} · ${fd(p.from)} al ${fd(p.to)}`);
+ if(vis){famOf(sid).forEach(x=>notify(x.id,`Nuevo ${doc.type.toLowerCase()} de ${short(UP(sid).name)}`));
+  const to=famOf(sid).filter(x=>x.status==='activo').map(x=>x.id);
+  if(to.length&&typeof mailNewId==='function')SB.rpc('mail_send',{p_id:mailNewId(),p_to:to,p_data:{subject:`${doc.type} de ${UP(sid).name.split(' ')[0]} · ${kind==='week'?`${fd(p.from)} al ${fd(p.to)}`:p.label.replace(' (mes en curso)','')}`,
+   body:`Hola:\n\nYa está disponible el ${doc.type.toLowerCase()} de ${UP(sid).name.split(' ')[0]} con lo trabajado ${kind==='week'?'durante la semana':'durante el mes'}.\n\nPuedes leerlo y descargarlo en el campus, en la sección Documentos.\n\nCualquier consulta, con gusto la conversamos.\n\n${ui.user.name}`,files:[]},p_draft:false}).then(r=>{if(r&&r.error)console.warn(r.error.message);if(typeof mailLoad==='function')mailLoad(true)}).catch(()=>{})}
+ save();ui.modal=null;toast(vis?'Informe guardado y compartido con la familia':'Informe guardado en Documentos (solo para el equipo)');render();
+ if(w)reportWin32(w,sid,doc)};
+
+// documento imprimible
+function reportHtml32(sid,doc){const r=doc.rep,c=CASE(sid)||{},k=UP(sid),f=c.ficha||{},pro=UP(r.by||c.prof),P=r.data||{},T=r.txt||{};const E=s=>esc(s||'');const inc=r.inc||[];
+ const logo=new URL('logo.png',location.href).href;const ds=typeof phaseDefs==='function'?phaseDefs():[];const asis=P.done&&(P.done.length+P.abs)?Math.round(P.done.length/(P.done.length+P.abs)*100):null;
+ const block=(t,v)=>v&&String(v).trim()?`<h2>${t}</h2><p class="pre">${E(v)}</p>`:'';
+ return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${E(doc.t)} · ${E(k.name)}</title><style>
+ @page{size:letter;margin:18mm 16mm}body{font-family:'Century Gothic',Poppins,Arial,sans-serif;color:#1d2b36;font-size:12.5px;line-height:1.55;margin:0;padding:0 4px}
+ header{display:flex;align-items:center;gap:16px;border-bottom:3px solid #5A9BCF;padding-bottom:12px;margin-bottom:16px}header img{height:62px}header .t{flex:1}header h1{font-size:20px;margin:0;color:#1F3B57}header p{margin:2px 0;color:#5b6b78;font-size:11.5px}
+ h2{font-size:14px;color:#1F3B57;border-left:4px solid #A6B321;padding-left:8px;margin:18px 0 8px}table{width:100%;border-collapse:collapse;margin:6px 0}td,th{border:1px solid #c9d3db;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eef4f9;font-weight:600}
+ .bar{height:9px;background:#e8eef3;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:#5A9BCF}.kp{display:flex;gap:10px}.kp div{flex:1;border:1px solid #c9d3db;border-radius:8px;padding:8px;text-align:center}.kp b{display:block;font-size:18px;color:#1F3B57}
+ .pre{white-space:pre-wrap;margin:0}.sig{margin-top:40px;display:flex;justify-content:space-between;gap:30px}.sig div{flex:1;border-top:1px solid #1d2b36;padding-top:6px;text-align:center;font-size:11.5px}.conf{margin-top:22px;font-size:10px;color:#6b7b88;border-top:1px solid #dde3e8;padding-top:8px}
+ .bar-top{background:#EEF4F9;padding:10px;text-align:center;font-family:Arial;font-size:13px}.bar-top button{margin-left:8px;padding:7px 14px;border-radius:8px;border:0;background:#4F93C7;color:#fff;font-weight:600;cursor:pointer}@media print{.noprint{display:none}}</style></head><body>
+ <div class="noprint bar-top">Para guardarlo en PDF, toca “Imprimir / Guardar PDF” y elige “Guardar como PDF”. <button data-print="1">Imprimir / Guardar PDF</button></div>
+ <header><img src="${logo}" alt="EduPsi"><div class="t"><h1>${r.kind==='week'?'Informe semanal':'Informe mensual'} de lo trabajado</h1><p>EduPsi · Servicios en Educación y Psicopedagogía</p><p>Periodo: ${fdl(r.from)} al ${fdl(r.to)} · Emitido el ${fdl(String(doc.date))}</p></div></header>
+ <table><tr><th style="width:28%">Estudiante</th><td>${E(k.name)}${f.birth&&typeof ageOf==='function'?` · ${ageOf(f.birth)}`:''}</td></tr>${f.school||f.level?`<tr><th>Centro educativo</th><td>${E([f.school,f.level].filter(Boolean).join(' · '))}</td></tr>`:''}<tr><th>Área de apoyo</th><td>${E(c.area)}</td></tr><tr><th>Profesional</th><td>${E(pro.name)}</td></tr>${ds[c.phase]?`<tr><th>Etapa del proceso</th><td>${E(ds[c.phase].n)}</td></tr>`:''}</table>
+ ${inc.includes('asist')?`<h2>Asistencia del periodo</h2><div class="kp"><div><b>${(P.done||[]).length}</b>sesiones realizadas</div><div><b>${P.abs||0}</b>ausencias</div><div><b>${P.canc||0}</b>canceladas</div><div><b>${asis===null?'—':asis+' %'}</b>asistencia</div></div>`:''}
+ ${block('Síntesis del periodo',T.sint)}
+ ${inc.includes('ses')&&(P.done||[]).length?`<h2>Lo que trabajamos</h2><table><tr><th style="width:15%">Fecha</th><th>Qué trabajamos</th><th>Logros y observaciones</th></tr>${P.done.map(x=>`<tr><td>${fd(x.date)}</td><td class="pre">${E(x.worked)}</td><td class="pre">${E(x.ach)}</td></tr>`).join('')}</table>`:''}
+ ${block('Logros observados',T.logros)}
+ ${inc.includes('cond')&&P.cond&&(P.cond.pos+P.cond.neg)?`<h2>Registro de conducta</h2><p>${P.cond.pos} registro${P.cond.pos===1?'':'s'} positivo${P.cond.pos===1?'':'s'}${P.cond.posAreas.length?` (${E(P.cond.posAreas.join(', '))})`:''} · ${P.cond.neg} por fortalecer${P.cond.negAreas.length?` (${E(P.cond.negAreas.join(', '))})`:''}.</p>${P.cond.items.length?`<table><tr><th style="width:15%">Fecha</th><th style="width:20%">Tipo</th><th>Situación</th></tr>${P.cond.items.map(x=>`<tr><td>${fd(x.date)}</td><td>${x.type==='positivo'?'Positivo':'Por fortalecer'}${x.area?' · '+E(x.area):''}</td><td>${E(x.txt)}${x.s?`<br><i>Estrategia que funcionó: ${E(x.s)}</i>`:''}</td></tr>`).join('')}</table>`:''}`:''}
+ ${inc.includes('goals')&&(P.goals||[]).length?`<h2>Avance de objetivos</h2><table><tr><th style="width:22%">Área</th><th>Objetivo</th><th style="width:26%">Avance</th></tr>${P.goals.map(g=>`<tr><td>${E(g.area)}</td><td>${E(g.t)}</td><td><div class="bar"><i style="width:${g.p}%"></i></div>${g.p} %${g.p>=100?' · Logrado':''}</td></tr>`).join('')}</table>`:''}
+ ${block('Aspectos por fortalecer',T.fort)}
+ ${block('Recomendaciones para casa',T.casa)}${P.home&&P.home.n?`<p class="small">Tareas para casa del periodo: ${P.home.done} de ${P.home.n} completadas.</p>`:''}
+ ${block(r.kind==='week'?'Próximos pasos para la próxima semana':'Próximos pasos para el siguiente mes',T.next)}
+ <div class="sig"><div>${E(pro.name)}<br>${E(typeof roleLabel==='function'?roleLabel(pro):'Profesional')}</div><div>Ana Carolina Hidalgo Madrigal<br>Dirección EduPsi</div></div>
+ <p class="conf">Documento confidencial. Contiene información protegida por la Ley N.° 8968. Su uso está limitado al acompañamiento del estudiante y no debe compartirse sin autorización de la familia.</p></body></html>`}
+function reportWin32(w,sid,doc){try{w.document.open();w.document.write(reportHtml32(sid,doc));w.document.close();w.document.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>w.print()))}catch(e){toast('No se pudo abrir el informe')}}
+// abrir un informe guardado (equipo y familia): se muestra listo para imprimir o guardar en PDF
+const _od32=ACT.opendoc;ACT.opendoc=d=>{const c=CASE(d.s);const doc=c&&(c.docs||[]).find(x=>x.id===d.id);if(doc&&doc.rep){const w=window.open('','_blank');if(!w){toast('Permite las ventanas emergentes para ver el informe');return}reportWin32(w,d.s,doc);try{log('Abrió informe',`${doc.t} · ${short(UP(d.s).name)}`);save()}catch(e){}return}return _od32(d)};
+
+// botones en el expediente
+const _cv32=caseView;caseView=function(sid,family){let h=_cv32(sid,family);if(family||!canReport32(sid)||h.includes('data-a="periodreport"'))return h;
+ const b=`<button class="btn sm" data-a="periodreport" data-s="${sid}" data-k="week">${ic('cal')}Informe semanal</button><button class="btn sm" data-a="periodreport" data-s="${sid}" data-k="month">${ic('chart')}Informe mensual</button>`;
+ return h.includes('data-a="report"')?h.replace(/(<button class="btn sm" data-a="report")/,b+'$1').replace(/>([^<]*)Informe PDF</,'>$1Informe de avance<'):h.replace('<div class="tabs" role="tablist">',`<div class="row" style="margin:-4px 0 12px;gap:6px;flex-wrap:wrap">${b}</div><div class="tabs" role="tablist">`)};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
