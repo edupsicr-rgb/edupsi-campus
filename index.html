@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-r3cepbe0ZQnbWMX40VE9LxrWbcR3aDxC1MWOuHlV8j0='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-DlZbsn0u43jLHt0gUCI3/Jckj7tSFOgLKSOOHmM29kE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-29g';
+const BUILD38='2026-10-29h';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4485,6 +4485,43 @@ installCard=(function(prev){return function(){let off=false;try{off=localStorage
  const b=browser40();if(!PWA.ev&&!b.ios&&!b.android)return prev();
  return `<div class="card row" style="justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap"><div class="row" style="gap:12px;flex:1;min-width:200px"><img src="emblem.png" alt="" style="width:44px;height:44px;border-radius:12px"><div><b>Instala la app EduPsi</b><div class="small muted">Ábrela desde tu pantalla de inicio, como cualquier app.</div></div></div><div class="row" style="gap:6px"><button class="btn sm pri" data-a="installapp">${PWA.ev?'Instalar':'Ver cómo'}</button><button class="btn sm ghost" data-a="noinstall" aria-label="No mostrar más">${ic('x')}</button></div></div>`}})(installCard);
 (function(){const st=document.createElement('style');st.textContent=`.inst40-s{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;line-height:1.5}.inst40-s li::marker{font-weight:700;color:var(--brand-ink)}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 41: dar de baja a una profesional (reasignar estudiantes, sesiones y cursos, y bloquear su acceso) =====
+function casesOf41(pid){return Object.keys(S.cases).filter(s=>CASE(s)&&CASE(s).prof===pid&&U(s))}
+function coursesOf41(pid){return (S.courses||[]).filter(c=>c.teacher===pid)}
+function others41(pid){return S.users.filter(u=>(u.role==='teacher'||u.role==='superadmin')&&u.status==='activo'&&u.id!==pid&&!u._ro)}
+function optsFor41(pid,sel){return others41(pid).map(u=>`<option value="${u.id}" ${u.id===sel?'selected':''}>${u.id===ui.user.id?'Yo ('+esc(short(u.name))+')':esc(u.name)}</option>`).join('')}
+ACT.probaja41=d=>{const p=U(d.id);if(!p||ui.user.role!=='superadmin')return;const ks=casesOf41(p.id),cs=coursesOf41(p.id);const def=ui.user.id;
+ const futureN=ks.reduce((a,s)=>a+((CASE(s).sessions)||[]).filter(x=>x.status==='Programada'&&String(x.date).slice(0,10)>=TODAY).length,0);
+ openModal({title:'Dar de baja a '+short(p.name),form:'probaja41',ok:'Dar de baja',wide:true,body:`<input type="hidden" name="id" value="${p.id}"><div class="stack">
+ <div class="row" style="gap:12px">${av(p,'lg')}<div><b>${esc(p.name)}</b><div class="small muted">${esc(p.email||'')}</div></div></div>
+ <p class="small" style="margin:0">Al darla de baja <b>ya no podrá entrar al campus</b>. Su nombre se conserva en las bitácoras, informes y mensajes que hizo, y puedes reactivarla cuando quieras.</p>
+ ${ks.length?`<div class="field"><label for="b41all">Pasar sus ${ks.length} estudiante${ks.length===1?'':'s'} a</label><select id="b41all" class="inp" data-ch="b41all">${optsFor41(p.id,def)}</select><p class="small muted" style="margin:4px 0 0">Si prefieres, cambia la profesional de cada estudiante en la lista.</p></div>
+ <div class="list b41-list">${ks.map(s=>`<div class="it"><div class="who" style="flex:1;min-width:180px">${av(U(s))}<div><b>${esc(U(s).name)}</b><span>${esc(CASE(s).area||'')}</span></div></div><select class="inp b41-sel" name="k_${s}" aria-label="Nueva profesional de ${esc(U(s).name)}" style="width:auto;min-width:200px">${optsFor41(p.id,def)}</select></div>`).join('')}</div>
+ ${futureN?`<p class="small muted" style="margin:0">${futureN} sesi${futureN===1?'ón agendada pasa':'ones agendadas pasan'} a la nueva profesional de cada estudiante, con la misma fecha y hora.</p>`:''}
+ <label class="check"><input type="checkbox" name="fam" value="1" checked> Avisar a las familias del cambio de profesional (aviso en el campus y en su buzón)</label>`:'<p class="small muted" style="margin:0">No tiene estudiantes a cargo.</p>'}
+ ${cs.length?`<label class="check"><input type="checkbox" name="crs" value="1" checked> Pasar también sus ${cs.length} curso${cs.length===1?'':'s'} (${esc(cs.map(c=>c.title).join(', ').slice(0,90))}) a</label><select class="inp" name="crsto" aria-label="Nueva profesional de los cursos">${optsFor41(p.id,def)}</select>`:''}
+ </div>`})};
+CH.b41all=el=>{document.querySelectorAll('.b41-sel').forEach(s=>s.value=el.value)};
+FORMS.probaja41=fd_=>{const p=U(fd_.get('id'));if(!p)return;const ks=casesOf41(p.id),moved=[];
+ ks.forEach(s=>{const to=fd_.get('k_'+s);if(!to||to===p.id||!U(to))return;const c=CASE(s);c.prof=to;
+  (c.sessions||[]).forEach(x=>{if(x.status==='Programada'&&String(x.date).slice(0,10)>=TODAY&&(!x.prof||x.prof===p.id))x.prof=to});
+  moved.push([s,to]);notify(to,`Se te asignó el expediente de ${U(s).name}`)});
+ if(fd_.get('crs')){const to=fd_.get('crsto');if(to&&U(to))coursesOf41(p.id).forEach(c=>{c.teacher=to})}
+ p.status='bloqueado';
+ log('Dio de baja a una profesional',`${p.name} · ${moved.length} estudiante${moved.length===1?'':'s'} reasignado${moved.length===1?'':'s'}`);
+ if(fd_.get('fam'))moved.forEach(([s,to])=>{const np=UP(to).name,kid=U(s).name.split(' ')[0];const fs=famOf(s).filter(x=>x.status==='activo');
+  fs.forEach(x=>notify(x.id,`A partir de ahora ${np} acompañará a ${kid} en EduPsi`));
+  if(fs.length&&typeof mailNewId==='function'&&typeof SB!=='undefined'&&SB)SB.rpc('mail_send',{p_id:mailNewId(),p_to:fs.map(x=>x.id),p_data:{subject:`Cambio de profesional de ${kid}`,body:`Hola:\n\nLes informamos que, a partir de ahora, ${np} acompañará el proceso de ${kid} en EduPsi. Tiene acceso a todo el expediente, así que el trabajo continúa sin interrupciones.\n\nSi tienen alguna consulta, con gusto la conversamos.\n\n${ui.user.name}`,files:[]},p_draft:false}).then(r=>{if(r&&r.error)console.warn(r.error.message)}).catch(()=>{})});
+ save();ui.modal=null;render();toast(`${short(p.name)} quedó dada de baja${moved.length?` y sus estudiantes reasignados`:''}`)};
+ACT.proalta41=d=>{const p=U(d.id);if(!p)return;p.status='activo';log('Reactivó a una profesional',p.name);save();render();toast(`${short(p.name)} puede volver a entrar`)};
+// botón en cada tarjeta de profesional + lista de profesionales dadas de baja
+const _pros41=VIEWS.pros;VIEWS.pros=()=>{let h=_pros41();if(ui.user.role!=='superadmin')return h;
+ h=h.replace(/<button class="btn sm" data-a="msgto" data-id="([^"]+)">(?:(?!<\/button>)[\s\S])*<\/button>/g,(m,id)=>{const u=U(id);return u&&u.role==='teacher'&&u.status==='activo'?m+`<button class="btn sm danger" data-a="probaja41" data-id="${id}">${ic('lock')}Dar de baja</button>`:m});
+ const off=S.users.filter(u=>u.role==='teacher'&&u.status==='bloqueado');
+ if(off.length){const box=`<div class="card stack"><div class="card-h" style="margin:0"><div><h2>Profesionales dadas de baja</h2><p class="small muted">No pueden entrar al campus. Su trabajo anterior se conserva en los expedientes.</p></div></div><div class="list">${off.map(u=>`<div class="it"><div class="who" style="flex:1">${av(u)}<div><b>${esc(u.name)}</b><span>${esc(u.email||'')}</span></div></div><button class="btn sm" data-a="proalta41" data-id="${u.id}">Reactivar</button></div>`).join('')}</div></div>`;
+  const i=h.lastIndexOf('<footer');h=i>0?h.slice(0,i)+box+h.slice(i):h+box}
+ return h};
+(function(){const st=document.createElement('style');st.textContent=`.b41-list{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:4px 10px}.b41-list .it{flex-wrap:wrap;gap:10px}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
