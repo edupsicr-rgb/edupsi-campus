@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-c03b0eKjX/6LeTyml8pakyOxRhaDIzlQSiwxxcjvFD8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-RhRF+p7VXJSLifsLELH6eEpesZNVwBWoUMWeIuNmIiw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-29e';
+const BUILD38='2026-10-29f';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4448,6 +4448,43 @@ Object.entries(PW39).forEach(([f,name])=>{const prev=FORMS[f];if(!prev)return;FO
 const _render39=render;render=function(){_render39();try{pwDecorate39()}catch(e){}};
 (function(){const st=document.createElement('style');st.textContent=`.pw39{list-style:none;margin:-4px 0 4px;padding:10px 12px;border-radius:10px;background:var(--surface-2,#F3F6F9);display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:12.5px;color:var(--muted)}
 .pw39 li.ok{color:#4F6B14;font-weight:600}@media (max-width:520px){.pw39{grid-template-columns:1fr}}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 40: instalar la app desde cualquier celular (guía paso a paso según el navegador) =====
+function browser40(){const u=navigator.userAgent;const ios=typeof isIOS==='function'?isIOS():/iphone|ipad|ipod/i.test(u);const android=/android/i.test(u);
+ const inapp=/FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|Snapchat|TikTok|musical_ly|GSA\//i.test(u)||(ios&&!/Safari\//.test(u)&&!/CriOS|FxiOS|EdgiOS/.test(u));
+ let name='other';if(inapp)name='inapp';else if(ios)name=/CriOS/.test(u)?'ioschrome':/FxiOS|EdgiOS/.test(u)?'iosother':'safari';
+ else if(android)name=/SamsungBrowser/.test(u)?'samsung':/Firefox/.test(u)?'afirefox':'achrome';else name=/Edg\//.test(u)?'edge':/Chrome\//.test(u)?'chrome':/Safari\//.test(u)?'macsafari':'other';
+ return {name,ios,android}}
+const SHARE40=`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>`;
+const DOTS40=`<b style="letter-spacing:1px">⋮</b>`;
+function steps40(b){const url=location.origin+location.pathname.replace(/index\.html$/,'');
+ const S={
+  safari:['Toca el botón <b>Compartir</b> '+SHARE40+' en la barra de abajo de Safari (en iPad está arriba).','Desliza hacia abajo y toca <b>«Agregar a pantalla de inicio»</b>.','Toca <b>Agregar</b>. El ícono de EduPsi aparecerá en tu pantalla de inicio.'],
+  ioschrome:['Toca el botón <b>Compartir</b> '+SHARE40+' arriba a la derecha, junto a la barra de dirección.','Elige <b>«Agregar a pantalla de inicio»</b>.','Toca <b>Agregar</b>. Si no aparece la opción, abre campus.edupsicr.com en <b>Safari</b> y repite los pasos.'],
+  iosother:['Abre <b>campus.edupsicr.com</b> en <b>Safari</b> (el navegador de la brújula azul).','Toca <b>Compartir</b> '+SHARE40+' y luego <b>«Agregar a pantalla de inicio»</b>.','Toca <b>Agregar</b>.'],
+  inapp:['Estás viendo el campus dentro de otra aplicación (WhatsApp, Facebook, Instagram…), y desde ahí no se puede instalar.','Copia el enlace con el botón de abajo y ábrelo en <b>'+(b.ios?'Safari':'Chrome')+'</b>, o toca el menú de esta pantalla y elige <b>«Abrir en '+(b.ios?'Safari':'el navegador')+'»</b>.','Ya en '+(b.ios?'Safari':'Chrome')+', vuelve a tocar <b>«Instalar la app en mi celular»</b>.'],
+  achrome:['Toca el menú '+DOTS40+' arriba a la derecha de Chrome.','Elige <b>«Instalar aplicación»</b> o <b>«Agregar a pantalla principal»</b>.','Confirma con <b>Instalar</b>. El ícono de EduPsi aparecerá con tus aplicaciones.'],
+  samsung:['Toca el menú <b>≡</b> abajo a la derecha.','Elige <b>«Agregar página a»</b> y luego <b>«Pantalla de inicio»</b>.','Confirma con <b>Agregar</b>.'],
+  afirefox:['Toca el menú '+DOTS40+'.','Elige <b>«Instalar»</b> o <b>«Agregar a la pantalla de inicio»</b>.','Confirma con <b>Agregar</b>.'],
+  chrome:['En la barra de dirección, a la derecha, toca el ícono de <b>instalar</b> (una pantalla con una flecha).','O abre el menú '+DOTS40+' → <b>«Transmitir, guardar y compartir»</b> → <b>«Instalar página como app»</b>.','Confirma con <b>Instalar</b>.'],
+  edge:['Abre el menú <b>···</b> arriba a la derecha.','Elige <b>«Aplicaciones»</b> → <b>«Instalar este sitio como una aplicación»</b>.','Confirma con <b>Instalar</b>.'],
+  macsafari:['En la barra de menú elige <b>Archivo</b> → <b>«Agregar al Dock»</b>.','Confirma con <b>Agregar</b>.'],
+  other:['Abre el menú de tu navegador.','Busca <b>«Instalar»</b>, <b>«Agregar a pantalla de inicio»</b> o <b>«Agregar a pantalla principal»</b>.','Si no aparece, abre campus.edupsicr.com en <b>Chrome</b> (Android) o <b>Safari</b> (iPhone).']};
+ return {steps:S[b.name]||S.other,url}}
+ACT.installapp=()=>{if(typeof isStandalone==='function'&&isStandalone()){toast('Ya estás usando la app EduPsi');return}
+ if(PWA.ev){openModal({title:'¿Instalar la app EduPsi?',form:'installok',ok:'Sí, instalar',body:`<div class="stack"><div class="row" style="gap:12px"><img src="emblem.png" alt="" style="width:52px;height:52px;border-radius:12px"><div><b>EduPsi Campus</b><div class="small muted">campus.edupsicr.com</div></div></div>
+ <p class="small">Se agregará un ícono de EduPsi en tu pantalla de inicio o en tus aplicaciones para abrir el campus más rápido. No ocupa casi espacio, no pide permisos adicionales y puedes desinstalarla cuando quieras, como cualquier otra app.</p>
+ <p class="small muted">Te recomendamos instalarla solo en dispositivos personales, no en computadoras compartidas.</p></div>`});return}
+ const b=browser40(),g=steps40(b);
+ openModal({title:'Instala la app EduPsi',form:'none',ok:false,body:`<div class="stack inst40"><div class="row" style="gap:12px"><img src="emblem.png" alt="" style="width:52px;height:52px;border-radius:12px"><div><b>EduPsi Campus</b><div class="small muted">Queda como un ícono en tu ${b.ios||b.android?'celular':'computadora'}, igual que cualquier app.</div></div></div>
+ <ol class="inst40-s">${g.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+ ${b.name==='inapp'||b.name==='iosother'||b.name==='other'?`<button type="button" class="btn pri" data-a="instcopy40">${ic('copy')}Copiar el enlace del campus</button>`:''}
+ <p class="small muted" style="margin:0">Después abre EduPsi desde el ícono de tu pantalla de inicio. Por seguridad, te pedirá tu contraseña o Face ID / huella cada vez.</p></div>`})};
+ACT.instcopy40=()=>{const u=steps40(browser40()).url;try{navigator.clipboard.writeText(u).then(()=>toast('Enlace copiado: '+u),()=>toast(u))}catch(e){toast(u)}};
+// tarjeta del inicio: también en Android y con botón para ver los pasos
+installCard=(function(prev){return function(){let off=false;try{off=localStorage.getItem('edupsi-pwa')==='1'}catch(e){}if(off||(typeof isStandalone==='function'&&isStandalone()))return '';
+ const b=browser40();if(!PWA.ev&&!b.ios&&!b.android)return prev();
+ return `<div class="card row" style="justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap"><div class="row" style="gap:12px;flex:1;min-width:200px"><img src="emblem.png" alt="" style="width:44px;height:44px;border-radius:12px"><div><b>Instala la app EduPsi</b><div class="small muted">Ábrela desde tu pantalla de inicio, como cualquier app.</div></div></div><div class="row" style="gap:6px"><button class="btn sm pri" data-a="installapp">${PWA.ev?'Instalar':'Ver cómo'}</button><button class="btn sm ghost" data-a="noinstall" aria-label="No mostrar más">${ic('x')}</button></div></div>`}})(installCard);
+(function(){const st=document.createElement('style');st.textContent=`.inst40-s{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;line-height:1.5}.inst40-s li::marker{font-weight:700;color:var(--brand-ink)}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
