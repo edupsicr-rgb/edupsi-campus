@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-gm+mKyj3F5FRc8yGNwTYhxxkGD0wRUySCbR7wzzCZzw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-FD0ThChifcTs6jD9gmgRwjehZSmXgsCWLaSByc059xM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4216,6 +4216,103 @@ function reportView33(sid,doc){reportClose33();const ov=document.createElement('
 .rep33-sc{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:14px 10px calc(env(safe-area-inset-bottom,0px) + 18px)}
 #rep33 iframe{display:block;width:100%;max-width:840px;min-height:70vh;margin:0 auto;border:0;background:#fff;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
 @media (pointer:coarse){.rep33-print{display:none}}@media (max-width:600px){.rep33-t{display:none}.rep33-bar .btn.pri{margin-left:auto}}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 34: inicio estilo Cloud Campus — banner de marca, favoritos, pestañas para familias y búsqueda general =====
+// ---------- banner con la imagen de marca EduPsi (ondas azul y verde sobre crema, como las publicaciones) ----------
+const BRAND34_SVG="data:image/svg+xml,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid slice"><rect width="800" height="300" fill="#FBF7F2"/>
+<path d="M560 0h240v150c-40 10-70-20-95-55S640 40 600 30 555 10 560 0z" fill="#CFE3F2"/><path d="M640 0h160v90c-30 5-50-15-62-40S650 10 640 0z" fill="#A9CBE6"/>
+<path d="M0 210c60-25 120 10 170 40s110 40 160 20 70 10 80 30H0z" fill="#E4EBC4"/><path d="M0 240c50-15 95 5 135 28s85 25 120 10 40 12 45 22H0z" fill="#C9D77E"/>
+<path d="M480 300c40-40 100-60 170-50s120 0 150-30v80z" fill="#DDEBF6"/><path d="M590 300c30-25 75-35 120-28s70-5 90-20v48z" fill="#B7D3EA"/></svg>`);
+const BRAND34_TAG=['Bienestar · Inclusión · Desarrollo integral','Valoración · Intervención · Seguimiento','El primer paso puede marcar la diferencia','Acompañamos cada proceso con cercanía y profesionalismo'];
+function brandTag34(){const d=new Date();return BRAND34_TAG[(d.getDate()+d.getMonth())%BRAND34_TAG.length]}
+
+// ---------- favoritos personalizables ----------
+function navItems34(){return (NAV[ui.user.role]||[]).filter(n=>Array.isArray(n)&&n.length>1&&n[0]!=='home'&&VIEWS[n[0]])}
+const FAV34_DEF={superadmin:['students','calendar','messages','files'],teacher:['students','calendar','messages','myspace'],student:['mycourses','tasks','calendar','messages'],ext:['students','messages','library']};
+function favs34(){const all=navItems34(),ok=new Set(all.map(n=>n[0]));const p=ui.user.prefs||{};let xs=Array.isArray(p.favs)?p.favs:(FAV34_DEF[ui.user.role]||all.slice(0,4).map(n=>n[0]));xs=xs.filter(v=>ok.has(v));return xs.map(v=>all.find(n=>n[0]===v))}
+function favHtml34(){const xs=favs34();const sub=v=>{try{if(v==='messages'&&typeof mailUnread==='function'){const n=mailUnread();return n?`${n} sin leer`:'Buzón al día'}if(v==='students'){const n=myStudentIds().filter(s=>CASE(s)).length;return `${n} estudiante${n===1?'':'s'}`}if(v==='calendar'){const n=myStudentIds().reduce((a,s)=>a+((CASE(s)?.sessions)||[]).filter(x=>x.status==='Programada'&&String(x.date).slice(0,10)===TODAY).length,0);return n?`${n} sesión${n===1?'':'es'} hoy`:'Sin sesiones hoy'}}catch(e){}return ''};
+ return `<section class="fav34"><div class="fav34-h"><div><h2>${ic('star')}Favoritos</h2><p class="small muted">Los accesos que usas con más frecuencia.</p></div><button class="btn ghost sm" data-a="favedit34">${ic('gear')}Personalizar</button></div>
+ <div class="fav34-g">${xs.map(n=>`<button type="button" class="fav34-c" data-a="go" data-v="${n[0]}"><span class="ic">${ic(n[2])}</span><span class="t"><b>${esc(n[1])}</b>${sub(n[0])?`<span class="small muted">${esc(sub(n[0]))}</span>`:''}</span><span class="st" aria-hidden="true">${ic('star')}</span></button>`).join('')||'<p class="muted small">Toca «Personalizar» para elegir tus accesos favoritos.</p>'}</div></section>`}
+ACT.favedit34=()=>{const sel=new Set(favs34().map(n=>n[0]));openModal({title:'Personalizar favoritos',form:'favs34',ok:'Guardar favoritos',body:`<div class="form"><p class="small muted">Elige hasta 8 accesos para tu inicio.</p><div class="fav34-pick">${navItems34().map(n=>`<label class="check"><input type="checkbox" name="v" value="${n[0]}" ${sel.has(n[0])?'checked':''}>${ic(n[2])}${esc(n[1])}</label>`).join('')}</div></div>`})};
+FORMS.favs34=fd_=>{const xs=fd_.getAll('v');if(xs.length>8){toast('Elige como máximo 8 accesos');return}ui.user.prefs=ui.user.prefs||{};ui.user.prefs.favs=xs;const su=S.users.find(x=>x.id===ui.user.id);if(su&&su!==ui.user){su.prefs=su.prefs||{};su.prefs.favs=xs}save();ui.modal=null;toast('Favoritos guardados');render()};
+
+// ---------- pestañas para familias ----------
+const FTABS34=[['inicio','Inicio','home'],['clases','Mi hijo o hija','users'],['eventos','Próximas citas','cal'],['recordatorios','Para hacer en casa','book'],['formularios','Formularios','form'],['novedades','Novedades','mega']];
+
+// ---------- inicio ----------
+const _home34=VIEWS.home;
+VIEWS.home=()=>{const u=ui.user;let h=_home34();if(!u)return h;const t=ui.hometab||'inicio';
+ if(u.role==='guardian'&&!(typeof isExtUser==='function'&&isExtUser())&&h.includes('class="fhero"')){
+  const i=h.indexOf('</section>',h.indexOf('class="fhero"'));if(i<0)return h;const head=h.slice(0,i+10);
+  const tabs=`<nav class="qtabs" aria-label="Accesos del inicio">${FTABS34.map(q=>`<button class="${t===q[0]?'on':''}" data-a="hometab" data-t="${q[0]}">${ic(q[2])}${q[1]}</button>`).join('')}</nav>`;
+  if(t==='inicio')return head+tabs+h.slice(i+10);
+  const body=t==='clases'?hClases():t==='eventos'?hEvents():t==='recordatorios'?hRem():t==='formularios'?hForms():hNews();return head+tabs+body}
+ // equipo: banner de marca cuando no hay foto propia + favoritos debajo de las pestañas
+ if(h.includes('<div class="banner">')&&!h.includes('<img class="cover"'))h=h.replace('<div class="banner">',`<div class="banner brand34"><span class="tag34">${esc(brandTag34())}</span>`);
+ if(t==='inicio'){const a=h.indexOf('aria-label="Accesos del inicio"');const j=a<0?-1:h.indexOf('</nav>',a);if(j>=0)h=h.slice(0,j+6)+favHtml34()+h.slice(j+6)}
+ return h};
+
+// ---------- búsqueda general (equipo) ----------
+const GS34={tab:'people',f:{}};
+function gsCanUse34(){return ['superadmin','teacher','admin','coord'].includes(ui.user.role)&&!(typeof isExtUser==='function'&&isExtUser())}
+function gsPool34(){const u=ui.user;if(u.role==='superadmin')return S.users.filter(x=>x.status!=='eliminado');
+ const kids=new Set(myStudentIds());const fams=new Set(Object.keys(S.guardians).filter(g=>(S.guardians[g]||[]).some(s=>kids.has(s))));
+ return S.users.filter(x=>kids.has(x.id)||fams.has(x.id)||(['superadmin','teacher'].includes(x.role)&&x.status==='activo'))}
+function gsKids34(id){const x=U(id);if(!x)return [];if(x.role==='student')return [id];if(x.role==='guardian')return S.guardians[id]||[];return Object.keys(S.cases).filter(s=>CASE(s)?.prof===id)}
+function gsPhones34(id){const out=new Set();const x=U(id);if(x&&x.phone)out.add(x.phone);const ks=x&&x.role==='guardian'?gsKids34(id):x&&x.role==='student'?[id]:[];
+ ks.forEach(s=>((CASE(s)?.ficha?.contacts)||[]).forEach(c=>{if(c.ph&&(x.role==='student'||(c.em&&x.email&&c.em.toLowerCase()===x.email.toLowerCase())||(c.n&&x.name&&x.name.toLowerCase().startsWith(String(c.n).toLowerCase().split(' ')[0]))))out.add(c.ph)}));return [...out]}
+const GS34_ROLES=[['','Todos'],['student','Estudiantes'],['guardian','Familias'],['teacher','Profesionales'],['superadmin','Administración']];
+const GS34_ST=[['','Todos'],['activo','Activo'],['pendiente','Pendiente'],['invitado','Invitado'],['inactivo','Inactivo']];
+const norm34=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+function gsResults34(){const f=GS34.f,has=v=>v&&String(v).trim();
+ if(GS34.tab==='people'){if(!['name','email','phone','role','status'].some(k=>has(f[k])))return `<p class="muted small gs34-empty">${ic('search')}Completa uno o varios campos. Cada dato filtra por separado, así encuentras a la persona rápido.</p>`;
+  const xs=gsPool34().filter(x=>(!has(f.name)||norm34(x.name).includes(norm34(f.name)))&&(!has(f.email)||norm34(x.email).includes(norm34(f.email)))&&(!f.role||x.role===f.role)&&(!f.status||x.status===f.status)&&(!has(f.phone)||gsPhones34(x.id).some(p=>p.replace(/\D/g,'').includes(String(f.phone).replace(/\D/g,''))))).slice(0,60);
+  return `<p class="small muted">${xs.length} resultado${xs.length===1?'':'s'}</p><div class="list gs34-list">${xs.map(x=>{const ks=gsKids34(x.id).filter(s=>CASE(s)),ph=gsPhones34(x.id);
+   return `<div class="it"><div class="who">${av(x)}<div><b>${esc(x.name)}</b><span>${esc(typeof roleLabel==='function'?roleLabel(x):ROLE_SHORT[x.role]||'')}${x.status!=='activo'?' · '+esc(x.status):''}</span></div></div>
+   <div class="grow small muted gs34-meta">${[x.email,ph.join(' · '),x.role==='guardian'&&ks.length?'Familia de '+ks.map(s=>short(U(s)?.name||'')).join(', '):''].filter(Boolean).map(esc).join('<br>')}</div>
+   <div class="row gs34-act">${ks.length&&x.role!=='teacher'&&x.role!=='superadmin'?`<button class="btn sm" data-a="go" data-v="case" data-p="${ks[0]}">${ic('folder')}Expediente</button>`:''}${x.id!==ui.user.id&&typeof mailCompose==='function'&&x.role!=='student'?`<button class="btn ghost sm" data-a="gsmail34" data-id="${x.id}">${ic('mail')}Mensaje</button>`:''}${ui.user.role==='superadmin'?`<button class="btn ghost sm" data-a="edituser" data-id="${x.id}">${ic('edit')}Editar</button>`:''}</div></div>`}).join('')||'<span class="muted">No hay coincidencias con esos datos.</span>'}</div>`}
+ // estudiantes
+ if(!['name','school','level','area','prof','phase'].some(k=>has(f[k])))return `<p class="muted small gs34-empty">${ic('search')}Completa uno o varios campos para buscar estudiantes.</p>`;
+ const ds=typeof phaseDefs==='function'?phaseDefs():[];const kids=new Set(myStudentIds());
+ const xs=Object.keys(S.cases).filter(s=>(ui.user.role==='superadmin'||kids.has(s))&&U(s)).map(s=>({s,c:CASE(s),u:U(s)})).filter(({c,u})=>{const fi=c.ficha||{};
+  return (!has(f.name)||norm34(u.name).includes(norm34(f.name)))&&(!has(f.school)||norm34(fi.school).includes(norm34(f.school)))&&(!has(f.level)||norm34(fi.level).includes(norm34(f.level)))&&(!has(f.area)||norm34(c.area).includes(norm34(f.area)))&&(!f.prof||c.prof===f.prof)&&(f.phase===''||f.phase==null||String(c.phase)===String(f.phase))}).slice(0,60);
+ return `<p class="small muted">${xs.length} resultado${xs.length===1?'':'s'}</p><div class="list gs34-list">${xs.map(({s,c,u})=>{const fi=c.ficha||{};return `<div class="it"><div class="who">${av(u)}<div><b>${esc(u.name)}</b><span>${esc(c.area||'')}</span></div></div>
+  <div class="grow small muted gs34-meta">${[[fi.school,fi.level].filter(Boolean).join(' · '),'Profesional: '+(UP(c.prof)?.name||'—'),ds[c.phase]?'Etapa: '+ds[c.phase].n:''].filter(Boolean).map(esc).join('<br>')}</div>
+  <div class="row gs34-act"><button class="btn sm" data-a="go" data-v="case" data-p="${s}">${ic('folder')}Expediente</button></div></div>`}).join('')||'<span class="muted">No hay coincidencias con esos datos.</span>'}</div>`}
+VIEWS.gsearch=()=>{if(!gsCanUse34())return '<div class="empty">Esta búsqueda está disponible para el equipo de EduPsi.</div>';const f=GS34.f,P=GS34.tab==='people';
+ const inp=(k,l,ph,icn)=>`<div class="field"><label for="gs_${k}">${l}</label><div class="gs34-in">${ic(icn)}<input id="gs_${k}" class="inp" data-gs="${k}" value="${esc(f[k]||'')}" placeholder="${esc(ph)}" autocomplete="off"></div></div>`;
+ const sel=(k,l,opts)=>`<div class="field"><label for="gs_${k}">${l}</label><select id="gs_${k}" class="inp" data-gs="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(f[k]??'')===String(o[0])?'selected':''}>${esc(o[1])}</option>`).join('')}</select></div>`;
+ const pros=S.users.filter(x=>['superadmin','teacher'].includes(x.role)&&x.status==='activo');const ds=typeof phaseDefs==='function'?phaseDefs():[];
+ return `<div class="head"><div><h1>Búsqueda general</h1><p>Encuentra personas y estudiantes de forma rápida y específica.</p></div></div>
+ <div class="gs34-tabs" role="tablist"><button role="tab" class="${P?'on':''}" data-a="gstab34" data-t="people">${ic('users')}Personas</button><button role="tab" class="${P?'':'on'}" data-a="gstab34" data-t="kids">${ic('book')}Estudiantes</button></div>
+ <div class="card stack"><div class="card-h"><div><h2>Filtros de búsqueda · ${P?'Personas':'Estudiantes'}</h2><p class="small muted">Completa uno o varios campos. Cada dato filtra por separado.</p></div>${Object.values(f).some(v=>v)?'<button class="btn ghost sm" data-a="gsclear34">Limpiar</button>':''}</div>
+ <div class="gs34-grid">${P?inp('name','Nombre','Ej. María, Pedro…','users')+inp('email','Correo electrónico','Ej. familia@correo.com','mail')+inp('phone','Teléfono','Ej. 8888-1234','phone')+sel('role','Rol',GS34_ROLES)+sel('status','Estado',GS34_ST)
+  :inp('name','Nombre','Ej. Sofía…','users')+inp('school','Centro educativo','Ej. Escuela…','home')+inp('level','Nivel','Ej. Primer año','book')+inp('area','Área de apoyo','Ej. Lectoescritura','spark')+sel('prof','Profesional',[['','Todas'],...pros.map(x=>[x.id,x.name])])+sel('phase','Etapa',[['','Todas'],...ds.map((d,i)=>[i,d.n])])}</div></div>
+ <div class="card" id="gsres34">${gsResults34()}</div>`};
+let gsT34=null;
+function gsDecorate34(){if(ui.view!=='gsearch')return;document.querySelectorAll('[data-gs]').forEach(el=>{if(el.dataset.ok)return;el.dataset.ok='1';const upd=()=>{GS34.f[el.dataset.gs]=el.value;clearTimeout(gsT34);gsT34=setTimeout(()=>{const r=document.getElementById('gsres34');if(r)r.innerHTML=gsResults34()},el.tagName==='SELECT'?0:180)};el.addEventListener('input',upd);el.addEventListener('change',upd)})}
+const _render34=render;render=function(){_render34();try{gsDecorate34()}catch(e){}};
+ACT.gstab34=d=>{GS34.tab=d.t;GS34.f={};render()};
+ACT.gsclear34=()=>{GS34.f={};render()};
+ACT.gsmail34=d=>{if(typeof mailCompose==='function')mailCompose({to:[d.id]})};
+// en el menú y desde la barra superior
+['superadmin','teacher'].forEach(r=>{const n=NAV[r];if(!n||n.some(x=>Array.isArray(x)&&x[0]==='gsearch'))return;const i=n.findIndex(x=>Array.isArray(x)&&x[0]==='home');n.splice(i+1,0,['gsearch','Búsqueda','search'])});
+const _sr34=searchResults;searchResults=function(){const h=_sr34();return gsCanUse34()?h.replace('<button class="btn" data-a="clearsearch">',`<div class="row" style="gap:8px"><button class="btn pri" data-a="gsfrom34">${ic('search')}Búsqueda avanzada</button><button class="btn" data-a="clearsearch">`).replace('Limpiar búsqueda</button></div>','Limpiar búsqueda</button></div></div>'):h};
+ACT.gsfrom34=()=>{GS34.tab='people';GS34.f={name:ui.q};ui.q='';go('gsearch')};
+
+(function(){const st=document.createElement('style');st.textContent=`
+.hero .banner.brand34{background:#FBF7F2 url("${BRAND34_SVG}") center/cover no-repeat}.hero .banner.brand34 .deco{display:none}
+.hero .banner.brand34 .embcard{box-shadow:0 10px 26px rgba(31,59,87,.14)}
+.tag34{position:absolute;left:24px;bottom:20px;max-width:52%;background:rgba(255,255,255,.88);color:#1F3B57;font-weight:600;font-size:13.5px;padding:8px 14px;border-radius:999px;box-shadow:0 4px 14px rgba(31,59,87,.08);line-height:1.35}
+.fav34{display:flex;flex-direction:column;gap:12px}.fav34-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}.fav34-h h2{display:flex;align-items:center;gap:8px;margin:0}.fav34-h h2 .ico{color:#E0A526;fill:#E0A526}.fav34-h p{margin:2px 0 0}
+.fav34-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.fav34-c{position:relative;display:flex;align-items:center;gap:12px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 34px 14px 14px;cursor:pointer;color:var(--ink);font:inherit;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+.fav34-c:hover{transform:translateY(-2px);border-color:var(--brand)}.fav34-c .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand-ink);flex:none}
+.fav34-c .t{display:flex;flex-direction:column;min-width:0}.fav34-c .t b{font-weight:600}.fav34-c .st{position:absolute;top:10px;right:10px;color:#E0A526}.fav34-c .st .ico{width:16px;height:16px;fill:#E0A526}
+.fav34-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}.fav34-pick .check{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px}
+.gs34-tabs{display:flex;gap:8px;margin-bottom:12px}.gs34-tabs button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 16px;font:inherit;font-weight:600;cursor:pointer}.gs34-tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.gs34-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}.gs34-in{position:relative}.gs34-in .ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}.gs34-in .inp{padding-left:34px}
+.gs34-empty{display:flex;align-items:center;gap:8px;margin:0}.gs34-list .it{flex-wrap:wrap;gap:12px}.gs34-list .who{min-width:220px}.gs34-meta{min-width:180px}.gs34-act{gap:6px;flex-wrap:wrap}
+@media (max-width:700px){.tag34{left:12px;bottom:12px;max-width:56%;font-size:12px;padding:6px 10px}.fav34-g{grid-template-columns:1fr 1fr}.fav34-c{padding:12px 28px 12px 12px}.fav34-c .ic{width:36px;height:36px}.fav34-h{align-items:flex-start}}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
