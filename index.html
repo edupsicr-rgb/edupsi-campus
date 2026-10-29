@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-/Ydsl9qef94QJYv0Kr3kQ/f7bkZUmioGlA2G2jr8104='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-xMRGn1SFPbe/b6R69cADzfLDxOLOMkZ7JmMC51W8ZSs='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -3779,6 +3779,238 @@ FORMS.bioask=()=>{ui.modal=null;render();ACT.bioenable()};
 function pwDecorate(){document.querySelectorAll('input[type=password]:not([data-pw]),input[data-pw="shown"]:not([data-pwd])').forEach(i=>{if(i.dataset.pwd)return;i.dataset.pw='1';i.dataset.pwd='1';const w=document.createElement('span');w.className='pwwrap';i.parentNode.insertBefore(w,i);w.appendChild(i);const b=document.createElement('button');b.type='button';b.className='pwbtn';b.dataset.a='pwtoggle';b.setAttribute('aria-label','Mostrar contraseña');b.setAttribute('aria-pressed','false');b.innerHTML=ic('eye');w.appendChild(b)})}
 ACT.pwtoggle=(d,el)=>{const i=el.parentNode.querySelector('input');if(!i)return;const show=i.type==='password';i.type=show?'text':'password';el.setAttribute('aria-pressed',show?'true':'false');el.setAttribute('aria-label',show?'Ocultar contraseña':'Mostrar contraseña');i.focus()};
 const _render30b=render;render=function(){_render30b();try{pwDecorate()}catch(e){}};
+// ---------- enlaces seguros: solo se abren direcciones web (https/http) ----------
+function safeUrl(u){u=String(u||'').trim();return /^(https?:\/\/|blob:|\/)/i.test(u)?u:''}
+(function(){const _wo=window.open.bind(window);window.open=function(u,...r){if(u&&!safeUrl(u)&&u!=='about:blank'){toast('Este enlace no es una dirección web válida');return null}return _wo(u,...r)}})();
+const _embed30=embedOf;embedOf=function(url){if(url&&!safeUrl(url))return '<p class="small muted">El enlace de esta lección no es una dirección web válida.</p>';return _embed30(url)};
+// ---------- limpieza de textos heredados del prototipo ----------
+const _set30c=VIEWS.settings;VIEWS.settings=()=>_set30c().replace(/<div class="card stack"><h2>Seguridad e inteligencia artificial<\/h2>[\s\S]*?<div class="ai-note">[\s\S]*?<\/div><\/div><\/div>/,'');
+if(VIEWS.crm){const _crm30=VIEWS.crm;VIEWS.crm=()=>_crm30().replace('CRM de estudiantes','Familias interesadas')}
+// ===== EduPsi Campus · Buzón de mensajes (tipo correo) =====
+// Bandejas: Entrada, No leídos, Enviados, Borradores, Importantes, Destacados, Eliminados y carpetas propias.
+// Cada mensaje nuevo avisa por correo a quien lo recibe (solo el aviso; el contenido se lee dentro del campus).
+Object.assign(ICONS,{
+ inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+ mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+ star:'<path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>',
+ tag:'<path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5"/>',
+ reply:'<path d="M9 17 4 12l5-5"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/>',
+ replyall:'<path d="M7 17 2 12l5-5"/><path d="M12 17 7 12l5-5"/><path d="M22 18v-2a4 4 0 0 0-4-4H7"/>',
+ fwd:'<path d="m15 17 5-5-5-5"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/>',
+ attach:'<path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',
+ draft:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/>',
+ back:'<path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>',
+ restore:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'});
+
+var MAIL={rows:[],loaded:false,loading:false,box:'in',folder:null,sel:null,q:'',folders:[],draft:null,err:''};
+const MAIL_BOXES=[['in','Entrada','inbox'],['unread','No leídos','mail'],['sent','Enviados','send'],['draft','Borradores','draft'],['important','Importantes','tag'],['star','Destacados','star'],['trash','Eliminados','trash']];
+function mailNewId(){return ui.user.id+'~'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function mailUnread(){return MAIL.rows.filter(r=>r.box==='in'&&!r.read&&!r.trash).length}
+async function mailLoad(quiet){if(!ui.user||typeof SB==='undefined'||!SB)return;MAIL.loading=true;try{const [l,f]=await Promise.all([SB.rpc('mail_list'),SB.from('mail_folders').select('*')]);
+  if(l.error){MAIL.err=l.error.message}else{MAIL.rows=(l.data||[]).map(r=>({...r,data:r.data||{}}));MAIL.err=''}
+  if(!f.error)MAIL.folders=(f.data||[]).sort((a,b)=>a.name.localeCompare(b.name));MAIL.loaded=true}catch(e){MAIL.err='No se pudo cargar el buzón'}
+ MAIL.loading=false;if(!quiet||ui.view==='messages')render();else{const b=document.querySelector('[data-a="go"][data-v="messages"] .badge');const n=mailUnread();if(!!b!==!!n)render()}}
+function mailFilter(){const q=MAIL.q.trim().toLowerCase();let xs=MAIL.rows;const b=MAIL.box;
+ if(MAIL.folder)xs=xs.filter(r=>r.folder===MAIL.folder&&!r.trash);
+ else if(b==='in')xs=xs.filter(r=>r.box==='in'&&!r.trash&&!r.folder);
+ else if(b==='unread')xs=xs.filter(r=>r.box==='in'&&!r.read&&!r.trash);
+ else if(b==='sent')xs=xs.filter(r=>r.box==='sent'&&!r.trash&&!r.folder);
+ else if(b==='draft')xs=xs.filter(r=>r.box==='draft'&&!r.trash);
+ else if(b==='important')xs=xs.filter(r=>r.important&&!r.trash);
+ else if(b==='star')xs=xs.filter(r=>r.star&&!r.trash);
+ else if(b==='trash')xs=xs.filter(r=>r.trash);
+ if(q)xs=xs.filter(r=>[r.data.subject,r.data.body,r.sender_name,(r.to_names||[]).join(' ')].join(' ').toLowerCase().includes(q));
+ return xs}
+function mailWhen(at){const d=new Date(at);if(isNaN(d))return '';const t=d.toLocaleDateString('sv-SE',{timeZone:'America/Costa_Rica'});return t===TODAY?d.toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Costa_Rica'}):fd(t)}
+function mailWhenLong(at){const d=new Date(at);if(isNaN(d))return '';return d.toLocaleString('es-CR',{dateStyle:'long',timeStyle:'short',timeZone:'America/Costa_Rica'})}
+function mailWho(r){return r.box==='in'?(r.sender_name||'EduPsi'):('Para: '+((r.to_names||[]).join(', ')||'(sin destinatarios)'))}
+function mailBody(t){return esc(t||'').replace(/(https?:\/\/[^\s<]+)/g,u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`)}
+
+// ---------- estilos ----------
+(function(){const st=document.createElement('style');st.textContent=`
+.mbx{display:grid;grid-template-columns:220px minmax(260px,360px) minmax(0,1fr);gap:14px;align-items:start}
+.mb-nav{display:flex;flex-direction:column;gap:2px;position:sticky;top:0}
+.mb-nav button{display:flex;align-items:center;gap:10px;border:0;background:none;padding:9px 12px;border-radius:10px;cursor:pointer;color:var(--fg);font:inherit;text-align:left;width:100%}
+.mb-nav button:hover{background:var(--surface-2)}.mb-nav button.on{background:var(--brand-soft);color:var(--brand-ink);font-weight:600}
+.mb-nav button .n{margin-left:auto;font-size:12px;font-weight:600;background:var(--brand);color:#fff;border-radius:999px;padding:1px 8px}
+.mb-nav .grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:14px 12px 4px}
+.mb-list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-height:300px}
+.mb-search{display:flex;gap:8px;padding:10px;border-bottom:1px solid var(--line)}.mb-search .inp{flex:1}
+.mb-item{display:grid;grid-template-columns:10px minmax(0,1fr) auto;grid-template-areas:'d w t' 'd s s' 'd p p';gap:3px 10px;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:none;width:100%;text-align:left;cursor:pointer;font:inherit;color:var(--fg)}
+.mb-item:hover{background:var(--surface-2)}.mb-item.on{background:var(--brand-soft)}
+.mb-item .dot{grid-area:d;width:8px;height:8px;border-radius:50%;background:transparent;margin-top:6px}.mb-item.unread .dot{background:var(--brand)}
+.mb-item .mbw{grid-area:w;min-width:0;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mb-item.unread .mbw,.mb-item.unread .mbs{font-weight:700}
+.mb-item .mbt{grid-area:t;font-size:12px;color:var(--muted);white-space:nowrap}
+.mb-item .mbs{grid-area:s;min-width:0;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-item .mbp{grid-area:p;min-width:0;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-item .flags{display:flex;gap:4px;color:var(--muted)}.mb-item .flags .ico{width:14px;height:14px}
+.mb-read{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;min-height:300px}
+.mb-read h2{font-size:20px;margin:0 0 10px;word-break:break-word}
+.mb-meta{display:flex;gap:12px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.mb-body{white-space:pre-wrap;line-height:1.65;word-break:break-word;font-size:15px}
+.mb-tools{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.mb-files{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.mb-file{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface-2);cursor:pointer;font:inherit;color:var(--fg);max-width:100%}
+.mb-file span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.iconbtn.on .ico{fill:currentColor}.mb-star.on{color:#E0A100}.mb-imp.on{color:#C2410C}
+.mb-back{display:none}@media (max-width:1080px){.mb-back{display:inline-flex}}
+.mb-empty{display:grid;place-items:center;text-align:center;color:var(--muted);min-height:260px;padding:20px}
+.mb-to{border:1px solid var(--line);border-radius:12px;max-height:230px;overflow:auto;padding:4px}
+.mb-to label{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:8px;cursor:pointer}.mb-to label:hover{background:var(--surface-2)}
+.mb-to .g{font-weight:600}.mb-to .h{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px 8px 2px}
+.mb-chosen{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}.mb-chosen .pill{display:inline-flex;align-items:center;gap:4px}
+@media (max-width:1080px){.mbx{grid-template-columns:200px minmax(0,1fr)}.mbx .mb-read{grid-column:1/3}.mbx.reading .mb-list{display:none}.mbx.reading .mb-read{grid-column:2/3}}
+@media (max-width:860px){.mbx{grid-template-columns:minmax(0,1fr)}.mb-nav{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+ .mb-nav button{width:auto;white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:7px 12px}.mb-nav .grp{display:none}
+ .mbx.reading .mb-nav,.mbx.reading .mb-list{display:none}.mbx.reading .mb-read{grid-column:1/2}.mbx:not(.reading) .mb-read{display:none}}
+`;document.head.appendChild(st)})();
+
+// ---------- vista ----------
+VIEWS.messages=()=>{if(!MAIL.loaded&&!MAIL.loading)mailLoad();
+ const xs=mailFilter();const sel=MAIL.rows.find(r=>r.box_id===MAIL.sel)||null;const unread=mailUnread();
+ const nav=MAIL_BOXES.map(([k,l,i])=>{const n=k==='in'?unread:k==='unread'?unread:k==='draft'?MAIL.rows.filter(r=>r.box==='draft'&&!r.trash).length:0;
+   return `<button class="${!MAIL.folder&&MAIL.box===k?'on':''}" data-a="mailbox" data-b="${k}">${ic(i)}<span>${l}</span>${n?`<span class="n">${n}</span>`:''}</button>`}).join('')
+  +`<div class="grp">Carpetas</div>`+MAIL.folders.map(f=>{const n=MAIL.rows.filter(r=>r.folder===f.id&&!r.trash&&!r.read&&r.box==='in').length;return `<button class="${MAIL.folder===f.id?'on':''}" data-a="mailfolder" data-id="${f.id}">${ic('folder')}<span>${esc(f.name)}</span>${n?`<span class="n">${n}</span>`:''}</button>`}).join('')
+  +`<button data-a="mailfoldernew">${ic('plus')}<span>Nueva carpeta</span></button>${MAIL.folders.length?`<button data-a="mailfolders">${ic('gear')}<span>Administrar carpetas</span></button>`:''}`;
+ const title=MAIL.folder?esc((MAIL.folders.find(f=>f.id===MAIL.folder)||{}).name||'Carpeta'):(MAIL_BOXES.find(b=>b[0]===MAIL.box)||[])[1];
+ const list=`<div class="mb-search"><input class="inp" type="search" placeholder="Buscar en ${esc(title)}" aria-label="Buscar mensajes" value="${esc(MAIL.q)}" id="mbq"><button class="iconbtn" data-a="mailreload" aria-label="Actualizar">${ic('restore')}</button></div>`
+  +(MAIL.loading&&!MAIL.loaded?'<div class="mb-empty">Cargando…</div>':xs.length?xs.map(r=>`<button class="mb-item ${r.box==='in'&&!r.read?'unread':''} ${r.box_id===MAIL.sel?'on':''}" data-a="mailopen" data-id="${r.box_id}">
+   <span class="dot"></span><span class="mbw">${r.box==='draft'?'<span style="color:#C2410C">Borrador</span> · ':''}${esc(mailWho(r))}</span><span class="mbt">${mailWhen(r.at)}</span>
+   <span class="mbs">${esc(r.data.subject||'(sin asunto)')}</span><span class="mbp">${(r.data.files||[]).length?ic('attach')+' ':''}${esc(String(r.data.body||'').replace(/\s+/g,' ').slice(0,110))}</span></button>`).join('')
+  :`<div class="mb-empty"><div>${ic('inbox','ico')}<p style="margin-top:8px">${MAIL.q?'No hay mensajes que coincidan con la búsqueda.':'No hay mensajes aquí.'}</p></div></div>`);
+ const read=sel?mailReadHtml(sel):`<div class="mb-empty"><div>${ic('mail')}<p style="margin-top:8px">Elige un mensaje para leerlo.</p></div></div>`;
+ return `<div class="head"><div><h1>Mensajes</h1><p>${unread?`Tienes ${unread} mensaje${unread===1?'':'s'} sin leer.`:'Tu buzón del campus. Te avisamos por correo cuando llega un mensaje nuevo.'}</p></div><button class="btn pri" data-a="mailnew">${ic('edit')}Nuevo mensaje</button></div>
+ ${MAIL.err?`<div class="card" style="color:#B42318">${esc(MAIL.err)}</div>`:''}
+ <div class="mbx ${sel?'reading':''}"><nav class="mb-nav" aria-label="Bandejas">${nav}</nav><section class="mb-list" aria-label="${esc(title)}">${list}</section><section class="mb-read" aria-live="polite">${read}</section></div>`};
+function mailReadHtml(r){const d=r.data;const f=(d.files||[]);const fopts=MAIL.folders.map(x=>`<option value="${x.id}" ${r.folder===x.id?'selected':''}>${esc(x.name)}</option>`).join('');
+ const tools=r.trash?`<button class="btn sm" data-a="mailrestore" data-id="${r.box_id}">${ic('restore')}Restaurar</button><button class="btn sm danger" data-a="mailpurge" data-id="${r.box_id}">${ic('trash')}Eliminar definitivamente</button>`
+  :r.box==='draft'?`<button class="btn sm pri" data-a="maileditdraft" data-id="${r.box_id}">${ic('edit')}Continuar borrador</button><button class="btn sm" data-a="mailtrash" data-id="${r.box_id}">${ic('trash')}Eliminar</button>`
+  :`${r.box==='in'?`<button class="btn sm pri" data-a="mailreply" data-id="${r.box_id}">${ic('reply')}Responder</button>`:''}${(d.to||[]).length>1||r.box==='sent'?`<button class="btn sm" data-a="mailreply" data-all="1" data-id="${r.box_id}">${ic('replyall')}Responder a todos</button>`:''}
+   <button class="btn sm" data-a="mailfwd" data-id="${r.box_id}">${ic('fwd')}Reenviar</button>
+   <button class="iconbtn mb-star ${r.star?'on':''}" data-a="mailflag" data-k="star" data-id="${r.box_id}" aria-pressed="${r.star}" aria-label="Destacar">${ic('star')}</button>
+   <button class="iconbtn mb-imp ${r.important?'on':''}" data-a="mailflag" data-k="important" data-id="${r.box_id}" aria-pressed="${r.important}" aria-label="Marcar como importante">${ic('tag')}</button>
+   ${r.box==='in'?`<button class="iconbtn" data-a="mailunread" data-id="${r.box_id}" aria-label="Marcar como no leído">${ic('mail')}</button>`:''}
+   <select class="inp" style="width:auto;max-width:180px;padding:6px 10px" data-ch="mailmove" data-id="${r.box_id}" aria-label="Mover a carpeta"><option value="">${r.folder?'Sacar de la carpeta':'Mover a carpeta…'}</option>${fopts}</select>
+   <button class="iconbtn" data-a="mailtrash" data-id="${r.box_id}" aria-label="Eliminar">${ic('trash')}</button>`;
+ const sender=U(r.sender_id);
+ return `<button class="btn ghost sm mb-back" data-a="mailback" style="margin-bottom:8px">${ic('back')}Volver</button><div class="mb-tools">${tools}</div>
+  <h2>${esc(d.subject||'(sin asunto)')}</h2>
+  <div class="mb-meta">${sender?av(sender):''}<div style="min-width:0"><b>${esc(r.sender_name||'EduPsi')}</b><div class="small muted">Para: ${esc((r.to_names||[]).join(', ')||'—')}</div><div class="small muted">${mailWhenLong(r.at)}${r.box==='draft'?' · Borrador sin enviar':''}${d.migrated?' · Mensaje del chat anterior':''}</div></div></div>
+  <div class="mb-body">${mailBody(d.body)||'<span class="muted">(Sin texto)</span>'}</div>
+  ${f.length?`<div class="mb-files">${f.map((x,i)=>`<button class="mb-file" data-a="mailfile" data-id="${r.box_id}" data-i="${i}">${ic(/image/.test(x.mime||'')?'image':'file')}<span>${esc(x.name)}</span><small class="muted">${esc(x.size||'')}</small></button>`).join('')}</div>`:''}`}
+
+// ---------- acciones del buzón ----------
+ACT.mailbox=d=>{MAIL.box=d.b;MAIL.folder=null;MAIL.sel=null;MAIL.q='';render()};
+ACT.mailfolder=d=>{MAIL.folder=d.id;MAIL.sel=null;MAIL.q='';render()};
+ACT.mailback=()=>{MAIL.sel=null;render()};
+ACT.mailreload=()=>mailLoad();
+let MAILQT=null;function mailSearchDecorate(){const i=document.getElementById('mbq');if(!i||i.dataset.ok)return;i.dataset.ok='1';i.addEventListener('input',()=>{clearTimeout(MAILQT);MAILQT=setTimeout(()=>{MAIL.q=i.value;MAIL.sel=null;render();const j=document.getElementById('mbq');if(j){j.focus();j.setSelectionRange(j.value.length,j.value.length)}},250)})}
+async function mailUpd(ids,patch){ids=[].concat(ids);MAIL.rows.forEach(r=>{if(ids.includes(r.box_id))Object.assign(r,patch)});render();const {error}=await SB.from('mail_box').update(patch).in('id',ids);if(error){toast('No se pudo guardar el cambio');mailLoad(true)}}
+ACT.mailopen=d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(!r)return;MAIL.sel=r.box_id;if(r.box==='in'&&!r.read)mailUpd(r.box_id,{read:true});else render();
+ if(innerWidth<=860)window.scrollTo(0,0)};
+ACT.mailunread=d=>{mailUpd(d.id,{read:false});MAIL.sel=null;render()};
+ACT.mailflag=d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(r)mailUpd(r.box_id,{[d.k]:!r[d.k]})};
+ACT.mailtrash=async d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(!r)return;MAIL.sel=null;await mailUpd(r.box_id,{trash:true});toast('Movido a Eliminados')};
+ACT.mailrestore=d=>{MAIL.sel=null;mailUpd(d.id,{trash:false});toast('Mensaje restaurado')};
+ACT.mailpurge=d=>openModal({title:'Eliminar definitivamente',form:'mailpurge',ok:'Eliminar',body:`<input type="hidden" name="id" value="${esc(d.id)}"><p>El mensaje se borrará de tu buzón y no se podrá recuperar. Las demás personas conservan su copia.</p>`});
+FORMS.mailpurge=async fd_=>{const id=fd_.get('id');const r=MAIL.rows.find(x=>x.box_id===id);ui.modal=null;if(!r){render();return}
+ const {error}=await SB.from('mail_box').delete().eq('id',id);if(error){toast('No se pudo eliminar');return}
+ if(r.box==='draft'){try{await SB.from('mail').delete().eq('id',r.mail_id);const fs=(r.data.files||[]).map(f=>f.path).filter(Boolean);if(fs.length)await SB.storage.from('mail').remove(fs)}catch(e){}}
+ MAIL.rows=MAIL.rows.filter(x=>x.box_id!==id);MAIL.sel=null;toast('Mensaje eliminado');render()};
+CH.mailmove=el=>{const v=el.value||null;mailUpd(el.dataset.id,{folder:v});toast(v?'Movido a la carpeta':'Sacado de la carpeta')};
+ACT.mailfile=async d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);const f=r&&(r.data.files||[])[+d.i];if(!f)return;const {data,error}=await SB.storage.from('mail').createSignedUrl(f.path,600);if(error||!data){toast('No se pudo abrir el archivo');return}window.open(data.signedUrl,'_blank','noopener')};
+
+// carpetas
+ACT.mailfoldernew=()=>openModal({title:'Nueva carpeta',form:'mailfoldernew',ok:'Crear',body:`<div class="field"><label for="mfn">Nombre de la carpeta</label><input id="mfn" name="name" class="inp" maxlength="40" required data-autofocus placeholder="Ej.: Informes, Escuela, Pagos"></div>`});
+FORMS.mailfoldernew=async fd_=>{const name=String(fd_.get('name')||'').trim();if(!name)return;const f={id:ui.user.id+'~f'+Date.now().toString(36),owner_id:ui.user.id,name};const {error}=await SB.from('mail_folders').insert([f]);if(error){toast('No se pudo crear la carpeta');return}MAIL.folders.push(f);MAIL.folders.sort((a,b)=>a.name.localeCompare(b.name));ui.modal=null;MAIL.folder=f.id;toast('Carpeta creada');render()};
+ACT.mailfolders=()=>openModal({title:'Administrar carpetas',form:'mailfolders',ok:'Guardar',body:`<p class="small muted">Cambia el nombre o marca las carpetas que quieres eliminar. Los mensajes de una carpeta eliminada vuelven a su bandeja.</p><div class="stack">${MAIL.folders.map(f=>`<div class="row" style="gap:8px"><input class="inp" name="n_${f.id}" value="${esc(f.name)}" maxlength="40" style="flex:1" aria-label="Nombre de la carpeta"><label class="check"><input type="checkbox" name="d_${f.id}"> Eliminar</label></div>`).join('')}</div>`});
+FORMS.mailfolders=async fd_=>{for(const f of [...MAIL.folders]){if(fd_.get('d_'+f.id)){const ids=MAIL.rows.filter(r=>r.folder===f.id).map(r=>r.box_id);if(ids.length)await SB.from('mail_box').update({folder:null}).in('id',ids);await SB.from('mail_folders').delete().eq('id',f.id);MAIL.folders=MAIL.folders.filter(x=>x.id!==f.id);if(MAIL.folder===f.id)MAIL.folder=null}
+  else{const n=String(fd_.get('n_'+f.id)||'').trim();if(n&&n!==f.name){await SB.from('mail_folders').update({name:n}).eq('id',f.id);f.name=n}}}
+ ui.modal=null;toast('Carpetas actualizadas');mailLoad()};
+
+// ---------- a quién se puede escribir ----------
+function mailContacts(){const me=ui.user;const act=u=>u&&u.id!==me.id&&u.status==='activo'&&u.role!=='student';const out=new Map();const add=(u,why)=>{if(act(u)&&!out.has(u.id))out.set(u.id,{u,why})};
+ const admins=S.users.filter(u=>isAdminU(u));admins.forEach(u=>add(u,'Administración'));
+ const caseIds=Object.keys(S.cases||{});
+ if(isAdminU(me)){S.users.forEach(u=>add(u,u.role==='guardian'?'Familia':isLimited(u)?'Externo':u.role==='teacher'?'Equipo EduPsi':''))}
+ else if(me.role==='guardian'){(S.guardians[me.id]||[]).forEach(k=>{const c=CASE(k);if(!c)return;add(U(c.prof),'Profesional de '+short(UP(k).name));(c.team||[]).forEach(t=>add(U(t),'Equipo de '+short(UP(k).name)))})}
+ else if(isLimited(me)){caseIds.forEach(k=>{const c=CASE(k);if(c&&(c.team||[]).includes(me.id))add(U(c.prof),'Profesional de '+short(UP(k).name))})}
+ else if(me.role==='teacher'){S.users.filter(u=>u.role==='teacher'&&!isLimited(u)).forEach(u=>add(u,'Equipo EduPsi'));
+  caseIds.forEach(k=>{const c=CASE(k);if(!c||!(c.prof===me.id||(c.team||[]).includes(me.id)))return;Object.entries(S.guardians).forEach(([g,ks])=>{if(ks.includes(k))add(U(g),'Familia de '+short(UP(k).name))});(c.team||[]).forEach(t=>add(U(t),isLimited(U(t))?'Externo · '+short(UP(k).name):'Equipo de '+short(UP(k).name)))})}
+ return [...out.values()].sort((a,b)=>a.u.name.localeCompare(b.u.name))}
+function mailGroups(cs){const me=ui.user;const ids=f=>cs.filter(f).map(x=>x.u.id);const g=[];
+ if(isAdminU(me)){g.push(['Todas las familias',ids(x=>x.u.role==='guardian')]);g.push(['Todo el equipo de EduPsi',ids(x=>x.u.role==='teacher'&&!isLimited(x.u)||isAdminU(x.u))]);g.push(['Docentes y profesionales externos',ids(x=>isLimited(x.u))])}
+ else if(me.role==='teacher'&&!isLimited(me)){g.push(['Familias de mis estudiantes',ids(x=>x.u.role==='guardian')])}
+ return g.filter(x=>x[1].length>1)}
+
+// ---------- redactar ----------
+function mailCompose(o){o=o||{};MAIL.draft={id:o.id||mailNewId(),to:new Set(o.to||[]),subject:o.subject||'',body:o.body||'',files:o.files||[],reply_of:o.reply_of||null,fwd_of:o.fwd_of||null,existing:!!o.existing,busy:false};mailComposeOpen()}
+function mailComposeOpen(){const D=MAIL.draft;const cs=mailContacts();const gs=mailGroups(cs);const chosen=[...D.to].map(id=>UP(id));
+ openModal({title:D.reply_of?'Responder':D.fwd_of?'Reenviar':'Nuevo mensaje',form:'mailsend',ok:'Enviar',wide:true,body:`<div class="form">
+  <div class="field"><label>Para</label><div class="mb-chosen" id="mbchosen">${chosen.map(u=>`<span class="pill brand">${esc(u.name)}<button type="button" class="iconbtn" style="width:20px;height:20px" data-a="mailrm" data-id="${u.id}" aria-label="Quitar a ${esc(u.name)}">${ic('x')}</button></span>`).join('')||'<span class="small muted">Elige una o varias personas de la lista.</span>'}</div>
+   <input class="inp" type="search" id="mbtoq" placeholder="Buscar persona…" aria-label="Buscar persona" autocomplete="off">
+   <div class="mb-to" id="mbto">${gs.length?`<div class="h">Grupos</div>${gs.map(([n,ids])=>`<label class="g" data-s="${esc(n.toLowerCase())}"><input type="checkbox" data-grp="${ids.join(',')}" ${ids.every(i=>D.to.has(i))?'checked':''}> ${esc(n)} <span class="small muted">(${ids.length})</span></label>`).join('')}`:''}
+    <div class="h">Personas</div>${cs.map(({u,why})=>`<label data-s="${esc((u.name+' '+why).toLowerCase())}"><input type="checkbox" data-uid="${u.id}" ${D.to.has(u.id)?'checked':''}>${av(u)}<span style="min-width:0"><span>${esc(u.name)}</span><br><span class="small muted">${esc(why||'')}</span></span></label>`).join('')||'<p class="small muted" style="padding:8px">No tienes personas disponibles para escribir.</p>'}</div></div>
+  <div class="field"><label for="mbsub">Asunto</label><input id="mbsub" name="subject" class="inp" maxlength="200" value="${esc(D.subject)}" required></div>
+  <div class="field"><label for="mbbody">Mensaje</label><textarea id="mbbody" name="body" class="inp" rows="9" maxlength="20000" style="resize:vertical">${esc(D.body)}</textarea></div>
+  <div class="field"><label>Adjuntos <span class="small muted">(hasta 5 archivos de 10 MB)</span></label><div class="mb-files" style="margin-top:0">${D.files.map((f,i)=>`<span class="mb-file">${ic('attach')}<span>${esc(f.name)}</span><button type="button" class="iconbtn" style="width:22px;height:22px" data-a="mailrmfile" data-i="${i}" aria-label="Quitar ${esc(f.name)}">${ic('x')}</button></span>`).join('')}
+   ${D.files.length<5?`<label class="btn sm" style="cursor:pointer">${ic('attach')}${D.busy?'Subiendo…':'Adjuntar archivo'}<input type="file" id="mbfile" multiple style="display:none" ${D.busy?'disabled':''}></label>`:''}</div></div>
+  <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><button type="button" class="btn sm ghost" data-a="mailsavedraft">${ic('draft')}Guardar borrador</button><span class="small muted">La persona recibirá un aviso en su correo. El contenido solo se lee dentro del campus.</span></div></div>`})}
+function mailSync(){const D=MAIL.draft;if(!D)return;const s=document.getElementById('mbsub'),b=document.getElementById('mbbody');if(s)D.subject=s.value;if(b)D.body=b.value}
+function mailDecorate(){const D=MAIL.draft;if(!D||!ui.modal||ui.modal.form!=='mailsend')return;const box=document.getElementById('mbto');if(!box||box.dataset.ok)return;box.dataset.ok='1';
+ const q=document.getElementById('mbtoq');if(q)q.addEventListener('input',()=>{const v=q.value.trim().toLowerCase();box.querySelectorAll('label[data-s]').forEach(l=>{l.style.display=!v||l.dataset.s.includes(v)?'':'none'})});
+ box.addEventListener('change',e=>{const c=e.target;if(c.dataset.uid){c.checked?D.to.add(c.dataset.uid):D.to.delete(c.dataset.uid)}else if(c.dataset.grp){c.dataset.grp.split(',').forEach(id=>c.checked?D.to.add(id):D.to.delete(id))}mailSync();const y=box.scrollTop,qv=q?q.value:'';mailComposeOpen();const b2=document.getElementById('mbto'),q2=document.getElementById('mbtoq');if(b2)b2.scrollTop=y;if(q2&&qv){q2.value=qv;q2.dispatchEvent(new Event('input'))}});
+ const fi=document.getElementById('mbfile');if(fi)fi.addEventListener('change',()=>mailUpload([...fi.files]))}
+async function mailUpload(files){const D=MAIL.draft;mailSync();const room=5-D.files.length;if(files.length>room)toast('Puedes adjuntar hasta 5 archivos');files=files.slice(0,room);
+ for(const f of files){if(f.size>10*1024*1024){toast(`${f.name} supera los 10 MB`);continue}D.busy=true;mailComposeOpen();
+  const path=`${D.id}/${Date.now().toString(36)}-${f.name.replace(/[^\w.\-]+/g,'_').slice(-80)}`;const {error}=await SB.storage.from('mail').upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false});
+  if(error)toast('No se pudo subir '+f.name);else D.files.push({path,name:f.name,size:f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(f.size/1024))+' KB',mime:f.type||''})}
+ D.busy=false;mailComposeOpen()}
+ACT.mailrm=d=>{mailSync();MAIL.draft.to.delete(d.id);mailComposeOpen()};
+ACT.mailrmfile=async d=>{mailSync();const D=MAIL.draft;const f=D.files[+d.i];if(!f)return;D.files.splice(+d.i,1);if(!f.copied)try{await SB.storage.from('mail').remove([f.path])}catch(e){}mailComposeOpen()};
+async function mailSave(draft){const D=MAIL.draft;mailSync();if(D.busy){toast('Espera a que terminen de subir los archivos');return false}
+ if(!draft){if(!D.to.size){toast('Elige al menos una persona');return false}if(!D.subject.trim()){toast('Escribe el asunto');return false}}
+ const {data,error}=await SB.rpc('mail_send',{p_id:D.id,p_to:[...D.to],p_data:{subject:D.subject.trim(),body:D.body,files:D.files.map(({path,name,size,mime})=>({path,name,size,mime})),reply_of:D.reply_of,fwd_of:D.fwd_of},p_draft:!!draft});
+ if(error){toast(error.message||'No se pudo enviar');return false}
+ log(draft?'Guardó un borrador de mensaje':'Envió un mensaje',`${D.subject.trim().slice(0,60)} · ${D.to.size} destinatario${D.to.size===1?'':'s'}`);save();
+ MAIL.draft=null;ui.modal=null;toast(draft?'Borrador guardado':'Mensaje enviado');if(!draft){MAIL.box='sent';MAIL.folder=null}await mailLoad();return true}
+FORMS.mailsend=()=>mailSave(false);
+ACT.mailsavedraft=()=>mailSave(true);
+ACT.mailnew=d=>mailCompose({to:d&&d.id?[d.id]:[]});
+ACT.maileditdraft=d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(!r)return;mailCompose({id:r.mail_id,existing:true,to:r.data.to||[],subject:r.data.subject,body:r.data.body,files:r.data.files||[],reply_of:r.data.reply_of,fwd_of:r.data.fwd_of})};
+function mailQuote(r){return `\n\n— El ${mailWhenLong(r.at)}, ${r.sender_name||'EduPsi'} escribió:\n`+String(r.data.body||'').split('\n').map(l=>'> '+l).join('\n')}
+ACT.mailreply=d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(!r)return;const me=ui.user.id;let to=r.box==='in'?[r.sender_id]:[...(r.data.to||[])];
+ if(d.all)to=[...new Set([r.sender_id,...(r.data.to||[])])].filter(x=>x!==me);const s=r.data.subject||'';
+ mailCompose({to,subject:/^re:/i.test(s)?s:'RE: '+s,body:mailQuote(r),reply_of:r.mail_id})};
+ACT.mailfwd=async d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);if(!r)return;const id=mailNewId();const files=[];
+ for(const f of (r.data.files||[])){const np=`${id}/${f.path.split('/').pop()}`;try{const {error}=await SB.storage.from('mail').copy(f.path,np);if(!error)files.push({...f,path:np})}catch(e){}}
+ if(files.length<(r.data.files||[]).length)toast('Algunos adjuntos no se pudieron incluir');const s=r.data.subject||'';
+ mailCompose({id,subject:/^rv:/i.test(s)?s:'RV: '+s,body:`\n\n— Mensaje reenviado —\nDe: ${r.sender_name||''}\nFecha: ${mailWhenLong(r.at)}\nAsunto: ${s}\n\n${r.data.body||''}`,files,fwd_of:r.mail_id})};
+const _closeM31=ACT.closemodal;ACT.closemodal=(...a)=>{if(ui.modal&&ui.modal.form==='mailsend'&&MAIL.draft){mailSync();const D=MAIL.draft;if((D.subject.trim()||D.body.trim()||D.files.length)&&!D.existing){if(confirmLeave())return}MAIL.draft=null}return _closeM31?_closeM31(...a):closeModal()};
+function confirmLeave(){mailSave(true);return true}
+
+// ---------- reemplazos del chat anterior ----------
+ACT.msgto=d=>{go('messages');mailCompose({to:[d.id]})};
+ACT.newmsg=()=>{go('messages');mailCompose({})};
+// solicitudes que antes se enviaban por el chat: ahora llegan como mensaje del buzón
+function convToMail(fn,subject){return async(...a)=>{const before=new Map(S.convs.map(c=>[c.id,c.msgs.length]));const r=await fn(...a);const me=ui.user&&ui.user.id;
+ for(const c of [...S.convs]){const n=before.has(c.id)?before.get(c.id):0;const nw=c.msgs.slice(n).filter(m=>m.f===me);if(!nw.length)continue;c.msgs.splice(n);if(!c.msgs.length&&!before.has(c.id))S.convs=S.convs.filter(x=>x!==c);
+  const to=c.m.filter(x=>x!==me);for(const m of nw){try{await SB.rpc('mail_send',{p_id:mailNewId(),p_to:to,p_data:{subject,body:m.t,files:[]},p_draft:false})}catch(e){}}}
+ save();mailLoad(true);return r}}
+if(FORMS.bookreq)FORMS.bookreq=convToMail(FORMS.bookreq,'Solicitud de cita');
+if(FORMS.askdelete)FORMS.askdelete=convToMail(FORMS.askdelete,'Solicitud de eliminación de datos (Ley 8968)');
+// "Descargar mis datos" incluye el buzón
+if(ACT.mydata){const _md31=ACT.mydata;ACT.mydata=()=>{const _dl=dlFile;dlFile=(n,c,t)=>{try{const o=JSON.parse(c);o.mensajes=MAIL.rows.filter(r=>r.box!=='draft').map(r=>({bandeja:r.box==='in'?'Recibido':'Enviado',fecha:r.at,de:r.sender_name,para:r.to_names,asunto:r.data.subject,texto:r.data.body,adjuntos:(r.data.files||[]).map(f=>f.name)}));c=JSON.stringify(o,null,2)}catch(e){}_dl(n,c,t)};try{_md31()}finally{dlFile=_dl}}}
+
+// insignias: mensajes sin leer del buzón
+if(typeof famCounts==='function'){const _fc31=famCounts;famCounts=function(){const n=_fc31.apply(this,arguments);n.msgs=mailUnread();return n}}
+const _shell31=shell;shell=function(body){let h=_shell31(body);const n=mailUnread();
+ h=h.replace(/(data-a="go" data-v="messages">[\s\S]*?<span>[^<]*<\/span>)(<span class="badge">\d+<\/span>)?/,(m,a)=>a+(n?`<span class="badge">${n}</span>`:''));return h};
+// carga inicial y actualización periódica
+const _ab31=afterBoot;afterBoot=function(acct){_ab31(acct);MAIL.loaded=false;MAIL.rows=[];setTimeout(()=>mailLoad(true),600)};
+const _lo31=ACT.logout;ACT.logout=async(...a)=>{MAIL.rows=[];MAIL.loaded=false;MAIL.sel=null;MAIL.draft=null;return _lo31(...a)};
+setInterval(()=>{if(ui.user&&!document.hidden&&!(ui.modal&&ui.modal.form==='mailsend'))mailLoad(true)},60000);
+const _render31=render;render=function(){_render31();try{mailDecorate();mailSearchDecorate()}catch(e){}};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
