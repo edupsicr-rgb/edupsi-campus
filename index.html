@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-8Lc5oQkJBQK3//sBOh+Ojs/xcwoLU9DTRuOZCZ8VejU='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-c03b0eKjX/6LeTyml8pakyOxRhaDIzlQSiwxxcjvFD8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-29d';
+const BUILD38='2026-10-29e';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4428,6 +4428,26 @@ function show38(){if(document.getElementById('upd38'))return;document.body.inser
 setTimeout(check38,15000);setInterval(check38,5*60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)check38()});
 (function(){const st=document.createElement('style');st.textContent=`#upd38{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 88px);z-index:96;display:flex;align-items:center;gap:12px;background:#fff;color:#1D2B36;border:1px solid #C7E0F2;border-radius:14px;padding:10px 12px 10px 16px;box-shadow:0 10px 28px rgba(31,59,87,.18);font-size:14px;font-weight:500;width:min(440px,calc(100% - 24px));box-sizing:border-box}
 #upd38 span{display:flex;align-items:center;gap:8px;flex:1;min-width:0}#upd38 .btn{flex:none}@media (min-width:701px){#upd38{bottom:24px}}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 39: contraseñas seguras (minúscula, mayúscula, número, 8+) y confirmación =====
+const PW39={signupinv:'p',newpass:'p',applypro:'pw',mypw:'p1'};
+function pwRules39(p){p=p||'';return [[p.length>=8,'Al menos 8 caracteres'],[/[a-zñáéíóúü]/.test(p),'Una letra minúscula'],[/[A-ZÑÁÉÍÓÚÜ]/.test(p),'Una letra mayúscula'],[/\d/.test(p),'Un número']]}
+function pwOk39(p){return pwRules39(p).every(r=>r[0])}
+function pwCheck39(form,main,conf){const box=form.querySelector('.pw39');if(!box)return;const p=main.value,c=conf?conf.value:'';
+ box.innerHTML=pwRules39(p).map(([ok,t])=>`<li class="${ok?'ok':''}">${ok?'✓':'•'} ${t}</li>`).join('')+(conf?`<li class="${c&&c===p?'ok':''}">${c&&c===p?'✓':'•'} Las dos contraseñas coinciden</li>`:'')}
+function pwDecorate39(){Object.entries(PW39).forEach(([f,name])=>{document.querySelectorAll(`form[data-f="${f}"]`).forEach(form=>{if(form.dataset.pw39)return;const main=form.querySelector(`input[name="${name}"]`);if(!main)return;form.dataset.pw39='1';
+  let conf=form.querySelector('input[name="p2"]');
+  const field=main.closest('.field')||main.parentNode;
+  if(!conf){field.insertAdjacentHTML('afterend',`<div class="field"><label for="${main.id||name}_c39">Confirma la contraseña</label><input id="${main.id||name}_c39" name="pconfirm39" type="password" class="inp" autocomplete="new-password" required></div>`);conf=form.querySelector('input[name="pconfirm39"]')}
+  else{const l=form.querySelector(`label[for="${conf.id}"]`);if(l)l.textContent='Confirma la contraseña'}
+  (conf.closest('.field')||field).insertAdjacentHTML('afterend','<ul class="pw39" aria-live="polite"></ul>');
+  main.removeAttribute('minlength');const upd=()=>pwCheck39(form,main,conf);main.addEventListener('input',upd);conf.addEventListener('input',upd);upd()})});
+ if(typeof pwDecorate==='function')try{pwDecorate()}catch(e){}}
+Object.entries(PW39).forEach(([f,name])=>{const prev=FORMS[f];if(!prev)return;FORMS[f]=function(fd_,form){const p=fd_.get(name)||'';const c=fd_.has('pconfirm39')?fd_.get('pconfirm39'):fd_.get('p2');
+ if(!pwOk39(p)){toast('La contraseña debe tener al menos 8 caracteres, con una minúscula, una mayúscula y un número');return}
+ if(c!=null&&c!==p){toast('Las contraseñas no coinciden');return}return prev.apply(this,arguments)}});
+const _render39=render;render=function(){_render39();try{pwDecorate39()}catch(e){}};
+(function(){const st=document.createElement('style');st.textContent=`.pw39{list-style:none;margin:-4px 0 4px;padding:10px 12px;border-radius:10px;background:var(--surface-2,#F3F6F9);display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:12.5px;color:var(--muted)}
+.pw39 li.ok{color:#4F6B14;font-weight:600}@media (max-width:520px){.pw39{grid-template-columns:1fr}}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
