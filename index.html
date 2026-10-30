@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-ZhVEDeLPTMK+ZYr+mh82tHPRGB8/wv6u4su6wQJ0yt4='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-3RRgxIzXN0/FWk7+Yc+4xmMZej+ZJDEztBnwCbqsOC0='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-30a';
+const BUILD38='2026-10-30b';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4653,6 +4653,144 @@ const _cv43=caseView;caseView=function(sid,family){let h=_cv43(sid,family);if(fa
  const b=`<button class="btn sm" data-a="acta43" data-s="${sid}">${ic('users')}Acta de reunión</button>`;
  const i=h.indexOf('<button class="btn sm" data-a="periodreport"');return i>=0?h.slice(0,i)+b+h.slice(i):h.replace('<div class="tabs" role="tablist">',`<div class="row" style="margin:-4px 0 12px;gap:6px;flex-wrap:wrap">${b}</div><div class="tabs" role="tablist">`)};
 setTimeout(()=>{try{if(ui.user)loadFonts43()}catch(e){}},4000);
+// ===== EduPsi Campus · parte 44: pie de página en informes y actas + confirmación digital (nombre completo + aceptar) de familias y profesionales =====
+// ---------- pie de página ----------
+const FOOT44={brand:'EduPsi · Servicios en Educación y Psicopedagogía',web:'edupsicr.com',mail:'edupsicr@gmail.com'};
+function footLine44(){return `${FOOT44.web} · ${FOOT44.mail}`}
+// ---------- datos de confirmación ----------
+const OK44={rows:[],loaded:false,busy:false};
+async function okLoad44(){if(!ui.user||typeof SB==='undefined'||!SB||OK44.busy)return;OK44.busy=true;
+ try{const {data,error}=await SB.rpc('doc_ok_list');if(error){console.warn('doc_ok_list',error.message);return}
+  const before=JSON.stringify(pend44().map(r=>r.id));OK44.rows=data||[];OK44.loaded=true;
+  if(JSON.stringify(pend44().map(r=>r.id))!==before&&!ui.modal&&!document.getElementById('rep33'))render()}
+ catch(e){console.warn(e)}finally{OK44.busy=false}}
+function oks44(docId){return OK44.rows.filter(r=>r.doc_id===docId)}
+function pend44(){return ui.user?OK44.rows.filter(r=>r.user_id===ui.user.id&&!r.ok&&r.snap):[]}
+function okRole44(r){const u=U(r.user_id);if(r.urole==='guardian')return 'Familia';if(u)return roleLabel(u);return r.urole==='admin'||r.urole==='superadmin'?'Dirección EduPsi':'Profesional'}
+function okWhen44(at){try{return new Date(at).toLocaleString('es-CR',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'})}catch(e){return String(at||'').slice(0,16)}}
+function okKind44(doc){return doc&&doc.acta?'acta':'informe'}
+function okText44(doc){return doc&&doc.acta?'Leí el acta y estoy de acuerdo con lo registrado y con los acuerdos.':'Leí el informe y confirmo que lo recibí.'}
+const norm44=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+
+// ---------- HTML: sección de confirmación + pie de página ----------
+function okHtml44(doc){const rows=oks44(doc.id);if(!rows.length)return '';const E=s=>esc(s||'');
+ return `<h2>Confirmación digital</h2><p class="okn">Cada persona leyó el documento en EduPsi Campus, escribió su nombre completo y lo aceptó. La fecha y la hora las registra el sistema.</p>
+ <table><tr><th style="width:34%">Nombre escrito</th><th style="width:22%">Rol</th><th style="width:28%">Fecha y hora</th><th>Estado</th></tr>${rows.map(r=>`<tr><td>${E(r.ok?r.ok.name:r.uname)}</td><td>${E(okRole44(r))}</td><td>${r.ok?E(okWhen44(r.ok.at)):'—'}</td><td>${r.ok?'<b class="okv">✓ Confirmado</b>':'Pendiente'}</td></tr>`).join('')}</table>`}
+function deco44(h,doc){h=String(h);
+ const css=`footer.dfoot{margin-top:26px;border-top:2px solid #6CA8D2;padding-top:8px;display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;font-size:10.5px;color:#5b6b78}footer.dfoot b{color:#1F3B57;font-weight:600}
+ .okn{font-size:11px;color:#5b6b78;margin:0 0 4px}.okv{color:#5F7A0F}
+ @page{@bottom-center{content:"EduPsi · edupsicr.com · Página " counter(page) " de " counter(pages);font-family:Poppins,Arial,sans-serif;font-size:8pt;color:#6b7b88}}`;
+ h=h.replace('</style>',css+'</style>');
+ if(doc&&doc.acta)h=h.replace('<th style="width:38%">Nombre</th><th style="width:32%">Rol</th><th>Firma</th>','<th style="width:55%">Nombre</th><th>Rol</th>').replace(/<td class="sig"><\/td>/g,'');
+ const ok=doc?okHtml44(doc):'';if(ok){const i=h.lastIndexOf('<p class="conf">');h=i>=0?h.slice(0,i)+ok+h.slice(i):h.replace('</body>',ok+'</body>')}
+ const f=`<footer class="dfoot"><span><b>EduPsi</b> · Servicios en Educación y Psicopedagogía</span><span>${footLine44()}</span></footer>`;
+ const j=h.lastIndexOf('</body>');return j>=0?h.slice(0,j)+f+h.slice(j):h+f}
+const _rh44=reportHtml32;reportHtml32=function(sid,doc){return deco44(_rh44.apply(this,arguments),doc)};
+const _ah44=actaHtml43;actaHtml43=function(sid,doc){return deco44(_ah44.apply(this,arguments),doc)};
+
+// ---------- PDF: pie de página de marca, sin columna de firma y con la confirmación digital ----------
+let HOOK44=null;
+Pdf33=(function(orig){return function(){const P=orig();
+ const out=P.out;P.out=(title,foot)=>{const keep=P.cur;P.pages.forEach(pg=>{P.cur=pg;const b=pdfEnc33('EduPsi'),s=pdfEnc33(' · Servicios en Educación y Psicopedagogía'),r=pdfEnc33(footLine44());
+   P.text(P.M,42,b,8,true,PC33.brand);P.text(P.M+pdfW33(b,8,true),42,s,8,false,PC33.muted);P.text(P.W-P.M-pdfW33(r,8),42,r,8,false,PC33.muted)});P.cur=keep;return out(title,foot)};
+ const table=P.table;P.table=(cols,head,rows,o)=>{if(head&&head.join('|')==='Nombre|Rol|Firma')return table([55,45],['Nombre','Rol'],rows.map(x=>x.slice(0,2)),o);return table(cols,head,rows,o)};
+ const para=P.para;P.para=(t,z,o)=>{if(HOOK44&&String(t).startsWith('Documento confidencial')){const h=HOOK44;HOOK44=null;
+   const last=P.cur[P.cur.length-1];if(/ RG 0\.5 w [\d.]+ [\d.]+ m [\d.]+ [\d.]+ l S$/.test(String(last))){P.cur.pop();P.y+=6}
+   try{h(P)}catch(e){console.warn(e)}P.need(40);P.y-=6;P.hline(P.X0,P.X0+P.CW,P.y,PC33.line,0.5)}
+  return para(t,z,o)};
+ return P}})(Pdf33);
+function okPdf44(P,doc){const rows=oks44(doc.id);if(!rows.length)return;P.h2('Confirmación digital');
+ P.para('Cada persona leyó el documento en EduPsi Campus, escribió su nombre completo y lo aceptó. La fecha y la hora las registra el sistema.',8.5,{c:PC33.muted});
+ P.table([34,22,28,16],['Nombre escrito','Rol','Fecha y hora','Estado'],rows.map(r=>[r.ok?r.ok.name:(r.uname||''),okRole44(r),r.ok?okWhen44(r.ok.at):'—',r.ok?'Confirmado':'Pendiente']))}
+const _ap44=actaPdf43;actaPdf43=function(sid,doc){HOOK44=P=>okPdf44(P,doc);try{return _ap44.apply(this,arguments)}finally{HOOK44=null}};
+const _rp44=reportPdf33;reportPdf33=function(sid,doc){HOOK44=P=>okPdf44(P,doc);try{return _rp44.apply(this,arguments)}finally{HOOK44=null}};
+
+// ---------- copia del documento para quien no tiene acceso al expediente ----------
+function snap44(sid,doc){const k=U(sid)||{},c=CASE(sid)||{},f=c.ficha||{};const us={};
+ [c.prof,doc.acta&&doc.acta.by,doc.rep&&doc.rep.by].filter(Boolean).forEach(id=>{const u=U(id);if(u)us[id]={name:u.name,role:u.role,spec:u.spec||undefined,dbrole:u.dbrole||undefined}});
+ return {sid,kid:k.name||'',doc:JSON.parse(JSON.stringify(doc)),c:{area:c.area||'',phase:c.phase,prof:c.prof||'',ficha:{birth:f.birth||'',school:f.school||'',level:f.level||''}},us}}
+function shadow44(sn,fn){const add=[],had=S.cases[sn.sid];
+ if(!U(sn.sid)){const k={id:sn.sid,name:sn.kid,role:'student',status:'activo',inst:'i1',email:'',_ro:true};S.users.push(k);add.push(k)}
+ Object.entries(sn.us||{}).forEach(([id,x])=>{if(!U(id)){const u={id,...x,status:'activo',inst:'i1',email:'',_ro:true};S.users.push(u);add.push(u)}});
+ if(!had)S.cases[sn.sid]={...sn.c,sessions:[],goals:[],home:[],conduct:[],forms:[],docs:[sn.doc]};
+ try{return fn()}finally{add.forEach(u=>{const i=S.users.indexOf(u);if(i>=0)S.users.splice(i,1)});if(!had)delete S.cases[sn.sid]}}
+// ---------- visor: panel de confirmación ----------
+let CUR44=null;
+function panel44(sid,doc){const rows=oks44(doc.id),me=ui.user.id,mine=rows.find(r=>r.user_id===me&&!r.ok);const staff=!CUR44.snap&&typeof canReport32==='function'&&canReport32(sid);
+ if(!rows.length&&!staff)return '';
+ const st=rows.map(r=>`<div class="ok44-r"><span class="ok44-i ${r.ok?'y':''}">${r.ok?'✓':'…'}</span><div class="grow"><b>${esc(r.ok?r.ok.name:r.uname||'')}</b><span>${esc(okRole44(r))} · ${r.ok?'confirmó el '+esc(okWhen44(r.ok.at)):'pendiente'}</span></div>${staff&&!r.ok?`<button type="button" class="btn sm ghost" data-ok44="cancel" data-id="${r.id}">Quitar</button>`:''}</div>`).join('');
+ return `<div class="ok44">${mine?`<div class="ok44-me"><h2>Tu confirmación digital</h2><p class="small" style="margin:0">${doc.acta?'Ya leíste el acta. Para confirmarla':'Ya leíste el informe. Para confirmarlo'}, escribe tu nombre completo y marca la casilla. No hace falta firmar.</p>
+  <div class="field" style="margin:0"><label for="ok44n">Tu nombre completo</label><input id="ok44n" class="inp" autocomplete="name" placeholder="Nombre y apellidos"></div>
+  <label class="check"><input type="checkbox" id="ok44c"> ${esc(okText44(doc))}</label>
+  <div><button type="button" class="btn pri" data-ok44="confirm" data-id="${mine.id}">${ic('check')}Confirmar</button></div></div>`:''}
+  ${rows.length||staff?`<div class="ok44-st"><div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><b>Confirmación digital</b>${staff?`<button type="button" class="btn sm" data-ok44="ask">${ic('users')}Pedir confirmación</button>`:''}</div>${st||'<p class="small muted" style="margin:0">Todavía nadie confirmó este documento. Puedes pedir la confirmación a la familia y a otras profesionales.</p>'}</div>`:''}</div>`}
+const _vd44=viewDoc43;viewDoc43=function(title,html,pdfFn,name){const cur=CUR44;const sn=cur&&cur.snap;
+ const pf=sn?()=>shadow44(sn,pdfFn):pdfFn;_vd44(title,html,pf,name);const ov=document.getElementById('rep33');if(!ov||!cur)return;
+ const p=panel44(cur.sid,cur.doc);if(p){const sc=ov.querySelector('.rep33-sc');sc.insertAdjacentHTML('beforeend',p);if(p.includes('ok44n'))sc.insertAdjacentHTML('afterbegin',`<div class="ok44-tip">${ic('check')}<span>Lee ${cur.doc.acta?'el acta':'el informe'} y, al final, confírm${cur.doc.acta?'ala':'alo'} con tu nombre completo.</span><button type="button" class="btn sm pri" data-ok44="go">Ir a confirmar</button></div>`)}
+ ov.addEventListener('click',e=>{const b=e.target.closest('[data-ok44]');if(!b)return;const a=b.dataset.ok44;
+  if(a==='confirm')okConfirm44(b.dataset.id,cur);
+  else if(a==='ask'){reportClose33();ACT.okask44({s:cur.sid,id:cur.doc.id})}
+  else if(a==='cancel')okCancel44(b.dataset.id,cur);
+  else if(a==='go'){const m=ov.querySelector('.ok44-me');if(m){m.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{const n=document.getElementById('ok44n');n&&n.focus({preventScroll:true})},400)}}})};
+function reopen44(cur){if(!cur||!cur.doc||!(cur.doc.acta||cur.doc.rep))return;CUR44=cur;try{const f=()=>cur.doc.acta?actaView43(cur.sid,cur.doc):reportView33(cur.sid,cur.doc);cur.snap?shadow44(cur.snap,f):f()}finally{CUR44=null}}
+const _av44=actaView43;actaView43=function(sid,doc){const top=!CUR44;if(top)CUR44={sid,doc};try{return _av44.apply(this,arguments)}finally{if(top)CUR44=null}};
+const _rv44=reportView33;reportView33=function(sid,doc){const top=!CUR44;if(top)CUR44={sid,doc};try{return _rv44.apply(this,arguments)}finally{if(top)CUR44=null}};
+async function okConfirm44(id,cur){const n=document.getElementById('ok44n'),c=document.getElementById('ok44c');const nm=(n&&n.value||'').replace(/\s+/g,' ').trim();
+ if(nm.split(' ').length<2||nm.length<5){toast('Escribe tu nombre completo (nombre y apellidos)');n&&n.focus();return}
+ const first=norm44(ui.user.name).split(' ')[0];if(first&&!norm44(nm).split(' ').includes(first)){toast(`Escribe tu nombre completo tal como aparece en tu cuenta (${ui.user.name})`);n&&n.focus();return}
+ if(!c||!c.checked){toast('Marca la casilla para aceptar');c&&c.focus();return}
+ const {error}=await SB.rpc('doc_ok_confirm',{p_id:id,p_name:nm});if(error){toast(error.message||'No se pudo confirmar');return}
+ const r=OK44.rows.find(x=>x.id===id);if(r){r.ok={name:nm,at:new Date().toISOString()};if(r.by_id&&r.by_id!==ui.user.id){notify(r.by_id,`${short(ui.user.name)} confirmó ${cur.doc.acta?'el acta':'el informe'} «${cur.doc.t}»`);save()}}
+ try{log('Confirmó un documento',cur.doc.t)}catch(e){}
+ toast('¡Listo! Tu confirmación quedó registrada');reportClose33();reopen44(cur);okLoad44()}
+async function okCancel44(id,cur){const {error}=await SB.rpc('doc_ok_cancel',{p_id:id});if(error){toast(error.message||'No se pudo quitar');return}
+ OK44.rows=OK44.rows.filter(r=>r.id!==id);toast('Solicitud quitada');reportClose33();reopen44(cur)}
+
+// ---------- pedir confirmación ----------
+ACT.okask44=d=>{const c=CASE(d.s),doc=c&&(c.docs||[]).find(x=>x.id===d.id);if(!doc)return;const rows=oks44(doc.id),done={};rows.forEach(r=>done[r.user_id]=r);
+ const act=u=>u&&u.status==='activo'&&!u._ro;const fams=famOf(d.s).filter(act);
+ const team=[...new Set([c.prof,...(c.team||[]),ui.user.id])].map(U).filter(u=>u&&u.status==='activo'&&u.role!=='guardian');
+ const others=S.users.filter(u=>(u.role==='teacher'||u.role==='superadmin')&&u.status==='activo'&&!team.includes(u)).sort((a,b)=>a.name.localeCompare(b.name));
+ const item=u=>{const r=done[u.id];return `<label class="check"><input type="checkbox" name="u" value="${u.id}" ${r?'checked disabled':''}> ${esc(u.name)}${u.id===ui.user.id?' (yo)':''} <span class="small muted">· ${esc(u.role==='guardian'?'Familia':roleLabel(u))}${r?(r.ok?' · ya confirmó':' · ya se le pidió'):''}</span></label>`};
+ openModal({title:'Pedir confirmación digital',form:'okask44',ok:'Enviar',wide:true,body:`<input type="hidden" name="s" value="${d.s}"><input type="hidden" name="id" value="${doc.id}"><div class="stack">
+  <p class="small" style="margin:0">Cada persona recibirá un aviso para leer <b>${esc(doc.t)}</b>, escribir su nombre completo y aceptarlo. Lo podrá leer aunque no tenga acceso al expediente.</p>
+  ${fams.length?`<div class="stack" style="gap:6px"><b class="small">Familia</b>${fams.map(item).join('')}${doc.vis?'':'<p class="small muted" style="margin:0">Este documento no está compartido con la familia; al pedirle la confirmación lo podrá leer.</p>'}</div>`:''}
+  <div class="stack" style="gap:6px"><b class="small">Equipo del estudiante</b>${team.map(item).join('')}</div>
+  ${others.length?`<div class="stack" style="gap:6px"><b class="small">Otras profesionales</b><div class="ok44-list stack" style="gap:6px">${others.map(item).join('')}</div></div>`:''}
+  <label class="check"><input type="checkbox" name="mail" value="1" checked> Enviar también un mensaje a su buzón</label></div>`})};
+FORMS.okask44=async fd_=>{const sid=fd_.get('s'),c=CASE(sid),doc=c&&(c.docs||[]).find(x=>x.id===fd_.get('id'));if(!doc)return;
+ const to=fd_.getAll('u').filter(id=>U(id));if(!to.length){toast('Elige al menos una persona');return}
+ const {data,error}=await SB.rpc('doc_ok_request',{p_sid:sid,p_doc:doc.id,p_users:to,p_snap:snap44(sid,doc)});if(error){toast(error.message||'No se pudo enviar la solicitud');return}
+ const kid=(U(sid)||{name:''}).name.split(' ')[0],what=doc.acta?'el acta de reunión':'el informe';
+ to.filter(id=>id!==ui.user.id).forEach(id=>notify(id,`Te pidieron confirmar ${what} «${doc.t}» de ${kid}. Lo encuentras en Inicio.`));
+ const mt=to.filter(id=>id!==ui.user.id);
+ if(fd_.get('mail')&&mt.length&&typeof mailNewId==='function')SB.rpc('mail_send',{p_id:mailNewId(),p_to:mt,p_data:{subject:`Confirmación pendiente: ${doc.t} · ${kid}`,body:`Hola:\n\nTe pedimos leer y confirmar ${what} «${doc.t}» del proceso de ${kid} en EduPsi.\n\nEntra al campus: en Inicio verás «Documentos por confirmar». Solo tienes que leerlo, escribir tu nombre completo y aceptar.\n\nMuchas gracias,\n${ui.user.name}`,files:[]},p_draft:false}).then(r=>{if(r&&r.error)console.warn(r.error.message)}).catch(()=>{});
+ try{log('Pidió confirmación digital',`${doc.t} · ${to.length} persona${to.length===1?'':'s'}`)}catch(e){}
+ save();ui.modal=null;render();toast(data?`Solicitud enviada a ${data} persona${data===1?'':'s'}`:'Esas personas ya tenían la solicitud');
+ await okLoad44();reopen44({sid,doc})};
+// al guardar un acta: ofrecer pedir la confirmación de una vez
+const _a43=ACT.acta43;ACT.acta43=d=>{_a43(d);if(ui.modal&&ui.modal.form==='acta43'&&!ui.modal.body.includes('name="okask"')){
+ ui.modal.body=ui.modal.body.replace('<label class="check"><input type="checkbox" name="ver"','<label class="check"><input type="checkbox" name="okask" value="1" checked> Pedir la confirmación digital al guardar (eliges a quién: familia y profesionales)</label>\n <label class="check"><input type="checkbox" name="ver"');render()}};
+const _fa44=FORMS.acta43;FORMS.acta43=fd_=>{const sid=fd_.get('s'),c=CASE(sid),n0=c?(c.docs||[]).length:0;const r=_fa44(fd_);
+ if(fd_.get('okask')&&c&&(c.docs||[]).length>n0){const doc=c.docs[0];reportClose33();ACT.okask44({s:sid,id:doc.id})}return r};
+
+// ---------- Inicio: documentos por confirmar ----------
+ACT.okopen44=d=>{const r=OK44.rows.find(x=>x.id===d.id);if(!r||!r.snap)return;const sn=r.snap,c=CASE(sn.sid),real=c&&(c.docs||[]).find(x=>x.id===r.doc_id);
+ reopen44(real?{sid:sn.sid,doc:real}:{sid:sn.sid,doc:sn.doc,snap:sn})};
+function pendCard44(){const p=pend44();if(!p.length)return '';
+ return `<div class="card stack ok44-home"><div class="card-h" style="margin:0"><div><h2>Documentos por confirmar</h2><p class="small muted">Léelos y confírmalos con tu nombre completo. Solo toma un minuto.</p></div></div><div class="list">${p.map(r=>{const d=r.snap.doc||{},by=U(r.by_id)||(r.snap.us||{})[r.by_id]||{};
+  return `<div class="it"><span class="ok44-i">${ic(d.acta?'users':'file')}</span><div class="grow"><b>${esc(d.t||'Documento')}</b><div class="small muted">${esc(r.snap.kid||'')}${by.name?' · enviado por '+esc(by.name):''}</div></div><button class="btn sm pri" data-a="okopen44" data-id="${r.id}">Leer y confirmar</button></div>`}).join('')}</div></div>`}
+const _home44=VIEWS.home;VIEWS.home=()=>{const h=_home44();const c=pendCard44();return c?c+h:h};
+(function(){const st=document.createElement('style');st.textContent=`.ok44-tip{max-width:840px;margin:0 auto 12px;display:flex;align-items:center;gap:10px;background:#EEF2D2;color:#3F5208;border-radius:12px;padding:10px 14px;font-size:13.5px}.ok44-tip span{flex:1}.ok44-tip svg{width:18px;height:18px;flex:none}
+.ok44{max-width:840px;margin:14px auto 24px;display:flex;flex-direction:column;gap:12px}
+.ok44-me{background:var(--surface,#fff);border:2px solid var(--go,#A2B424);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}.ok44-me h2{font-size:17px;margin:0}
+.ok44-st{background:var(--surface,#fff);border:1px solid var(--line,#dde3e8);border-radius:14px;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.ok44-r{display:flex;gap:10px;align-items:center}.ok44-r span{display:block;font-size:12px;color:var(--muted,#5b6b78)}
+.ok44-i{flex:none;width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--brand-soft,#E4EFF7);color:var(--brand-ink,#1F3B57);font-weight:700}.ok44-i.y{background:#EEF2D2;color:#5F7A0F}.ok44-i svg{width:16px;height:16px}
+.ok44-list{max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px 10px}.ok44-home{border-left:4px solid var(--go,#A2B424)}
+@media(max-width:560px){.ok44-home .it{flex-wrap:wrap}.ok44-home .it .grow{flex:1 1 calc(100% - 50px);min-width:0}.ok44-home .it .btn{width:100%;justify-content:center}.ok44-tip{flex-wrap:wrap}.ok44-tip span{flex:1 1 calc(100% - 30px)}}`;document.head.appendChild(st)})();
+const _ab44=afterBoot;afterBoot=function(acct){_ab44(acct);OK44.rows=[];OK44.loaded=false;setTimeout(okLoad44,900)};
+setInterval(()=>{if(ui.user&&!document.hidden)okLoad44()},60000);
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
