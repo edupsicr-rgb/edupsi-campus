@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-CchwuWyE45wlFiPTIP373w/izl6V4WMNDaJ1vyR0vZE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-0eY23B9U9WufDI6vx7BXwnoqJSM77aCPnSZCAS+nhuw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-30e';
+const BUILD38='2026-10-30f';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4819,6 +4819,53 @@ const _home44=VIEWS.home;VIEWS.home=()=>{const h=_home44();const c=pendCard44();
 @media(max-width:560px){.ok44-home .it{flex-wrap:wrap}.ok44-home .it .grow{flex:1 1 calc(100% - 50px);min-width:0}.ok44-home .it .btn{width:100%;justify-content:center}.ok44-tip{flex-wrap:wrap}.ok44-tip span{flex:1 1 calc(100% - 30px)}}`;document.head.appendChild(st)})();
 const _ab44=afterBoot;afterBoot=function(acct){_ab44(acct);OK44.rows=[];OK44.loaded=false;setTimeout(okLoad44,900)};
 setInterval(()=>{if(ui.user&&!document.hidden)okLoad44()},60000);
+// ===== EduPsi Campus · parte 45: avisos en el celular (notificaciones push) =====
+const PUSH45={sub:null,checked:false,busy:false};
+function pushOk45(){return 'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window}
+function ios45(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}
+function standalone45(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}
+function key45(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+function pushState45(){if(ios45()&&!standalone45())return 'instalar';if(!pushOk45())return 'nosoporta';if(Notification.permission==='denied')return 'bloqueado';return PUSH45.sub?'activo':'apagado'}
+async function pushCheck45(){if(!pushOk45()||!ui.user)return;try{const reg=await navigator.serviceWorker.ready;PUSH45.sub=await reg.pushManager.getSubscription();PUSH45.checked=true;
+ if(PUSH45.sub&&Notification.permission==='granted'){const j=PUSH45.sub.toJSON();await SB.rpc('push_sub_save',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_ua:navigator.userAgent})}}catch(e){console.warn('push',e)}}
+async function pushOn45(){if(PUSH45.busy)return;const st=pushState45();
+ if(st==='instalar'){toast('En iPhone, primero instala el campus en tu pantalla de inicio y ábrelo desde ahí');if(ACT.installapp)ACT.installapp();return}
+ if(st==='nosoporta'){toast('Este navegador no permite avisos. Prueba con Chrome o con la app instalada');return}
+ if(st==='bloqueado'){toast('Los avisos están bloqueados para el campus en este teléfono. Actívalos en los ajustes del navegador');return}
+ PUSH45.busy=true;try{const perm=await Notification.requestPermission();if(perm!=='granted'){toast('No se activaron los avisos');return}
+  const {data:k,error:ke}=await SB.rpc('push_public_key');if(ke||!k){toast('Los avisos todavía no están listos. Intenta más tarde');return}
+  const reg=await navigator.serviceWorker.ready;let sub=await reg.pushManager.getSubscription();
+  if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:key45(k)});
+  const j=sub.toJSON();const {error}=await SB.rpc('push_sub_save',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_ua:navigator.userAgent});if(error){toast(error.message);return}
+  PUSH45.sub=sub;const u=ui.user;u.prefs=u.prefs||{};if(u.prefs.push===false){u.prefs.push=true;const su=S.users.find(x=>x.id===u.id);if(su&&su!==u)su.prefs=u.prefs;save()}
+  try{localStorage.removeItem('push45-hide')}catch(e){}toast('¡Listo! Te avisaremos en este teléfono');render()}
+ catch(e){console.warn(e);toast('No se pudieron activar los avisos en este teléfono')}finally{PUSH45.busy=false}}
+async function pushOff45(silent){try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(sub){try{await SB.rpc('push_sub_delete',{p_endpoint:sub.endpoint})}catch(e){}await sub.unsubscribe()}PUSH45.sub=null;if(!silent){toast('Avisos apagados en este teléfono');render()}}catch(e){console.warn(e)}}
+ACT.push45on=()=>pushOn45();
+ACT.push45off=()=>pushOff45(false);
+ACT.push45hide=()=>{try{localStorage.setItem('push45-hide','1')}catch(e){}render()};
+ACT.push45test=()=>{notify(ui.user.id,'Aviso de prueba: así te llegarán los avisos de EduPsi Campus');save();toast('Enviamos un aviso de prueba. Debería llegar en unos segundos')};
+// tarjeta en Inicio
+function pushCard45(){if(!ui.user||!PUSH45.checked&&pushOk45())return '';const st=pushState45();let hide=false;try{hide=localStorage.getItem('push45-hide')==='1'}catch(e){}
+ if(hide||st==='activo'||st==='nosoporta'||st==='bloqueado')return '';
+ const ios=st==='instalar';
+ return `<div class="card push45"><span class="push45-i">${ic('bell')}</span><div class="grow"><b>Recibe avisos en este teléfono</b><p class="small muted" style="margin:2px 0 0">${ios?'En iPhone, primero instala el campus en tu pantalla de inicio. Luego ábrelo desde ese ícono y activa los avisos.':'Te avisamos cuando te llegue un mensaje, un documento o una confirmación pendiente, aunque el campus esté cerrado.'}</p></div>
+ <div class="row" style="gap:6px;flex-wrap:wrap">${ios?`<button class="btn sm pri" data-a="installapp">Ver cómo instalar</button>`:`<button class="btn sm pri" data-a="push45on">Activar avisos</button>`}<button class="btn sm ghost" data-a="push45hide">Ahora no</button></div></div>`}
+const _home45=VIEWS.home;VIEWS.home=()=>{const h=_home45();if(pushState45()==='instalar'&&h.includes('data-a="installapp"'))return h;const c=pushCard45();return c?c+h:h};
+// en Mi perfil
+function pushPanel45(){const st=pushState45();const T={activo:['Activados en este teléfono','Te llegarán avisos aunque el campus esté cerrado.'],apagado:['Apagados en este teléfono','Actívalos para enterarte de mensajes, documentos y citas.'],instalar:['Primero instala la app','En iPhone los avisos funcionan solo con el campus instalado en la pantalla de inicio (iOS 16.4 o más reciente).'],bloqueado:['Bloqueados','Permite las notificaciones de campus.edupsicr.com en los ajustes del navegador o del teléfono y vuelve a intentarlo.'],nosoporta:['No disponibles en este navegador','Prueba con Chrome o con la app instalada.']}[st];
+ return `<div class="card stack push45-p"><div class="card-h" style="margin:0"><div><h2>Avisos en este teléfono</h2><p class="small muted">${T[1]}</p></div><span class="pill ${st==='activo'?'good':''}">${T[0]}</span></div>
+ <div class="row" style="gap:8px;flex-wrap:wrap">${st==='activo'?`<button class="btn sm" data-a="push45test">${ic('bell')}Enviar aviso de prueba</button><button class="btn sm ghost" data-a="push45off">Apagar en este teléfono</button>`:st==='apagado'?`<button class="btn sm pri" data-a="push45on">${ic('bell')}Activar avisos</button>`:st==='instalar'?`<button class="btn sm pri" data-a="installapp">Ver cómo instalar</button>`:''}</div></div>`}
+const _prof45=VIEWS.profile;VIEWS.profile=()=>{const h=_prof45();const p=pushPanel45();const i=h.indexOf('<div class="card stack"><h2>Cómo quiero recibir los avisos</h2>');return i>=0?h.slice(0,i)+p+h.slice(i):h+p};
+// al tocar un aviso: abrir la sección correspondiente
+function pushGo45(link){const v=link&&VIEWS[link]?link:'home';try{if(ui.user)go(v)}catch(e){}}
+(function(){try{const q=new URLSearchParams(location.search);const ir=q.get('ir');if(ir){PUSH45.ir=ir;history.replaceState(null,'',location.pathname)}}catch(e){}
+ if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.t==='push-open')pushGo45(e.data.link)})})();
+const _ab45=afterBoot;afterBoot=function(acct){_ab45(acct);setTimeout(()=>{pushCheck45().then(()=>{if(!ui.modal)render()});if(PUSH45.ir){const v=PUSH45.ir;PUSH45.ir=null;pushGo45(v)}},700)};
+// al cerrar sesión, este teléfono deja de recibir avisos de esa cuenta
+const _lo45=ACT.logout;ACT.logout=async d=>{try{if(pushOk45()&&ui.user){const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();if(sub)await SB.rpc('push_sub_delete',{p_endpoint:sub.endpoint})}}catch(e){}PUSH45.sub=null;PUSH45.checked=false;return _lo45(d)};
+(function(){const st=document.createElement('style');st.textContent=`.push45{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-left:4px solid var(--brand,#336FA8)}.push45 .grow{flex:1 1 220px;min-width:0}
+.push45-i{flex:none;width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--brand-soft,#E4EFF7);color:var(--brand-ink,#1F3B57)}.push45-i svg{width:20px;height:20px}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
