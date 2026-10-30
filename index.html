@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-0eY23B9U9WufDI6vx7BXwnoqJSM77aCPnSZCAS+nhuw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-nmz/PPwpVw22ZqicEVDSzU09Fo1VX7bNf3iaLRbPv3o='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-30f';
+const BUILD38='2026-10-30g';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4866,6 +4866,40 @@ const _ab45=afterBoot;afterBoot=function(acct){_ab45(acct);setTimeout(()=>{pushC
 const _lo45=ACT.logout;ACT.logout=async d=>{try{if(pushOk45()&&ui.user){const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();if(sub)await SB.rpc('push_sub_delete',{p_endpoint:sub.endpoint})}}catch(e){}PUSH45.sub=null;PUSH45.checked=false;return _lo45(d)};
 (function(){const st=document.createElement('style');st.textContent=`.push45{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-left:4px solid var(--brand,#336FA8)}.push45 .grow{flex:1 1 220px;min-width:0}
 .push45-i{flex:none;width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--brand-soft,#E4EFF7);color:var(--brand-ink,#1F3B57)}.push45-i svg{width:20px;height:20px}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 46: abrir y descargar adjuntos del buzón también en iPhone, iPad y Android =====
+// En iPhone/iPad, abrir una ventana después de esperar la respuesta del servidor está bloqueado. Ahora el archivo se descarga dentro
+// del campus y se muestra en un visor con «Descargar» y «Guardar o compartir» (menú del teléfono: Archivos, Fotos, WhatsApp…).
+function fileClose46(){const o=document.getElementById('fv46');if(o){if(o._url)URL.revokeObjectURL(o._url);o.remove();document.documentElement.style.overflow='';document.removeEventListener('keydown',fileKey46)}}
+function fileKey46(e){if(e.key==='Escape')fileClose46()}
+async function fileView46(url,name,mime){fileClose46();const ov=document.createElement('div');ov.id='fv46';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label',name);
+ ov.innerHTML=`<div class="rep33-bar"><button type="button" class="btn ghost" data-f46="close">${ic('x')}Cerrar</button><span class="rep33-t">${esc(name)}</span></div><div class="rep33-sc"><div class="fv46-load"><span class="spin46"></span>Abriendo el archivo…</div></div>`;
+ document.body.appendChild(ov);document.documentElement.style.overflow='hidden';document.addEventListener('keydown',fileKey46);
+ ov.addEventListener('click',e=>{const b=e.target.closest('[data-f46]');if(!b)return;const a=b.dataset.f46;if(a==='close')fileClose46();else if(a==='share')fileShare46(ov)});
+ let blob;try{const r=await fetch(url);if(!r.ok)throw 0;blob=await r.blob()}catch(e){ov.querySelector('.rep33-sc').innerHTML=`<div class="fv46-card"><p>No se pudo abrir el archivo. Revisa tu conexión e inténtalo de nuevo.</p></div>`;return}
+ if(!document.body.contains(ov))return;
+ const type=mime||blob.type||'application/octet-stream';const file=new File([blob],name,{type});ov._file=file;const bu=URL.createObjectURL(file);ov._url=bu;
+ const img=/^image\//.test(type)||/\.(png|jpe?g|gif|webp)$/i.test(name),pdf=/pdf/.test(type)||/\.pdf$/i.test(name),vid=/^video\//.test(type),aud=/^audio\//.test(type);
+ const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ const canShare=!!(navigator.canShare&&navigator.canShare({files:[file]}));
+ const kb=blob.size>1048576?(blob.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(blob.size/1024))+' KB';
+ let prev='';if(img)prev=`<img class="fv46-img" src="${bu}" alt="${esc(name)}">`;
+ else if(pdf&&!ios)prev=`<iframe class="fv46-pdf" src="${bu}" title="${esc(name)}"></iframe>`;
+ else if(vid)prev=`<video class="fv46-img" src="${bu}" controls playsinline></video>`;else if(aud)prev=`<audio src="${bu}" controls style="width:100%"></audio>`;
+ const bar=ov.querySelector('.rep33-bar');bar.insertAdjacentHTML('beforeend',`${canShare?`<button type="button" class="btn ghost" data-f46="share">${ic('upload')}<span class="fv46-h">Guardar o compartir</span></button>`:''}<a class="btn pri" href="${bu}" download="${esc(name)}">${ic('download')}Descargar</a>`);
+ ov.querySelector('.rep33-sc').innerHTML=`${prev}<div class="fv46-card">${prev?'':`<span class="fv46-ic">${ic('file')}</span>`}<div><b>${esc(name)}</b><div class="small muted">${kb}</div></div>
+  <div class="fv46-acts">${canShare?`<button type="button" class="btn pri" data-f46="share">${ic('upload')}Guardar o compartir</button>`:''}<a class="btn ${canShare?'':'pri'}" href="${bu}" download="${esc(name)}">${ic('download')}Descargar</a>${pdf&&ios?`<a class="btn ghost" href="${bu}" target="_blank" rel="noopener">${ic('file')}Ver el PDF</a>`:''}</div>
+  ${canShare?`<p class="small muted" style="margin:0">En el teléfono, «Guardar o compartir» te deja guardarlo en Archivos o Fotos, o enviarlo por WhatsApp o correo.</p>`:''}</div>`}
+async function fileShare46(ov){const f=ov&&ov._file;if(!f)return;try{await navigator.share({files:[f],title:f.name})}catch(e){if(e&&e.name!=='AbortError')toast('No se pudo compartir. Usa «Descargar»')}}
+ACT.mailfile=async d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);const f=r&&(r.data.files||[])[+d.i];if(!f)return;
+ const {data,error}=await SB.storage.from('mail').createSignedUrl(f.path,600);if(error||!data){toast('No se pudo abrir el archivo');return}
+ fileView46(data.signedUrl,f.name||'archivo',f.mime||'')};
+(function(){const st=document.createElement('style');st.textContent=`#fv46{position:fixed;inset:0;z-index:96;background:var(--bg,#F3F6F9);display:flex;flex-direction:column}
+.fv46-load{display:flex;align-items:center;justify-content:center;gap:10px;padding:60px 0;color:var(--muted)}.spin46{width:20px;height:20px;border:3px solid var(--line,#dde3e8);border-top-color:var(--brand,#336FA8);border-radius:50%;animation:spin46 .8s linear infinite}@keyframes spin46{to{transform:rotate(360deg)}}
+.fv46-img{display:block;max-width:min(100%,900px);max-height:70vh;margin:0 auto 14px;border-radius:12px;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.fv46-pdf{display:block;width:100%;max-width:900px;height:72vh;margin:0 auto 14px;border:0;border-radius:12px;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+.fv46-card{max-width:620px;margin:0 auto;background:var(--surface,#fff);border:1px solid var(--line,#dde3e8);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.fv46-ic{width:46px;height:46px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--brand-soft,#E4EFF7);color:var(--brand-ink,#1F3B57)}.fv46-ic svg{width:22px;height:22px}
+.fv46-acts{display:flex;gap:8px;flex-wrap:wrap}#fv46 .btn{text-decoration:none}@media (max-width:600px){.fv46-h{display:none}#fv46 .rep33-t{display:block;flex:1}}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
