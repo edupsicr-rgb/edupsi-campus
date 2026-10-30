@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-DlZbsn0u43jLHt0gUCI3/Jckj7tSFOgLKSOOHmM29kE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-ZhVEDeLPTMK+ZYr+mh82tHPRGB8/wv6u4su6wQJ0yt4='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-29h';
+const BUILD38='2026-10-30a';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4522,6 +4522,137 @@ const _pros41=VIEWS.pros;VIEWS.pros=()=>{let h=_pros41();if(ui.user.role!=='supe
   const i=h.lastIndexOf('<footer');h=i>0?h.slice(0,i)+box+h.slice(i):h+box}
  return h};
 (function(){const st=document.createElement('style');st.textContent=`.b41-list{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:4px 10px}.b41-list .it{flex-wrap:wrap;gap:10px}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 42: misma paleta que edupsicr.com (celeste y verde del logo) =====
+const PAL42={celeste:'#6CA8D2',celesteFuerte:'#336FA8',verde:'#A2B424',verdeH:'#93A41E',celesteSuave:'#E4EFF7',verdeSuave:'#EEF2D2'};
+const _applyBrand42=applyBrand;applyBrand=function(){try{_applyBrand42()}catch(e){}const r=document.documentElement.style;r.setProperty('--brand',PAL42.celesteFuerte);r.setProperty('--leaf',PAL42.verde)};
+(function(){const st=document.createElement('style');st.textContent=`:root{--go:${PAL42.verde};--go-h:${PAL42.verdeH}}
+:root:not([data-theme="dark"]){--nav-bg:${PAL42.celeste}}
+.fav34-c.k0 .ic{background:${PAL42.celesteSuave};color:${PAL42.celesteFuerte}}.fav34-c.k1 .ic{background:${PAL42.verdeSuave};color:#55610A}`;document.head.appendChild(st)})();
+try{applyBrand()}catch(e){}
+// ===== EduPsi Campus · parte 43: Actas de reunión por estudiante + todos los informes en tipografía Poppins (también en el PDF) =====
+// ---------- Poppins: carga y lectura de la fuente para incrustarla en los PDF ----------
+const FONT43={r:null,b:null,p:null};
+function ttf43(buf){const v=new DataView(buf),n=v.getUint16(4),T={};for(let i=0;i<n;i++){const o=12+16*i;T[String.fromCharCode(v.getUint8(o),v.getUint8(o+1),v.getUint8(o+2),v.getUint8(o+3))]={o:v.getUint32(o+8),l:v.getUint32(o+12)}}
+ const hd=T.head.o,upem=v.getUint16(hd+18),bb=[v.getInt16(hd+36),v.getInt16(hd+38),v.getInt16(hd+40),v.getInt16(hd+42)];
+ const hh=T.hhea.o,asc=v.getInt16(hh+4),desc=v.getInt16(hh+6),nh=v.getUint16(hh+34),hm=T.hmtx.o;
+ const adv=g=>v.getUint16(hm+4*Math.min(g,nh-1));
+ let cap=Math.round(asc*0.7);try{if(T['OS/2']&&v.getUint16(T['OS/2'].o)>=2)cap=v.getInt16(T['OS/2'].o+88)}catch(e){}
+ // cmap formato 4 (Windows Unicode)
+ const cm=T.cmap.o,nt=v.getUint16(cm+2);let sub=-1;for(let i=0;i<nt;i++){const p=v.getUint16(cm+4+8*i),e=v.getUint16(cm+6+8*i);if(p===3&&e===1){sub=cm+v.getUint32(cm+8+8*i);break}}
+ const glyph=c=>{if(sub<0||v.getUint16(sub)!==4)return 0;const sc=v.getUint16(sub+6)/2,ends=sub+14,starts=ends+2*sc+2,deltas=starts+2*sc,ros=deltas+2*sc;
+  for(let i=0;i<sc;i++){const end=v.getUint16(ends+2*i);if(c>end)continue;const st=v.getUint16(starts+2*i);if(c<st)return 0;const dl=v.getInt16(deltas+2*i),ro=v.getUint16(ros+2*i);
+   if(!ro)return (c+dl)&0xFFFF;const g=v.getUint16(ros+2*i+ro+2*(c-st));return g?(g+dl)&0xFFFF:0}return 0};
+ const inv={};Object.entries(CP33).forEach(([u,b])=>inv[b]=+u);
+ const w=[];for(let code=32;code<=255;code++){const u=code>=128&&code<160?inv[code]:code;w.push(u?Math.round(adv(glyph(u))*1000/upem):0)}
+ const k=x=>Math.round(x*1000/upem);const u8=new Uint8Array(buf);let s='';for(let i=0;i<u8.length;i+=8192)s+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));
+ return {w,bytes:s,asc:k(asc),desc:k(desc),cap:k(cap),bbox:bb.map(k)}}
+function loadFonts43(){if(FONT43.p)return FONT43.p;
+ FONT43.p=Promise.all(['Poppins-Regular.ttf','Poppins-Bold.ttf'].map(f=>fetch(f).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(ttf43)))
+  .then(([r,b])=>{FONT43.r=r;FONT43.b=b;PDFW33.r=r.w;PDFW33.b=b.w}).catch(e=>{console.warn('Poppins no disponible',e);FONT43.p=null});return FONT43.p}
+// salida PDF con Poppins incrustada (si no cargó, se usa Helvetica)
+Pdf33=(function(orig){return function(){const P=orig();
+ const e=s=>s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+ P.out=(title,foot)=>{const objs=[];const add=s=>{objs.push(s);return objs.length};add('');add('');add('');add('');
+  const kids=[];const N=P.pages.length;P.pages.forEach((pg,i)=>{const f=pdfEnc33(`${foot} · Página ${i+1} de ${N}`);
+   const s=pg.concat([`${PC33.line} RG 0.5 w ${P.M} 34 m ${P.W-P.M} 34 l S`,`BT /F1 8 Tf ${PC33.muted} rg ${P.M} 22 Td (${e(f)}) Tj ET`]).join('\n');
+   const c=add(`<< /Length ${s.length} >>\nstream\n${s}\nendstream`);kids.push(add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${P.W} ${P.H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${c} 0 R >>`))});
+  if(FONT43.r&&FONT43.b){[[2,FONT43.r,'Poppins-Regular',80],[3,FONT43.b,'Poppins-Bold',140]].forEach(([ix,F,name,stem])=>{
+    const ff=add(`<< /Length ${F.bytes.length} /Length1 ${F.bytes.length} >>\nstream\n${F.bytes}\nendstream`);
+    const fdsc=add(`<< /Type /FontDescriptor /FontName /${name} /Flags 32 /FontBBox [${F.bbox.join(' ')}] /ItalicAngle 0 /Ascent ${F.asc} /Descent ${F.desc} /CapHeight ${F.cap} /StemV ${stem} /FontFile2 ${ff} 0 R >>`);
+    objs[ix]=`<< /Type /Font /Subtype /TrueType /BaseFont /${name} /FirstChar 32 /LastChar 255 /Widths [${F.w.join(' ')}] /Encoding /WinAnsiEncoding /FontDescriptor ${fdsc} 0 R >>`})}
+  else{objs[2]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';objs[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'}
+  objs[0]='<< /Type /Catalog /Pages 2 0 R >>';objs[1]=`<< /Type /Pages /Kids [${kids.map(k=>k+' 0 R').join(' ')}] /Count ${kids.length} >>`;
+  const info=add(`<< /Title (${e(pdfEnc33(title))}) /Author (EduPsi) /Producer (EduPsi Campus) >>`);
+  let out='%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';const off=[];objs.forEach((o,i)=>{off.push(out.length);out+=`${i+1} 0 obj\n${o}\nendobj\n`});
+  const xr=out.length;out+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+off.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objs.length+1} /Root 1 0 R /Info ${info} 0 R >>\nstartxref\n${xr}\n%%EOF`;
+  const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;return u};
+ return P}})(Pdf33);
+// HTML de los informes en Poppins
+function fontify43(h){const base=location.href.replace(/[^/]*([?#].*)?$/,'');const ff=`@font-face{font-family:'Poppins';font-weight:400;src:url('${base}Poppins-Regular.ttf') format('truetype')}@font-face{font-family:'Poppins';font-weight:600 700;src:url('${base}Poppins-Bold.ttf') format('truetype')}`;
+ return String(h).replace(/font-family:'Century Gothic',Poppins,Arial,sans-serif/g,"font-family:'Poppins',Arial,sans-serif").replace('<style>','<style>'+ff)}
+const _rh43=reportHtml32;reportHtml32=function(){return fontify43(_rh43.apply(this,arguments))};
+const _fr43=FORMS.report;if(_fr43)FORMS.report=function(){const ro=window.open;window.open=function(){const w=ro.apply(window,arguments);try{if(w){const d=w.document,wr=d.write.bind(d);d.write=h=>wr(fontify43(h))}}catch(e){}return w};try{return _fr43.apply(this,arguments)}finally{window.open=ro}};
+
+// ---------- visor general (informes y actas) ----------
+function viewDoc43(title,html,pdfFn,name){reportClose33();loadFonts43();const ov=document.createElement('div');ov.id='rep33';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label',title);
+ ov.innerHTML=`<div class="rep33-bar"><button type="button" class="btn ghost" data-r33="close">${ic('x')}Cerrar</button><span class="rep33-t">${esc(title)}</span><button type="button" class="btn ghost rep33-print" data-r33="print">Imprimir</button><button type="button" class="btn pri" data-r33="pdf">${ic('download')}Descargar PDF</button></div><div class="rep33-sc"><iframe sandbox="allow-same-origin allow-modals" title="${esc(title)}"></iframe></div>`;
+ document.body.appendChild(ov);document.documentElement.style.overflow='hidden';document.addEventListener('keydown',rep33Key);
+ const fr=ov.querySelector('iframe');const fit=()=>{try{const d=fr.contentDocument;if(d&&d.documentElement)fr.style.height=(d.documentElement.scrollHeight+8)+'px'}catch(e){}};
+ fr.addEventListener('load',()=>{fit();try{fr.contentDocument.querySelectorAll('img').forEach(i=>i.addEventListener('load',fit));fr.contentDocument.fonts&&fr.contentDocument.fonts.ready.then(fit)}catch(e){}setTimeout(fit,400);setTimeout(fit,1200)});
+ fr.srcdoc=html;
+ ov.addEventListener('click',e=>{const b=e.target.closest('[data-r33]');if(!b)return;const a=b.dataset.r33;
+  if(a==='close')reportClose33();
+  else if(a==='print'){try{fr.contentWindow.focus();fr.contentWindow.print()}catch(err){toast('Usa “Descargar PDF” para guardarlo o imprimirlo')}}
+  else if(a==='pdf'){try{pdfSave33(pdfFn(),name)}catch(err){console.warn(err);toast('No se pudo crear el PDF')}}});
+ setTimeout(()=>{const b=ov.querySelector('[data-r33="close"]');if(b)b.focus()},30)}
+reportView33=function(sid,doc){viewDoc43(doc.t||'Informe',reportHtml32(sid,doc),()=>reportPdf33(sid,doc),pdfName33(sid,doc))};
+
+// ---------- Actas de reunión ----------
+const ACTA_TIPOS=['Reunión con la familia','Reunión con el centro educativo','Reunión de equipo EduPsi','Reunión con otros profesionales','Otra reunión'];
+const ACTA_MOD=['Presencial','Virtual','Telefónica'];
+function lines43(t){return String(t||'').split('\n').map(s=>s.trim()).filter(Boolean)}
+function parts43(t){return lines43(t).map(l=>{const p=l.split(/\s+[—–-]\s+/);return {n:p[0]||'',r:p.slice(1).join(' — ')}})}
+function agree43(t){return lines43(t).map(l=>{const p=l.split(/\s+[—–-]\s+/);return {a:p[0]||'',r:p[1]||'',f:p.slice(2).join(' — ')}})}
+ACT.acta43=d=>{const sid=d.s,c=CASE(sid),k=U(sid);if(!c||!k)return;const pro=UP(c.prof)||{};const fams=famOf(sid);
+ const who=[`${ui.user.name} — ${typeof roleLabel==='function'?roleLabel(ui.user):'Profesional EduPsi'}`].concat(c.prof&&c.prof!==ui.user.id?[`${pro.name} — Profesional a cargo`]:[]).concat(fams.map(f=>`${f.name} — Familia`)).join('\n');
+ const hh=new Date();const now=String(hh.getHours()).padStart(2,'0')+':'+String(hh.getMinutes()).padStart(2,'0');
+ openModal({title:'Acta de reunión · '+short(k.name),form:'acta43',ok:'Guardar acta',wide:true,body:`<input type="hidden" name="s" value="${sid}"><div class="form">
+ <div class="two"><div class="field"><label for="ac1">Tipo de reunión</label><select id="ac1" name="tipo" class="inp">${ACTA_TIPOS.map(t=>`<option>${t}</option>`).join('')}</select></div><div class="field"><label for="ac2">Modalidad</label><select id="ac2" name="mod" class="inp">${ACTA_MOD.map(t=>`<option>${t}</option>`).join('')}</select></div></div>
+ <div class="two"><div class="field"><label for="ac3">Fecha de la reunión</label><input id="ac3" name="fecha" type="date" class="inp" value="${TODAY}" required></div><div class="field"><label for="ac4">Hora de la reunión</label><input id="ac4" name="hora" type="time" class="inp" value="${now}"></div></div>
+ <p class="small muted" style="margin:-6px 0 0">Puedes registrar el acta antes o después de la reunión: escribe aquí la fecha y hora en que se realiza o se realizó.</p>
+ <div class="field"><label for="ac5">Lugar o enlace</label><input id="ac5" name="lugar" class="inp" placeholder="Ej. Centro educativo, casa de la familia, Google Meet"></div>
+ <div class="field"><label for="ac6">Participantes</label><textarea id="ac6" name="part" class="inp" rows="4" placeholder="Una persona por línea: Nombre — rol">${esc(who)}</textarea><p class="small muted" style="margin:4px 0 0">Una persona por línea, con su rol después de un guion. Ej.: <i>María Rojas — Docente de grupo</i>.</p></div>
+ <div class="field"><label for="ac7">Motivo de la reunión</label><textarea id="ac7" name="motivo" class="inp" rows="2" required placeholder="Ej. Revisar los avances del periodo y coordinar apoyos en el aula"></textarea></div>
+ <div class="field"><label for="ac8">Temas tratados</label><textarea id="ac8" name="temas" class="inp" rows="5" placeholder="Lo que se conversó, observaciones de cada participante y aspectos importantes"></textarea></div>
+ <div class="field"><label for="ac9">Acuerdos</label><textarea id="ac9" name="acuerdos" class="inp" rows="4" placeholder="Un acuerdo por línea: Acuerdo — responsable — fecha"></textarea><p class="small muted" style="margin:4px 0 0">Ej.: <i>Usar la agenda visual en clase — Docente — desde el 4 de noviembre</i>.</p></div>
+ <div class="two"><div class="field"><label for="ac10">Próximos pasos</label><textarea id="ac10" name="pasos" class="inp" rows="2"></textarea></div><div class="field"><label for="ac11">Próxima reunión (opcional)</label><input id="ac11" name="prox" type="date" class="inp"></div></div>
+ <div class="field"><label for="ac12">Observaciones (opcional)</label><textarea id="ac12" name="obs" class="inp" rows="2"></textarea></div>
+ ${fams.length?'<label class="check"><input type="checkbox" name="vis" value="1"> Compartir el acta con la familia (la verá en sus Documentos y recibirá un aviso)</label>':''}
+ <label class="check"><input type="checkbox" name="ver" value="1" checked> Abrir el acta al guardarla (para revisarla o descargar el PDF)</label></div>`})};
+FORMS.acta43=fd_=>{const sid=fd_.get('s'),c=CASE(sid);if(!c)return;const g=k=>(fd_.get(k)||'').trim();
+ if(!g('motivo')){toast('Escribe el motivo de la reunión');return}
+ const acta={tipo:g('tipo'),mod:g('mod'),fecha:g('fecha')||TODAY,hora:g('hora'),lugar:g('lugar'),part:g('part'),motivo:g('motivo'),temas:g('temas'),acuerdos:g('acuerdos'),pasos:g('pasos'),prox:g('prox'),obs:g('obs'),by:ui.user.id,at:nowStr()};
+ const vis=!!fd_.get('vis')&&famOf(sid).length>0;
+ const doc={id:nid('d'),t:`Acta de reunión · ${fd(acta.fecha)}`,type:'Acta de reunión',date:acta.fecha,size:'—',vis,acta};
+ (c.docs=c.docs||[]).unshift(doc);log('Registró un acta de reunión',`${U(sid).name} · ${acta.tipo} · ${fd(acta.fecha)}`);
+ if(vis){const kid=U(sid).name.split(' ')[0];famOf(sid).forEach(x=>notify(x.id,`Nueva acta de reunión de ${kid} disponible en Documentos`));
+  const to=famOf(sid).filter(x=>x.status==='activo').map(x=>x.id);
+  if(to.length&&typeof mailNewId==='function'&&typeof SB!=='undefined'&&SB)SB.rpc('mail_send',{p_id:mailNewId(),p_to:to,p_data:{subject:`Acta de reunión de ${kid} · ${fd(acta.fecha)}`,body:`Hola:\n\nYa está disponible el acta de la reunión del ${fdl(acta.fecha)} sobre el proceso de ${kid}, con los temas conversados y los acuerdos.\n\nPuedes leerla y descargarla en el campus, en la sección Documentos.\n\n${ui.user.name}`,files:[]},p_draft:false}).then(r=>{if(r&&r.error)console.warn(r.error.message)}).catch(()=>{})}
+ save();ui.modal=null;toast(vis?'Acta guardada y compartida con la familia':'Acta guardada en Documentos');render();if(fd_.get('ver'))actaView43(sid,doc)};
+function actaHtml43(sid,doc){const a=doc.acta,k=U(sid)||{},c=CASE(sid)||{},by=UP(a.by)||{},E=s=>esc(s||'');const logo=new URL('logo.png',location.href).href;
+ const ps=parts43(a.part),ag=agree43(a.acuerdos);const block=(t,v)=>v?`<h2>${t}</h2><p class="pre">${E(v)}</p>`:'';
+ return fontify43(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>${E(doc.t)} · ${E(k.name)}</title><style>
+ @page{size:letter;margin:18mm 16mm}body{font-family:'Century Gothic',Poppins,Arial,sans-serif;color:#1d2b36;font-size:12.5px;line-height:1.55;margin:0;padding:0 4px}
+ header{display:flex;align-items:center;gap:16px;border-bottom:3px solid #6CA8D2;padding-bottom:12px;margin-bottom:16px}header img{height:62px}header .t{flex:1}header h1{font-size:20px;margin:0;color:#1F3B57}header p{margin:2px 0;color:#5b6b78;font-size:11.5px}
+ h2{font-size:14px;color:#1F3B57;border-left:4px solid #A2B424;padding-left:8px;margin:18px 0 8px}table{width:100%;border-collapse:collapse;margin:6px 0}td,th{border:1px solid #c9d3db;padding:6px 8px;text-align:left;vertical-align:top}th{background:#eef4f9;font-weight:600}
+ .pre{white-space:pre-wrap;margin:0}.sig{height:34px}.conf{margin-top:22px;font-size:10px;color:#6b7b88;border-top:1px solid #dde3e8;padding-top:8px}
+ @media screen{body{padding:22px 24px}}@media screen and (max-width:520px){body{padding:16px 12px;font-size:12px}header img{height:44px}header h1{font-size:17px}}</style></head><body>
+ <header><img src="${logo}" alt="EduPsi"><div class="t"><h1>Acta de reunión</h1><p>EduPsi · Servicios en Educación y Psicopedagogía</p><p>${fdl(a.fecha)}${a.hora?' · '+E(a.hora):''} · ${E(a.mod)}</p></div></header>
+ <table><tr><th style="width:28%">Estudiante</th><td>${E(k.name)}</td></tr><tr><th>Tipo de reunión</th><td>${E(a.tipo)}</td></tr>${a.lugar?`<tr><th>Lugar o enlace</th><td>${E(a.lugar)}</td></tr>`:''}<tr><th>Fecha de la reunión</th><td>${fdl(a.fecha)}${a.hora?' · '+E(a.hora):''}</td></tr><tr><th>Acta elaborada por</th><td>${E(by.name)} · ${fdl(String(a.at||'').slice(0,10)||TODAY)}</td></tr>${c.area?`<tr><th>Área de apoyo</th><td>${E(c.area)}</td></tr>`:''}</table>
+ ${ps.length?`<h2>Participantes</h2><table><tr><th style="width:38%">Nombre</th><th style="width:32%">Rol</th><th>Firma</th></tr>${ps.map(p=>`<tr><td>${E(p.n)}</td><td>${E(p.r)}</td><td class="sig"></td></tr>`).join('')}</table>`:''}
+ ${block('Motivo de la reunión',a.motivo)}${block('Temas tratados',a.temas)}
+ ${ag.length?`<h2>Acuerdos</h2><table><tr><th style="width:6%">#</th><th>Acuerdo</th><th style="width:24%">Responsable</th><th style="width:20%">Fecha</th></tr>${ag.map((x,i)=>`<tr><td>${i+1}</td><td>${E(x.a)}</td><td>${E(x.r)}</td><td>${E(x.f)}</td></tr>`).join('')}</table>`:''}
+ ${block('Próximos pasos',a.pasos)}${a.prox?`<h2>Próxima reunión</h2><p>${fdl(a.prox)}</p>`:''}${block('Observaciones',a.obs)}
+ <p class="conf">Documento confidencial. Contiene información protegida por la Ley N.° 8968. Su uso está limitado al acompañamiento del estudiante y no debe compartirse sin autorización de la familia.</p></body></html>`)}
+function actaPdf43(sid,doc){const a=doc.acta,k=U(sid)||{},c=CASE(sid)||{},by=UP(a.by)||{};const P=Pdf33(),X0=P.X0,CW=P.CW;
+ P.y-=6;P.text(X0,P.y-14,pdfEnc33('EduPsi'),22,true,PC33.blue);P.text(X0+pdfW33(pdfEnc33('EduPsi'),22,true)+10,P.y-12,pdfEnc33('Servicios en Educación y Psicopedagogía'),9,false,PC33.muted);
+ P.y-=36;P.text(X0,P.y,pdfEnc33('Acta de reunión'),17,true,PC33.brand);P.y-=16;
+ P.text(X0,P.y,pdfEnc33(`${fdl(a.fecha)}${a.hora?' · '+a.hora:''} · ${a.mod}`),9.5,false,PC33.muted);P.y-=10;P.fill(X0,P.y-2.5,CW,2.5,PC33.blue);P.y-=10;
+ const rows=[['Estudiante',k.name||''],['Tipo de reunión',a.tipo]];if(a.lugar)rows.push(['Lugar o enlace',a.lugar]);rows.push(['Fecha de la reunión',fdl(a.fecha)+(a.hora?' · '+a.hora:'')]);rows.push(['Acta elaborada por',(by.name||'')+' · '+fdl(String(a.at||'').slice(0,10)||TODAY)]);if(c.area)rows.push(['Área de apoyo',c.area]);
+ P.table([28,72],null,rows,{thCol0:true,z:10});
+ const ps=parts43(a.part);if(ps.length){P.h2('Participantes');P.table([38,32,30],['Nombre','Rol','Firma'],ps.map(p=>[p.n,p.r,'\n']))}
+ const block=(t,v)=>{if(v){P.h2(t);P.para(v,10.5)}};block('Motivo de la reunión',a.motivo);block('Temas tratados',a.temas);
+ const ag=agree43(a.acuerdos);if(ag.length){P.h2('Acuerdos');P.table([6,50,24,20],['#','Acuerdo','Responsable','Fecha'],ag.map((x,i)=>[String(i+1),x.a,x.r,x.f]))}
+ block('Próximos pasos',a.pasos);if(a.prox){P.h2('Próxima reunión');P.para(fdl(a.prox),10.5)}block('Observaciones',a.obs);
+ P.need(40);P.y-=6;P.hline(X0,X0+CW,P.y,PC33.line,0.5);P.para('Documento confidencial. Contiene información protegida por la Ley N.° 8968. Su uso está limitado al acompañamiento del estudiante y no debe compartirse sin autorización de la familia.',8,{c:PC33.muted});
+ return P.out(`${doc.t} · ${k.name||''}`,`EduPsi · Acta de reunión · ${k.name||''}`)}
+function actaView43(sid,doc){const k=U(sid)||{};viewDoc43(doc.t,actaHtml43(sid,doc),()=>actaPdf43(sid,doc),(`Acta ${k.name||''} ${doc.acta.fecha}`).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-')+'.pdf')}
+const _od43=ACT.opendoc;ACT.opendoc=d=>{const c=CASE(d.s);const doc=c&&(c.docs||[]).find(x=>x.id===d.id);if(doc&&doc.acta){actaView43(d.s,doc);try{log('Abrió acta de reunión',`${doc.t} · ${short(UP(d.s).name)}`);save()}catch(e){}return}return _od43(d)};
+// botón en el expediente
+const _cv43=caseView;caseView=function(sid,family){let h=_cv43(sid,family);if(family||!CASE(sid)||h.includes('data-a="acta43"')||!(typeof canReport32==='function'?canReport32(sid):canEditCase(sid)))return h;
+ const b=`<button class="btn sm" data-a="acta43" data-s="${sid}">${ic('users')}Acta de reunión</button>`;
+ const i=h.indexOf('<button class="btn sm" data-a="periodreport"');return i>=0?h.slice(0,i)+b+h.slice(i):h.replace('<div class="tabs" role="tablist">',`<div class="row" style="margin:-4px 0 12px;gap:6px;flex-wrap:wrap">${b}</div><div class="tabs" role="tablist">`)};
+setTimeout(()=>{try{if(ui.user)loadFonts43()}catch(e){}},4000);
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
