@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-7/zKknf4G266zt84UtFTvlA+9v5p5NhbxYx0WVRvz/A='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-CchwuWyE45wlFiPTIP373w/izl6V4WMNDaJ1vyR0vZE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-30c';
+const BUILD38='2026-10-30e';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4655,8 +4655,8 @@ const _cv43=caseView;caseView=function(sid,family){let h=_cv43(sid,family);if(fa
 setTimeout(()=>{try{if(ui.user)loadFonts43()}catch(e){}},4000);
 // ===== EduPsi Campus · parte 44: pie de página en informes y actas + confirmación digital (nombre completo + aceptar) de familias y profesionales =====
 // ---------- pie de página ----------
-const FOOT44={brand:'EduPsi · Servicios en Educación y Psicopedagogía',web:'edupsicr.com',mail:'edupsicr@gmail.com',wa:'WhatsApp 6320-0135'};
-function footLine44(){return `${FOOT44.wa} · ${FOOT44.mail} · ${FOOT44.web}`}
+const FOOT44={brand:'EduPsi · Servicios en Educación y Psicopedagogía',web:'edupsicr.com',c:[['WhatsApp','6320-0135'],['Correo','edupsicr@gmail.com'],['Instagram','@edupsicr'],['Facebook','EduPsi']]};
+function footLine44(){return FOOT44.c.map(x=>x[0]+' '+x[1]).join(' · ')}
 // ---------- datos de confirmación ----------
 const OK44={rows:[],loaded:false,busy:false};
 async function okLoad44(){if(!ui.user||typeof SB==='undefined'||!SB||OK44.busy)return;OK44.busy=true;
@@ -4677,29 +4677,57 @@ function okHtml44(doc){const rows=oks44(doc.id);if(!rows.length)return '';const 
  return `<h2>Confirmación digital</h2><p class="okn">Cada persona leyó el documento en EduPsi Campus, escribió su nombre completo y lo aceptó. La fecha y la hora las registra el sistema.</p>
  <table><tr><th style="width:34%">Nombre escrito</th><th style="width:22%">Rol</th><th style="width:28%">Fecha y hora</th><th>Estado</th></tr>${rows.map(r=>`<tr><td>${E(r.ok?r.ok.name:r.uname)}</td><td>${E(okRole44(r))}</td><td>${r.ok?E(okWhen44(r.ok.at)):'—'}</td><td>${r.ok?'<b class="okv">✓ Confirmado</b>':'Pendiente'}</td></tr>`).join('')}</table>`}
 function deco44(h,doc){h=String(h);
- const css=`footer.dfoot{margin-top:26px;border-top:2px solid #6CA8D2;padding-top:8px;display:flex;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;font-size:10.5px;color:#5b6b78}footer.dfoot b{color:#1F3B57;font-weight:600}
- .okn{font-size:11px;color:#5b6b78;margin:0 0 4px}.okv{color:#5F7A0F}
+ const css=`footer.dfoot{margin-top:26px;border-top:2px solid #6CA8D2;padding-top:8px;font-size:10.5px;color:#5b6b78}footer.dfoot .r1{display:flex;justify-content:space-between;gap:4px 14px;flex-wrap:wrap}footer.dfoot .r2{margin-top:5px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}footer.dfoot b{color:#1F3B57;font-weight:600}footer.dfoot .ct{color:#5F7A0F;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:9.5px}footer.dfoot .r2 span i{font-style:normal;color:#1F3B57;font-weight:600}
+ .okn{font-size:10pt;color:#5b6b78;margin:0 0 6px}.okv{color:#5F7A0F}
+ body{font-size:12pt!important;line-height:1.5}h2{font-size:14pt!important}td,th{font-size:12pt}header p{font-size:10pt}.small{font-size:10pt}.kp div{font-size:10pt}
  @page{@bottom-center{content:"EduPsi · edupsicr.com · Página " counter(page) " de " counter(pages);font-family:Poppins,Arial,sans-serif;font-size:8pt;color:#6b7b88}}`;
  h=h.replace('</style>',css+'</style>');
  if(doc&&doc.acta)h=h.replace('<th style="width:38%">Nombre</th><th style="width:32%">Rol</th><th>Firma</th>','<th style="width:55%">Nombre</th><th>Rol</th>').replace(/<td class="sig"><\/td>/g,'');
  const ok=doc?okHtml44(doc):'';if(ok){const i=h.lastIndexOf('<p class="conf">');h=i>=0?h.slice(0,i)+ok+h.slice(i):h.replace('</body>',ok+'</body>')}
- const f=`<footer class="dfoot"><span><b>EduPsi</b> · Servicios en Educación y Psicopedagogía</span><span>${footLine44()}</span></footer>`;
+ const f=`<footer class="dfoot"><div class="r1"><span><b>EduPsi</b> · Servicios en Educación y Psicopedagogía</span><span>${FOOT44.web}</span></div><div class="r2"><span class="ct">Contactos</span>${FOOT44.c.map(x=>`<span><i>${x[0]}</i> ${x[1]}</span>`).join('')}</div></footer>`;
  const j=h.lastIndexOf('</body>');return j>=0?h.slice(0,j)+f+h.slice(j):h+f}
 const _rh44=reportHtml32;reportHtml32=function(sid,doc){return deco44(_rh44.apply(this,arguments),doc)};
 const _ah44=actaHtml43;actaHtml43=function(sid,doc){return deco44(_ah44.apply(this,arguments),doc)};
 
 // ---------- PDF: pie de página de marca, sin columna de firma y con la confirmación digital ----------
 let HOOK44=null;
+const LOGO44={bytes:null,w:0,h:0,p:null};
+function loadLogo44(){if(LOGO44.p)return LOGO44.p;LOGO44.p=new Promise(res=>{const im=new Image();im.onload=()=>{try{const h=360,w=Math.round(h*im.naturalWidth/im.naturalHeight),cv=document.createElement('canvas');cv.width=w;cv.height=h;const x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);
+  const b=atob(cv.toDataURL('image/jpeg',0.92).split(',')[1]);LOGO44.bytes=b;LOGO44.w=w;LOGO44.h=h}catch(e){console.warn('logo',e)}res()};im.onerror=()=>{LOGO44.p=null;res()};im.src='logo.png'});return LOGO44.p}
+const _lf44=loadFonts43;loadFonts43=function(){loadLogo44();return _lf44.apply(this,arguments)};
 Pdf33=(function(orig){return function(){const P=orig();
- const out=P.out;P.out=(title,foot)=>{const keep=P.cur;P.pages.forEach(pg=>{P.cur=pg;const b=pdfEnc33('EduPsi'),s=pdfEnc33(' · Servicios en Educación y Psicopedagogía'),r=pdfEnc33(footLine44());
-   P.text(P.M,42,b,8,true,PC33.brand);P.text(P.M+pdfW33(b,8,true),42,s,8,false,PC33.muted);P.text(P.W-P.M-pdfW33(r,8),42,r,8,false,PC33.muted)});P.cur=keep;return out(title,foot)};
- const table=P.table;P.table=(cols,head,rows,o)=>{if(head&&head.join('|')==='Nombre|Rol|Firma')return table([55,45],['Nombre','Rol'],rows.map(x=>x.slice(0,2)),o);return table(cols,head,rows,o)};
+ const e=s=>s.replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+ // logo en el encabezado (en lugar de la palabra EduPsi)
+ const text=P.text;let lg=false;P.text=(x,y,s,z,b,c)=>{
+  if(LOGO44.bytes&&s==='EduPsi'&&z===22&&b){const H=58,W=H*LOGO44.w/LOGO44.h,top=P.y+4;P.cur.push(`q ${W.toFixed(2)} 0 0 ${H} ${x} ${(top-H).toFixed(2)} cm /Im1 Do Q`);P.y=top-H+8;lg={x:x+W+14,top};return}
+  if(lg&&z===9&&s===pdfEnc33('Servicios en Educación y Psicopedagogía')){const t=lg;lg=false;text(t.x,t.top-24,pdfEnc33('Servicios en Educación y Psicopedagogía'),11,true,PC33.brand);text(t.x,t.top-38,pdfEnc33(`${FOOT44.web} · WhatsApp 6320-0135`),8.5,false,PC33.muted);return}
+  return text(x,y,s,z,b,c)};
+ P.out=(title,foot)=>{const keep=P.cur;P.pages.forEach(pg=>{P.cur=pg;const b=pdfEnc33('EduPsi'),s=pdfEnc33(' · Servicios en Educación y Psicopedagogía'),w=pdfEnc33(FOOT44.web);P.text(P.M,53,b,8,true,PC33.brand);P.text(P.M+pdfW33(b,8,true),53,s,8,false,PC33.muted);P.text(P.W-P.M-pdfW33(w,8),53,w,8,false,PC33.muted);let x=P.M;const ct=pdfEnc33('CONTACTOS  ');P.text(x,42,ct,7.5,true,PC33.green);x+=pdfW33(ct,7.5,true);FOOT44.c.forEach((c,i)=>{const k=pdfEnc33(c[0]+' '),v=pdfEnc33(c[1]+(i<FOOT44.c.length-1?'   ·   ':''));P.text(x,42,k,7.5,true,PC33.brand);x+=pdfW33(k,7.5,true);P.text(x,42,v,7.5,false,PC33.muted);x+=pdfW33(v,7.5)})});P.cur=keep;
+  const objs=[];const add=s=>{objs.push(s);return objs.length};add('');add('');add('');add('');
+  const im=LOGO44.bytes?add(`<< /Type /XObject /Subtype /Image /Width ${LOGO44.w} /Height ${LOGO44.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${LOGO44.bytes.length} >>\nstream\n${LOGO44.bytes}\nendstream`):0;
+  const kids=[];const N=P.pages.length;P.pages.forEach((pg,i)=>{const f=pdfEnc33(`${foot} · Página ${i+1} de ${N}`);
+   const s=pg.concat([`${PC33.line} RG 0.5 w ${P.M} 34 m ${P.W-P.M} 34 l S`,`BT /F1 8 Tf ${PC33.muted} rg ${P.M} 22 Td (${e(f)}) Tj ET`]).join('\n');
+   const c=add(`<< /Length ${s.length} >>\nstream\n${s}\nendstream`);kids.push(add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${P.W} ${P.H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>${im?` /XObject << /Im1 ${im} 0 R >>`:''} >> /Contents ${c} 0 R >>`))});
+  if(FONT43.r&&FONT43.b){[[2,FONT43.r,'Poppins-Regular',80],[3,FONT43.b,'Poppins-Bold',140]].forEach(([ix,F,name,stem])=>{
+    const ff=add(`<< /Length ${F.bytes.length} /Length1 ${F.bytes.length} >>\nstream\n${F.bytes}\nendstream`);
+    const fdsc=add(`<< /Type /FontDescriptor /FontName /${name} /Flags 32 /FontBBox [${F.bbox.join(' ')}] /ItalicAngle 0 /Ascent ${F.asc} /Descent ${F.desc} /CapHeight ${F.cap} /StemV ${stem} /FontFile2 ${ff} 0 R >>`);
+    objs[ix]=`<< /Type /Font /Subtype /TrueType /BaseFont /${name} /FirstChar 32 /LastChar 255 /Widths [${F.w.join(' ')}] /Encoding /WinAnsiEncoding /FontDescriptor ${fdsc} 0 R >>`})}
+  else{objs[2]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';objs[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'}
+  objs[0]='<< /Type /Catalog /Pages 2 0 R >>';objs[1]=`<< /Type /Pages /Kids [${kids.map(k=>k+' 0 R').join(' ')}] /Count ${kids.length} >>`;
+  const info=add(`<< /Title (${e(pdfEnc33(title))}) /Author (EduPsi) /Producer (EduPsi Campus) >>`);
+  let out='%PDF-1.4\n%\xE2\xE3\xCF\xD3\n';const off=[];objs.forEach((o,i)=>{off.push(out.length);out+=`${i+1} 0 obj\n${o}\nendobj\n`});
+  const xr=out.length;out+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+off.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objs.length+1} /Root 1 0 R /Info ${info} 0 R >>\nstartxref\n${xr}\n%%EOF`;
+  const u=new Uint8Array(out.length);for(let i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;return u};
+ const table0=P.table;const table=(cols,head,rows,o)=>{o=Object.assign({},o||{});if(!o.z||o.z>=9.5)o.z=12;return table0(cols,head,rows,o)};
+ const para0=P.para;P.para=(t,z,o)=>para0(t,z>=10?12:z,o);
+ P.h2=t=>{P.need(64);P.y-=20;P.fill(P.X0,P.y-3,3.4,17,PC33.green);P.text(P.X0+10,P.y,pdfEnc33(t),14,true,PC33.brand);P.y-=10};
+ P.table=(cols,head,rows,o)=>{if(head&&head.join('|')==='Nombre|Rol|Firma')return table([55,45],['Nombre','Rol'],rows.map(x=>x.slice(0,2)),o);return table(cols,head,rows,o)};
  const para=P.para;P.para=(t,z,o)=>{if(HOOK44&&String(t).startsWith('Documento confidencial')){const h=HOOK44;HOOK44=null;
    const last=P.cur[P.cur.length-1];if(/ RG 0\.5 w [\d.]+ [\d.]+ m [\d.]+ [\d.]+ l S$/.test(String(last))){P.cur.pop();P.y+=6}
    try{h(P)}catch(e){console.warn(e)}P.need(40);P.y-=6;P.hline(P.X0,P.X0+P.CW,P.y,PC33.line,0.5)}
   return para(t,z,o)};
  return P}})(Pdf33);
-function okPdf44(P,doc){const rows=oks44(doc.id);if(!rows.length)return;P.h2('Confirmación digital');
+function okPdf44(P,doc){const rows=oks44(doc.id);if(!rows.length)return;P.need(150);P.h2('Confirmación digital');
  P.para('Cada persona leyó el documento en EduPsi Campus, escribió su nombre completo y lo aceptó. La fecha y la hora las registra el sistema.',8.5,{c:PC33.muted});
  P.table([34,22,28,16],['Nombre escrito','Rol','Fecha y hora','Estado'],rows.map(r=>[r.ok?r.ok.name:(r.uname||''),okRole44(r),r.ok?okWhen44(r.ok.at):'—',r.ok?'Confirmado':'Pendiente']))}
 const _ap44=actaPdf43;actaPdf43=function(sid,doc){HOOK44=P=>okPdf44(P,doc);try{return _ap44.apply(this,arguments)}finally{HOOK44=null}};
