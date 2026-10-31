@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-aPeeIv6asuLG7Lc8p1adM1+ox8YMsEowDXPQ7GidRkE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-KT6o0ak8i6qn6m0qSU34mE25lm/j/yHFQZUoEFyFhT8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-01a';
+const BUILD38='2026-11-01b';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -4904,7 +4904,7 @@ ACT.mailfile=async d=>{const r=MAIL.rows.find(x=>x.box_id===d.id);const f=r&&(r.
 const PEND47={mine:null,loading:false,day:null,month:null};
 // el estudiante no lee su expediente: sus tareas para casa llegan aparte (solo las suyas)
 async function pendLoad47(){const u=ui.user;if(!u||u.role!=='student'||PEND47.loading||typeof SB==='undefined'||!SB)return;PEND47.loading=true;
- try{const {data,error}=await SB.from('home_tasks').select('id,data,vis').eq('student_id',u.id);if(error){console.warn('home_tasks',error.message);PEND47.mine=[]}else PEND47.mine=(data||[]).filter(r=>r.vis).map(r=>({...r.data,id:r.id}))}
+ try{const {data,error}=await SB.from('home_tasks').select('id,data,vis').eq('student_id',u.id);if(error){console.warn('home_tasks',error.message);PEND47.mine=[]}else PEND47.mine=(data||[]).filter(r=>(r.data||{}).to!=='fam').map(r=>({...r.data,id:r.id}))}
  catch(e){PEND47.mine=[]}finally{PEND47.loading=false;if(!ui.modal&&(ui.view==='pend'||ui.view==='calendar'||ui.view==='home'))render()}}
 const _ab47=afterBoot;afterBoot=function(acct){_ab47(acct);PEND47.mine=null;setTimeout(pendLoad47,500)};
 function pendWho47(){const u=ui.user;if(u.role==='student')return u;if(u.role==='guardian')return typeof curKid==='function'?curKid():null;return null}
@@ -5178,6 +5178,58 @@ ACT.note50del=async d=>{const n=(NOTES50.rows||[]).find(x=>x.id===d.id);if(!n)re
 .n50-t{word-break:break-word}.n50-it.done .n50-t{text-decoration:line-through;color:var(--muted)}.n50-late{color:#B42318}
 .n50-ck{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:var(--surface,#fff);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:#fff}
 .n50-it.done .n50-ck{background:#A2B424;border-color:#A2B424}.n50-ck svg{width:14px;height:14px}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 51: «Entregas» para la profesional (ver lo que envían los estudiantes) y respuesta =====
+const FR51={at:{},all:0};
+function snapRow51(sid,h){try{if(typeof SYNC!=='undefined'&&SYNC.snap){SYNC.snap.home_tasks=SYNC.snap.home_tasks||{};SYNC.snap.home_tasks[h.id]=JSON.stringify({id:h.id,student_id:sid,vis:h.to!=='est',data:h})}}catch(e){}}
+// trae de nuevo las tareas desde la base de datos (lo que entregaron los estudiantes) sin pisar nada
+async function fresh51(sid){if(typeof SB==='undefined'||!SB||!ui.user)return false;let q=SB.from('home_tasks').select('id,student_id,vis,data');if(sid)q=q.eq('student_id',sid);
+ const {data,error}=await q;if(error||!data)return false;let ch=false;
+ data.forEach(r=>{const c=CASE(r.student_id);if(!c)return;c.home=c.home||[];const i=c.home.findIndex(x=>x.id===r.id);const nd={...r.data,id:r.id};
+  if(i<0){c.home.push(nd);ch=true}else if(JSON.stringify(c.home[i])!==JSON.stringify(nd)){Object.keys(c.home[i]).forEach(k=>delete c.home[i][k]);Object.assign(c.home[i],nd);ch=true}
+  snapRow51(r.student_id,i<0?nd:c.home[i])});
+ return ch}
+function staff51(){const u=ui.user;return u&&(u.role==='superadmin'||u.role==='teacher')&&!(typeof isExtUser==='function'&&isExtUser(u))}
+function mySids51(){const u=ui.user;return Object.keys(S.cases||{}).filter(sid=>{const c=CASE(sid);return c&&(u.role==='superadmin'||c.prof===u.id||(c.team||[]).includes(u.id))})}
+function subs51(){const out=[];mySids51().forEach(sid=>(CASE(sid).home||[]).forEach(h=>{if(h.sub)out.push({sid,h})}));return out.sort((a,b)=>String(b.h.sub.at).localeCompare(String(a.h.sub.at)))}
+function newSubs51(){return subs51().filter(x=>!x.h.rev||String(x.h.rev.at)<String(x.h.sub.at))}
+// al abrir un expediente, se actualizan sus tareas
+const _cv51=caseView;caseView=function(sid,family){const h=_cv51.apply(this,arguments);try{if(!family&&staff51()&&Date.now()-(FR51.at[sid]||0)>20000){FR51.at[sid]=Date.now();fresh51(sid).then(ch=>{if(ch&&!ui.modal&&ui.view==='case')render()})}}catch(e){}return h};
+// revisión dentro de la entrega
+const _sub51=sub49;sub49=function(sid,h){let s=_sub51.apply(this,arguments);if(!s)return s;const r=h.rev;const isStaff=staff51();
+ const fb=r?`<div class="h51-rev"><div class="small"><b>${isStaff?'Revisada':'Comentario de tu profesional'}</b> · ${esc(fdl(String(r.at).slice(0,10)))}${r.byName&&isStaff?' · '+esc(short(r.byName)):''}</div>${r.fb?`<div class="small" style="white-space:pre-wrap">${esc(r.fb)}</div>`:''}</div>`:'';
+ const btn=isStaff?`<div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap"><button class="btn sm ${r?'ghost':'pri'}" data-a="h51rev" data-s="${sid}" data-id="${h.id}">${ic('reply')}${r?'Responder de nuevo':'Responder y marcar revisada'}</button></div>`:'';
+ const i=s.lastIndexOf('</div>');return s.slice(0,i)+fb+btn+s.slice(i)};
+ACT.h51rev=d=>{const c=CASE(d.s),h=c&&(c.home||[]).find(x=>x.id===d.id);if(!h)return;const k=UP(d.s);
+ openModal({title:'Responder a '+short(k.name),form:'h51rev',ok:false,body:`<input type="hidden" name="s" value="${d.s}"><input type="hidden" name="id" value="${d.id}"><div class="form">
+  <p class="small" style="margin:0"><b>${esc(h.t)}</b>${h.sub&&h.sub.note?`<br><span class="muted">«${esc(h.sub.note.slice(0,300))}»</span>`:''}</p>
+  <div class="field"><label for="h51fb">Tu comentario <span class="small muted">(opcional)</span></label><textarea id="h51fb" name="fb" class="inp" rows="4" maxlength="4000" style="resize:vertical" placeholder="¡Muy buen trabajo! Revisa el ejercicio 3…">${esc(h.rev&&h.rev.fb||'')}</textarea></div>
+  <p class="small muted" style="margin:0">${esc(k.name.split(' ')[0])}${h.to==='est'?'':' y su familia'} recibirá${h.to==='est'?'':'n'} un aviso.</p>
+  <div class="row end"><button type="submit" class="btn pri">${ic('send')}Enviar y marcar revisada</button></div></div>`})};
+FORMS.h51rev=async(fd_,form)=>{if(form.dataset.busy)return;form.dataset.busy='1';const sid=fd_.get('s'),id=fd_.get('id');
+ try{const {data,error}=await SB.rpc('home_task_review',{p_id:id,p_fb:String(fd_.get('fb')||'')});if(error){toast(error.message||'No se pudo guardar');return}
+  const h=(CASE(sid).home||[]).find(x=>x.id===id);if(h){h.rev=data;snapRow51(sid,h)}ui.modal=null;render();toast('Respuesta enviada')}finally{delete form.dataset.busy}};
+// vista «Entregas»
+const E51={f:'nuevas'};
+VIEWS.entregas=()=>{if(!staff51())return '<div class="card"><p class="muted">No disponible.</p></div>';
+ if(Date.now()-FR51.all>20000){FR51.all=Date.now();fresh51().then(ch=>{if(ch&&!ui.modal&&ui.view==='entregas')render()})}
+ const all=subs51(),nuevas=newSubs51();const xs=E51.f==='nuevas'?nuevas:all;
+ return `<div class="p47-head"><h1 style="margin:0">Entregas de tareas</h1><p class="muted" style="margin:4px 0 0">Lo que tus estudiantes y sus familias enviaron: comentarios, fotos, archivos y enlaces.</p></div>
+ <div class="row" style="gap:8px;margin-bottom:14px;flex-wrap:wrap"><button class="btn sm ${E51.f==='nuevas'?'pri':''}" data-a="e51f" data-v="nuevas">Sin revisar (${nuevas.length})</button><button class="btn sm ${E51.f==='todas'?'pri':''}" data-a="e51f" data-v="todas">Todas (${all.length})</button></div>
+ <div class="stack">${xs.map(({sid,h})=>{const k=UP(sid);return `<div class="card stack" style="gap:6px"><div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:flex-start">
+   <div style="min-width:0"><b>${esc(k.name)}</b><div class="small muted">${esc(h.t)}${h.due?' · para el '+esc(fdl(h.due)):''}</div></div>
+   <button class="btn sm ghost" data-a="go" data-v="case" data-p="${sid}">Ver expediente</button></div>${sub49(sid,h)}</div>`}).join('')
+  ||`<div class="card p47-empty"><span class="p47-big">${ic('check')}</span><h2 style="margin:0">${E51.f==='nuevas'?'No hay entregas sin revisar':'Todavía no hay entregas'}</h2><p class="muted" style="margin:0">Cuando un estudiante entregue una tarea, aparecerá aquí y te llegará un aviso.</p></div>`}</div>`};
+ACT.e51f=d=>{E51.f=d.v;render()};
+(function(){try{[NAV.teacher,NAV.superadmin].forEach(N=>{if(!N||N.some(n=>n[0]==='entregas'))return;const i=N.findIndex(n=>n[0]==='students');N.splice(i>=0?i+1:2,0,['entregas','Entregas','task'])})}catch(e){}})();
+// número de entregas sin revisar en el menú
+const _render51=render;render=function(){const r=_render51.apply(this,arguments);try{if(staff51()){const n=newSubs51().length;document.querySelectorAll('[data-a="go"][data-v="entregas"]').forEach(b=>{let s=b.querySelector('.badge');if(n&&!s){s=document.createElement('span');s.className='badge';b.appendChild(s)}if(s){if(n)s.textContent=n;else s.remove()}})}}catch(e){}return r};
+// la familia marca «hecha» por la base de datos (no pisa la entrega ni la revisión)
+async function done51(sid,id,on){const {error}=await SB.rpc('home_task_done',{p_id:id,p_done:on});if(error){toast(error.message||'No se pudo guardar');return false}
+ const c=CASE(sid),h=c&&(c.home||[]).find(x=>x.id===id);if(h){h.done=on;h.doneAt=on?nowStr():null;h.doneBy=on?ui.user.id:null;snapRow51(sid,h)}return true}
+const _hd51=ACT.homedone;ACT.homedone=async d=>{if(ui.user.role!=='guardian')return _hd51(d);const h=(CASE(d.s).home||[]).find(x=>x.id===d.id);if(!h)return;
+ if(await done51(d.s,d.id,!h.done)){render();toast(h.done?'¡Listo! Avisamos a la profesional':'Tarea marcada como pendiente')}};
+const _pd51=ACT.pend47done;ACT.pend47done=async d=>{if(ui.user.role!=='guardian')return _pd51(d);if(await done51(d.s,d.id,d.v==='1')){render();toast(d.v==='1'?'¡Listo! Avisamos a la profesional':'Tarea marcada como pendiente')}};
+(function(){const st=document.createElement('style');st.textContent=`.h51-rev{margin-top:6px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.65);border-left:3px solid #336FA8;color:var(--fg,#1F2A37)}[data-theme="dark"] .h51-rev{background:rgba(0,0,0,.25)}.p47-it.done .h51-rev b{text-decoration:none;color:inherit}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
