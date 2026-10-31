@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-QUbOr/lTVUUEUhXgWU3MFuBSJhMyY3oPWRjkBqdWZmM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-aPeeIv6asuLG7Lc8p1adM1+ox8YMsEowDXPQ7GidRkE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-10-31b';
+const BUILD38='2026-11-01a';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5030,6 +5030,154 @@ const _render48=render;render=function(){const r=_render48.apply(this,arguments)
 (function(){const st=document.createElement('style');st.textContent=`.stu48{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 14px;padding:14px 16px}.stu48 .grow{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px}
 .stu48-i{flex:none;width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--brand-soft,#E4EFF7);color:var(--brand-ink,#1F3B57)}.stu48-i svg{width:20px;height:20px}
 .stu48-cred{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:baseline;background:var(--brand-soft,#E4EFF7);border-radius:12px;padding:16px}.stu48-cred b{font-size:18px}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 49: tareas para el estudiante (enlaces, archivos y entregas) y mensajes con estudiantes =====
+Object.assign(ICONS,{link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'});
+const TO49={ambos:'Estudiante y familia',est:'Solo el estudiante',fam:'Solo la familia'};
+// la familia ve la tarea salvo que sea solo para el estudiante
+MAP.home_tasks=()=>Object.entries(S.cases).flatMap(([sid,c])=>(c.home||[]).map(x=>({id:x.id,student_id:sid,vis:x.to!=='est',data:x})));
+function hasAcc49(sid){const k=U(sid);return !!(k&&k.status==='activo')}
+function links49(txt){return String(txt||'').split(/[\n\s]+/).map(s=>s.trim()).filter(s=>/^https?:\/\/\S+\.\S+/i.test(s)).slice(0,10)}
+function linkName49(u){try{const h=new URL(u).hostname.replace(/^www\./,'');const k={'docs.google.com':'Google Docs','drive.google.com':'Google Drive','forms.gle':'Formulario','youtube.com':'YouTube','youtu.be':'YouTube','canva.com':'Canva','liveworksheets.com':'Liveworksheets','wordwall.net':'Wordwall','kahoot.it':'Kahoot','quizizz.com':'Quizizz','genial.ly':'Genially','padlet.com':'Padlet'};return k[h]||h}catch(e){return 'Enlace'}}
+function fsize49(n){return n>1048576?(n/1048576).toFixed(1).replace('.',',')+' MB':Math.max(1,Math.round(n/1024))+' KB'}
+function fileChips49(files,sid,tid,kind){return (files||[]).map((f,i)=>`<button type="button" class="mb-file h49-f" data-a="h49file" data-s="${sid}" data-id="${tid}" data-k="${kind}" data-i="${i}">${ic('attach')}<span>${esc(f.name)}</span></button>`).join('')}
+function linkChips49(ls){return (ls||[]).map(u=>`<a class="mb-file h49-f" href="${esc(u)}" target="_blank" rel="noopener">${ic('link')}<span>${esc(linkName49(u))}</span></a>`).join('')}
+async function upload49(sid,tid,kind,list){const out=[];for(const f of [...(list||[])].slice(0,5)){if(f.size>20*1048576){toast(`«${f.name}» supera 20 MB`);continue}
+ const path=`${sid}/${tid}/${kind}/${Date.now().toString(36)}-${f.name.replace(/[^\w.\-]+/g,'_').slice(-80)}`;
+ const {error}=await SB.storage.from('tareas').upload(path,f,{contentType:f.type||'application/octet-stream',upsert:false});
+ if(error){toast('No se pudo subir «'+f.name+'»: '+error.message);continue}out.push({name:f.name,path,size:f.size,mime:f.type||''})}return out}
+function task49(sid,id){if(ui.user&&ui.user.role==='student'&&typeof PEND47!=='undefined'&&PEND47.mine){const m=PEND47.mine.find(x=>x.id===id);if(m)return m}const c=CASE(sid);return c&&(c.home||[]).find(x=>x.id===id)}
+ACT.h49file=async d=>{const h=task49(d.s,d.id);const f=h&&(d.k==='e'?(h.sub&&h.sub.files||[]):(h.files||[]))[+d.i];if(!f)return;
+ const {data,error}=await SB.storage.from('tareas').createSignedUrl(f.path,600);if(error||!data){toast('No se pudo abrir el archivo');return}
+ if(typeof fileView46==='function')fileView46(data.signedUrl,f.name||'archivo',f.mime||'');else window.open(data.signedUrl,'_blank','noopener')};
+
+// ---------- formulario para asignar ----------
+function form49(sid){const k=U(sid);const first=esc((k&&k.name||'').split(' ')[0]||'el estudiante');const acc=hasAcc49(sid);const fams=famOf(sid).filter(x=>x.status==='activo').length;
+ const due=(()=>{const d=new Date(TODAY+'T12:00:00');d.setDate(d.getDate()+7);return d.toISOString().slice(0,10)})();
+ return `<form class="card stack" data-f="hometask" data-s="${sid}"><h2>Asignar tarea</h2><div class="form">
+ <div class="field"><label>¿Para quién es?</label><div class="h49-to">${Object.entries(TO49).map(([v,l])=>`<label class="h49-opt"><input type="radio" name="to" value="${v}" ${v==='ambos'?'checked':''}><span>${l}</span></label>`).join('')}</div>
+  <span class="small muted">${acc?`${first} la verá en «Mis pendientes» y recibirá un aviso.`:`${first} todavía no tiene usuario: la verá cuando le des acceso (tarjeta «Acceso del estudiante», arriba).`}${fams?'':' Este estudiante no tiene familia con cuenta activa.'}</span></div>
+ <div class="field"><label for="ht">Tarea</label><input id="ht" name="t" class="inp" required maxlength="160" placeholder="Ej.: Resolver la hoja de fracciones"></div>
+ <div class="field"><label for="hd">Indicaciones</label><textarea id="hd" name="d" class="inp" rows="3" maxlength="2000" style="resize:vertical" placeholder="Explica qué debe hacer, paso a paso"></textarea></div>
+ <div class="two"><div class="field"><label for="hdu">Fecha de entrega</label><input id="hdu" name="due" type="date" class="inp" value="${due}"></div>
+  <div class="field"><label for="hr">Material de la biblioteca</label><select id="hr" name="res" class="inp"><option value="">Ninguno</option>${(S.library||[]).map(r=>`<option value="${r.id}">${esc(r.title)}</option>`).join('')}</select></div></div>
+ <div class="field"><label for="hl">Enlaces para trabajar <span class="small muted">(opcional, uno por línea)</span></label><textarea id="hl" name="links" class="inp" rows="2" style="resize:vertical" placeholder="https://docs.google.com/…&#10;https://wordwall.net/…"></textarea><span class="small muted">Google Docs, Canva, Wordwall, Liveworksheets, videos de YouTube…</span></div>
+ <div class="field"><label>Archivos <span class="small muted">(opcional, hasta 5 de 20 MB)</span></label><label class="btn sm" style="cursor:pointer;position:relative;overflow:hidden;align-self:flex-start">${ic('attach')}<span id="h49fl">Adjuntar hoja de trabajo, foto o PDF</span><input type="file" id="h49f" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;font-size:0"></label></div>
+ <label class="check"><input type="checkbox" name="ent" value="1" checked> Que pueda entregar el trabajo en el campus (subir fotos, archivos o enlaces)</label>
+ </div><div class="row end"><button class="btn pri">${ic('send')}Asignar tarea</button></div></form>`}
+document.addEventListener('change',e=>{if(e.target&&e.target.id==='h49f'){const l=document.getElementById('h49fl');const n=e.target.files.length;if(l)l.textContent=n?`${n} archivo${n===1?'':'s'} listo${n===1?'':'s'}`:'Adjuntar hoja de trabajo, foto o PDF'}
+ if(e.target&&e.target.id==='h49s'){const l=document.getElementById('h49sl');const n=e.target.files.length;if(l)l.textContent=n?`${n} archivo${n===1?'':'s'} listo${n===1?'':'s'}`:'Subir fotos o archivos'}});
+const _cv49=caseView;caseView=function(sid,family){const h=_cv49.apply(this,arguments);try{if(family||!h.includes('data-f="hometask"'))return h;return h.replace(/<form class="card stack" data-f="hometask"[\s\S]*?<\/form>/,form49(sid))}catch(e){return h}};
+FORMS.hometask=async(fd_,form)=>{const sid=form.dataset.s,k=U(sid);if(form.dataset.busy)return;const to=fd_.get('to')||'ambos';
+ const h={id:nid('h'),t:String(fd_.get('t')||'').trim(),d:String(fd_.get('d')||'').trim(),due:fd_.get('due')||'',done:false,res:fd_.get('res')||null,to,links:links49(fd_.get('links')),files:[],ent:!!fd_.get('ent'),by:ui.user.id,at:nowStr()};
+ if(!h.t){toast('Escribe la tarea');return}
+ const inp=form.querySelector('#h49f');form.dataset.busy='1';const btn=form.querySelector('button.pri');if(btn){btn.disabled=true;btn.textContent='Guardando…'}
+ try{if(inp&&inp.files.length){toast('Subiendo archivos…');h.files=await upload49(sid,h.id,'p',inp.files)}}finally{delete form.dataset.busy}
+ CASE(sid).home.push(h);const msg=`Nueva tarea: ${h.t}${h.due?' · para el '+fdl(h.due):''}`;const sent=[];
+ if(to!=='fam'&&k&&k.status==='activo'){notify(sid,msg);sent.push(short(k.name))}
+ if(to!=='est'){const fs=famOf(sid).filter(x=>x.status==='activo');fs.forEach(x=>notify(x.id,msg));if(fs.length)sent.push('la familia')}
+ try{log('Asignó una tarea',`${h.t} · ${short(UP(sid).name)} · ${TO49[to]}`)}catch(e){}save();render();
+ toast(sent.length?'Tarea asignada. Avisamos a '+sent.join(' y '):'Tarea asignada')};
+
+// ---------- lista de tareas (expediente y familia) ----------
+function sub49(sid,h){const s=h.sub;if(!s)return '';return `<div class="h49-sub"><div class="small"><b>Entregada</b> · ${esc(fdl(String(s.at).slice(0,10)))} ${esc(String(s.at).slice(11,16))}${s.byName?' · '+esc(short(s.byName)):''}</div>
+ ${s.note?`<div class="small" style="white-space:pre-wrap">${esc(s.note)}</div>`:''}${(s.links||[]).length||(s.files||[]).length?`<div class="mb-files" style="margin-top:4px">${linkChips49(s.links)}${fileChips49(s.files,sid,h.id,'e')}</div>`:''}</div>`}
+function extras49(sid,h,compact){const r=(S.library||[]).find(x=>x.id===h.res);const any=(h.links||[]).length||(h.files||[]).length||r;
+ return `${any&&!compact?`<div class="mb-files" style="margin-top:6px">${linkChips49(h.links)}${fileChips49(h.files,sid,h.id,'p')}${r?`<button type="button" class="mb-file h49-f" data-a="openresource" data-id="${r.id}">${ic('book')}<span>${esc(r.title)}</span></button>`:''}</div>`:''}${compact?'':sub49(sid,h)}`}
+homeList=function(sid,c,family,compact){const xs=(compact?c.home.filter(h=>!h.done):c.home).filter(h=>!family||h.to!=='est');
+ return `<div class="list">${xs.map(h=>`<div class="it" style="align-items:flex-start">${family?`<button class="lesson" style="width:auto;padding:0" data-a="homedone" data-s="${sid}" data-id="${h.id}" aria-label="${h.done?'Marcar como pendiente':'Marcar como hecha'}"><span class="st ${h.done?'done':''}">${h.done?ic('check'):''}</span></button>`:`<span class="lesson" style="width:auto;padding:0"><span class="st ${h.done?'done':''}">${h.done?ic('check'):''}</span></span>`}
+  <div class="grow" style="min-width:0"><b style="font-weight:500;${h.done?'text-decoration:line-through;opacity:.7':''}">${esc(h.t)}</b>
+  <div class="small muted">${h.due?`Para el ${fdl(h.due)}`:'Sin fecha'}${!family?` · ${TO49[h.to||'ambos']}`:''}</div>
+  ${h.d&&!compact?`<div class="small" style="white-space:pre-wrap;margin-top:4px">${esc(h.d)}</div>`:''}${extras49(sid,h,compact)}
+  ${family&&!compact&&h.ent&&!h.sub?`<button class="btn sm" style="margin-top:8px" data-a="h49sub" data-s="${sid}" data-id="${h.id}">${ic('upload')}Entregar trabajo</button>`:''}</div>
+  ${!family&&!compact?(ui.confirm==='h49:'+h.id?`<div class="row" style="gap:6px;flex-wrap:wrap;justify-content:flex-end"><span class="small">¿Eliminar?</span><button class="btn sm danger" data-a="h49del" data-s="${sid}" data-id="${h.id}">Sí</button><button class="btn sm" data-a="cancelconfirm">No</button></div>`:`<button class="iconbtn" data-a="h49ask" data-id="${h.id}" aria-label="Eliminar tarea" title="Eliminar tarea">${ic('trash')}</button>`):''}</div>`).join('')||`<span class="muted">${compact?'Todo al día.':'No hay tareas asignadas.'}</span>`}</div>`};
+ACT.h49ask=d=>{ui.confirm='h49:'+d.id;render()};
+ACT.h49del=async d=>{const c=CASE(d.s);const h=c&&c.home.find(x=>x.id===d.id);ui.confirm=null;if(!h){render();return}c.home=c.home.filter(x=>x!==h);
+ const paths=[...(h.files||[]),...((h.sub&&h.sub.files)||[])].map(f=>f.path).filter(Boolean);try{log('Eliminó una tarea',`${h.t} · ${short(UP(d.s).name)}`)}catch(e){}save();render();toast('Tarea eliminada');
+ if(paths.length)try{await SB.storage.from('tareas').remove(paths)}catch(e){}};
+
+// ---------- entregar el trabajo (estudiante o familia) ----------
+ACT.h49sub=d=>{const h=task49(d.s,d.id);if(!h)return;
+ openModal({title:'Entregar: '+h.t,form:'h49sub',ok:false,body:`<input type="hidden" name="s" value="${d.s}"><input type="hidden" name="id" value="${d.id}"><div class="form">
+  <div class="field"><label for="h49n">Comentario <span class="small muted">(opcional)</span></label><textarea id="h49n" name="note" class="inp" rows="3" maxlength="4000" style="resize:vertical" placeholder="Cuéntale a tu profesional cómo te fue"></textarea></div>
+  <div class="field"><label for="h49l">Enlace a tu trabajo <span class="small muted">(opcional)</span></label><textarea id="h49l" name="links" class="inp" rows="2" style="resize:vertical" placeholder="https://…"></textarea></div>
+  <div class="field"><label>Fotos o archivos <span class="small muted">(hasta 5 de 20 MB)</span></label><label class="btn sm" style="cursor:pointer;position:relative;overflow:hidden;align-self:flex-start">${ic('attach')}<span id="h49sl">Subir fotos o archivos</span><input type="file" id="h49s" multiple accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;font-size:0"></label>
+   <span class="small muted">Desde el celular puedes tomarle una foto a tu hoja de trabajo.</span></div>
+  <div class="row end"><button type="submit" class="btn pri">${ic('send')}Entregar</button></div></div>`})};
+FORMS.h49sub=async(fd_,form)=>{if(form.dataset.busy)return;const sid=fd_.get('s'),id=fd_.get('id');const h=task49(sid,id);if(!h)return;
+ const note=String(fd_.get('note')||'').trim(),links=links49(fd_.get('links'));const inp=form.querySelector('#h49s');
+ if(!note&&!links.length&&!(inp&&inp.files.length)){toast('Agrega un comentario, un enlace o un archivo');return}
+ form.dataset.busy='1';const btn=form.querySelector('button.pri');if(btn){btn.disabled=true;btn.textContent='Entregando…'}
+ try{const files=inp&&inp.files.length?await upload49(sid,id,'e',inp.files):[];
+  const {error}=await SB.rpc('home_task_submit',{p_id:id,p_sub:{note,links,files}});if(error){toast(error.message||'No se pudo entregar');if(btn){btn.disabled=false;btn.textContent='Entregar'}return}
+  const at=nowStr();Object.assign(h,{done:true,doneAt:at,doneBy:ui.user.id,sub:{at,by:ui.user.id,byName:ui.user.name,note,links,files}});
+  if(CASE(sid)&&typeof SYNC!=='undefined'&&SYNC.snap&&SYNC.snap.home_tasks){try{SYNC.snap.home_tasks[id]=JSON.stringify({id,student_id:sid,vis:h.to!=='est',data:h})}catch(e){}}
+  ui.modal=null;render();toast('¡Trabajo entregado! Avisamos a tu profesional')}finally{delete form.dataset.busy}};
+
+// ---------- «Mis pendientes»: enlaces, archivos y entregar ----------
+const _pi49=pendItems47;pendItems47=function(sid){const xs=_pi49.apply(this,arguments);xs.forEach(it=>{if(it.k==='casa'){const h=task49(sid,it.id);if(h)it.h=h}});
+ return ui.user.role==='guardian'?xs.filter(it=>!(it.h&&it.h.to==='est')):xs};
+const _ih49=itemHtml47;itemHtml47=function(it,sid){if(!it.h)return _ih49.apply(this,arguments);const h=it.h;const d0=it.d;it.d='';let s=_ih49.apply(this,arguments);it.d=d0;
+ const add=`${h.d?`<div class="small" style="white-space:pre-wrap;margin-top:4px">${esc(h.d)}</div>`:''}${extras49(sid,h,false)}${h.ent&&!h.sub&&!h.done?`<button class="btn sm pri" style="margin-top:8px" data-a="h49sub" data-s="${sid}" data-id="${h.id}">${ic('upload')}Entregar trabajo</button>`:''}`;
+ s=s.replace(/(<div class="small muted">[\s\S]*?<\/div>)/,'$1'+add);
+ if(h.sub)s=s.replace('>Deshacer<','>Marcar pendiente<');return s};
+
+// ---------- mensajes: estudiantes en el buzón ----------
+var STU49={people:{},contacts:null,loading:false};
+const _UP49=UP;UP=function(id){return U(id)||STU49.people[id]||_UP49(id)};
+async function stuContacts49(){if(STU49.loading)return;STU49.loading=true;try{const {data,error}=await SB.rpc('student_contacts');if(!error){STU49.contacts=(data||[]).map(x=>({u:{id:x.id,name:x.name,role:'teacher',status:'activo'},why:x.why}));STU49.contacts.forEach(c=>STU49.people[c.u.id]=c.u)}else STU49.contacts=[]}catch(e){STU49.contacts=[]}STU49.loading=false;if(MAIL.draft&&ui.modal&&ui.modal.form==='mailsend')mailComposeOpen()}
+const _mc49=mailContacts;mailContacts=function(){const me=ui.user;
+ if(me.role==='student'){if(STU49.contacts===null){stuContacts49();return []}return STU49.contacts}
+ const out=_mc49.apply(this,arguments);const have=new Set(out.map(x=>x.u.id));
+ const add=(k,why)=>{if(k&&k.role==='student'&&k.status==='activo'&&k.id!==me.id&&!have.has(k.id)){have.add(k.id);out.push({u:k,why})}};
+ Object.keys(S.cases||{}).forEach(sid=>{const c=CASE(sid);if(!c)return;if(isAdminU(me)||c.prof===me.id||(c.team||[]).includes(me.id))add(U(sid),'Estudiante')});
+ return out.sort((a,b)=>a.u.name.localeCompare(b.u.name))};
+const _mg49=mailGroups;mailGroups=function(cs){const g=_mg49.apply(this,arguments);const me=ui.user;if(me.role!=='student'){const ids=cs.filter(x=>x.u.role==='student').map(x=>x.u.id);if(ids.length>1)g.push([isAdminU(me)?'Todos los estudiantes':'Mis estudiantes',ids])}return g};
+// «Escribir al estudiante» desde su tarjeta de acceso
+const _ac49=accessCard48;accessCard48=function(sid){let h=_ac49.apply(this,arguments);const k=U(sid);if(h&&k&&k.status==='activo'&&stuUser48(k))h=h.replace('<button class="btn sm" data-a="stu48pw"',`<button class="btn sm" data-a="h49msg" data-s="${sid}">${ic('mail')}Escribirle</button><button class="btn sm" data-a="stu48pw"`);return h};
+ACT.h49msg=d=>{try{go('messages')}catch(e){ui.view='messages'}mailCompose({to:[d.s]})};
+
+(function(){const st=document.createElement('style');st.textContent=`.h49-to{display:flex;flex-wrap:wrap;gap:8px}.h49-opt{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:14px}
+.h49-opt:has(input:checked){background:var(--brand-soft,#E4EFF7);border-color:var(--brand,#336FA8);color:var(--brand-ink,#1F3B57);font-weight:600}.h49-opt input{accent-color:var(--brand,#336FA8)}
+.h49-f{text-decoration:none;font-size:13px;padding:6px 10px}.h49-f span{max-width:180px}
+.h49-sub{margin-top:8px;padding:10px 12px;border-radius:10px;background:#EEF2D2;color:#2F3D07;display:flex;flex-direction:column;gap:4px}[data-theme="dark"] .h49-sub{background:#22301A;color:#DDE7A6}.p47-it.done .h49-sub b{text-decoration:none;color:inherit}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 50: notas y cosas por hacer del estudiante en su calendario =====
+var NOTES50={rows:null,loading:false};
+async function notesLoad50(){if(NOTES50.loading||typeof SB==='undefined'||!SB)return;NOTES50.loading=true;
+ try{const {data,error}=await SB.from('my_notes').select('id,day,data');NOTES50.rows=error?[]:(data||[]).map(r=>({id:r.id,day:String(r.day).slice(0,10),...(r.data||{})}))}catch(e){NOTES50.rows=[]}
+ NOTES50.loading=false;if(!ui.modal&&ui.view==='pend')render()}
+const _ab50=afterBoot;afterBoot=function(acct){_ab50(acct);NOTES50.rows=null};
+function notesOn50(){return ui.user&&ui.user.role==='student'}
+// puntos amarillos en el calendario
+const _cal50=cal47;cal47=function(sid,items){let h=_cal50.apply(this,arguments);if(!notesOn50()||!NOTES50.rows)return h;
+ [...new Set(NOTES50.rows.filter(n=>!n.done).map(n=>n.day))].forEach(d=>{h=h.replace(new RegExp('(data-d="'+d+'"[^>]*>[\\s\\S]*?<i>)'),'$1<em class="p47-dot p47-nota"></em>')});
+ return h.replace('Sesiones</span></div>','Sesiones</span><span><em class="p47-dot p47-nota"></em>Mis notas</span></div>')};
+function notesCard50(){const day=PEND47.day;let xs;
+ if(day)xs=NOTES50.rows.filter(n=>n.day===day);
+ else xs=NOTES50.rows.filter(n=>!n.done||n.day>=TODAY).filter(n=>!(n.done&&n.day<TODAY));
+ xs=xs.sort((a,b)=>a.day.localeCompare(b.day)||String(a.at||'').localeCompare(String(b.at||''))).slice(0,30);
+ return `<div class="card stack n50"><div><h2 style="margin:0;font-size:17px">${day?'Mis notas · '+esc(fdl(day)):'Mis notas y cosas por hacer'}</h2>
+  <p class="small muted" style="margin:2px 0 0">${day?'Escribe lo que quieras recordar este día.':'Toca un día del calendario para ver o agregar notas de ese día.'}</p></div>
+  <form class="n50-add" data-f="note50"><input name="t" class="inp" required maxlength="300" placeholder="${day?'Ej.: Estudiar para el quiz':'Algo por hacer…'}" aria-label="Nueva nota">
+   <div class="row" style="gap:6px;flex-wrap:nowrap"><input name="day" type="date" class="inp" value="${day||TODAY}" aria-label="Día" style="flex:1;min-width:0"><button class="btn sm pri" aria-label="Agregar nota">${ic('plus')}Agregar</button></div></form>
+  <div class="n50-list">${xs.map(n=>`<div class="n50-it ${n.done?'done':''}"><button type="button" class="n50-ck" data-a="note50tog" data-id="${n.id}" aria-label="${n.done?'Marcar como pendiente':'Marcar como hecha'}">${n.done?ic('check'):''}</button>
+   <div class="grow"><span class="n50-t">${esc(n.t)}</span>${day?'':`<span class="small ${n.day<TODAY&&!n.done?'n50-late':'muted'}">${n.day===TODAY?'Hoy':esc(fdl(n.day))}</span>`}</div>
+   <button type="button" class="iconbtn" data-a="note50del" data-id="${n.id}" aria-label="Borrar nota" title="Borrar nota">${ic('trash')}</button></div>`).join('')||`<p class="small muted" style="margin:0">${day?'Sin notas para este día.':'Todavía no tienes notas.'}</p>`}</div></div>`}
+const _vp50=VIEWS.pend;VIEWS.pend=function(){const h=_vp50.apply(this,arguments);if(!notesOn50()||!h.includes('class="p47-side"'))return h;
+ if(NOTES50.rows===null){notesLoad50();return h}const i=h.lastIndexOf('</div></div>');return i<0?h:h.slice(0,i)+notesCard50()+h.slice(i)};
+FORMS.note50=async(fd_,form)=>{const t=String(fd_.get('t')||'').trim(),day=String(fd_.get('day')||TODAY).slice(0,10);if(!t)return;if(form.dataset.busy)return;form.dataset.busy='1';
+ const n={id:'nt_'+ui.user.id+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t,done:false,at:nowStr()};
+ const {error}=await SB.from('my_notes').insert([{id:n.id,owner_id:ui.user.id,day,data:{t:n.t,done:false,at:n.at}}]);delete form.dataset.busy;
+ if(error){toast('No se pudo guardar la nota');return}NOTES50.rows.push({...n,day});render();toast('Nota guardada')};
+ACT.note50tog=async d=>{const n=(NOTES50.rows||[]).find(x=>x.id===d.id);if(!n)return;n.done=!n.done;render();
+ const {error}=await SB.from('my_notes').update({data:{t:n.t,done:n.done,at:n.at}}).eq('id',n.id);if(error){n.done=!n.done;render();toast('No se pudo guardar')}};
+ACT.note50del=async d=>{const n=(NOTES50.rows||[]).find(x=>x.id===d.id);if(!n)return;NOTES50.rows=NOTES50.rows.filter(x=>x!==n);render();
+ const {error}=await SB.from('my_notes').delete().eq('id',n.id);if(error){NOTES50.rows.push(n);render();toast('No se pudo borrar')}};
+(function(){const st=document.createElement('style');st.textContent=`.p47-nota{background:#E0A100}.p47-side{display:flex;flex-direction:column;gap:16px}
+.n50-add{display:flex;flex-direction:column;gap:6px}.n50-list{display:flex;flex-direction:column}
+.n50-it{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}.n50-it:first-child{border-top:0}.n50-it .grow{flex:1;min-width:0;display:flex;flex-direction:column}
+.n50-t{word-break:break-word}.n50-it.done .n50-t{text-decoration:line-through;color:var(--muted)}.n50-late{color:#B42318}
+.n50-ck{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--line);background:var(--surface,#fff);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:#fff}
+.n50-it.done .n50-ck{background:#A2B424;border-color:#A2B424}.n50-ck svg{width:14px;height:14px}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
