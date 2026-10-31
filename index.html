@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-KT6o0ak8i6qn6m0qSU34mE25lm/j/yHFQZUoEFyFhT8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-TA4oC3bTQLHG9RDUY78IqYAdtmng3NtSRLvvkB/6NrU='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-01b';
+const BUILD38='2026-11-01c';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5230,6 +5230,24 @@ const _hd51=ACT.homedone;ACT.homedone=async d=>{if(ui.user.role!=='guardian')ret
  if(await done51(d.s,d.id,!h.done)){render();toast(h.done?'¡Listo! Avisamos a la profesional':'Tarea marcada como pendiente')}};
 const _pd51=ACT.pend47done;ACT.pend47done=async d=>{if(ui.user.role!=='guardian')return _pd51(d);if(await done51(d.s,d.id,d.v==='1')){render();toast(d.v==='1'?'¡Listo! Avisamos a la profesional':'Tarea marcada como pendiente')}};
 (function(){const st=document.createElement('style');st.textContent=`.h51-rev{margin-top:6px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.65);border-left:3px solid #336FA8;color:var(--fg,#1F2A37)}[data-theme="dark"] .h51-rev{background:rgba(0,0,0,.25)}.p47-it.done .h51-rev b{text-decoration:none;color:inherit}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 52: la página no «brinca» (iPad/iPhone) =====
+// 1) Cada actualización automática (cada 60–90 s, al volver a la app, al cargar datos) redibujaba todo y la página saltaba arriba.
+//    Ahora, si sigues en la misma sección, se conserva exactamente dónde estabas (contenido y menú).
+// 2) El cuerpo tenía un margen de 8 px que hacía la página un poco más alta que la pantalla: en iPad rebotaba y se movía.
+const SCR52={key:null};
+function key52(){return ui.user?[ui.user.id,ui.view,ui.p||'',ui.tab||''].join('|'):'login'}
+const _render52=render;render=function(){const k=key52();const c=document.querySelector('.content'),n=document.querySelector('.side .nav');
+ const keep=k===SCR52.key?{c:c?c.scrollTop:0,n:n?n.scrollTop:0}:null;const ae=document.activeElement;const aeId=ae&&ae.id;
+ const r=_render52.apply(this,arguments);SCR52.key=k;
+ try{const c2=document.querySelector('.content'),n2=document.querySelector('.side .nav');
+  if(keep){if(c2)c2.scrollTop=keep.c;if(n2)n2.scrollTop=keep.n}else{if(c2)c2.scrollTop=0;if(window.scrollY)window.scrollTo(0,0)}
+  if(keep&&aeId&&!ui.modal){const e=document.getElementById(aeId);if(e&&e!==document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(e.tagName))e.focus({preventScroll:true})}}catch(e){}
+ return r};
+(function(){const st=document.createElement('style');st.textContent=`html,body{margin:0}
+body:has(.app.campus){overflow:hidden;overscroll-behavior:none}
+html:has(.app.campus){overflow:hidden;overscroll-behavior:none}
+.app.campus{height:100%;height:100dvh}
+.content,.side .nav{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
