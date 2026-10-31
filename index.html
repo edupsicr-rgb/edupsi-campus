@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-RR6vME+DrRIot8pMehPTAVb8Rozjn/VfYGAaY4q+GEg='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-NiFWX9jF4qXEuLwsta0r19fyYcUYMgHQ6aP3dB+PsU8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-01d';
+const BUILD38='2026-11-01e';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5252,6 +5252,32 @@ body:has(.app.campus){overflow:hidden;overscroll-behavior:none}
 html:has(.app.campus){overflow:hidden;overscroll-behavior:none}
 .app.campus{height:100%;height:100dvh}
 .content,.side .nav{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 53: el campus se actualiza solo (sin botón) =====
+// Cuando hay una versión nueva, se aplica sola en un momento seguro: al cambiar de sección, al salir y volver a la app
+// o tras un rato sin tocar nada. Nunca con una ventana abierta, algo escrito sin enviar o archivos subiéndose. Se vuelve a la misma sección.
+const UPD53={pend:false,last:Date.now(),busy:false};
+['pointerdown','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{UPD53.last=Date.now()},{passive:true,capture:true}));
+function safe53(){try{if(ui.modal||document.getElementById('fv46')||document.querySelector('form[data-busy]'))return false;if(typeof SYNC!=='undefined'&&SYNC.busy)return false;
+ const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.type!=='checkbox'&&a.type!=='radio'&&String(a.value||'').trim())return false;
+ if([...document.querySelectorAll('.content textarea,.content input[type=text],.content input:not([type])')].some(i=>String(i.value||'').trim()&&!i.readOnly&&i.defaultValue!==i.value))return false;
+ return true}catch(e){return false}}
+async function apply53(view){if(!UPD53.pend||UPD53.busy||!safe53())return false;UPD53.busy=true;
+ try{if(ui.user){sessionStorage.setItem('edupsi-upd-to',JSON.stringify({v:view||ui.view,p:ui.p||null,t:ui.tab||null}))}}catch(e){}
+ try{if(typeof SYNC!=='undefined'&&SYNC.on){clearTimeout(SYNC.timer);await syncNow()}}catch(e){}
+ try{const rs=await navigator.serviceWorker?.getRegistrations?.();if(rs)await Promise.all(rs.map(r=>r.update().catch(()=>{})))}catch(e){}
+ location.reload();return true}
+// en lugar del aviso con botón
+show38=function(){UPD53.pend=true;if(!ui.user||document.hidden){apply53();return}const b=document.getElementById('upd38');if(b)b.remove()};
+// al cambiar de sección
+const _go53=go;go=function(v,p,tab){if(UPD53.pend&&safe53()&&!ui.modal){try{sessionStorage.setItem('edupsi-upd-to',JSON.stringify({v,p:p||null,t:tab||null}))}catch(e){}
+ apply53(v).then(ok=>{if(!ok)_go53(v,p,tab)});return}return _go53.apply(this,arguments)};
+// al salir de la app (o volver) y tras 2 minutos sin tocar nada
+document.addEventListener('visibilitychange',()=>{if(UPD53.pend)apply53()});
+setInterval(()=>{if(UPD53.pend&&Date.now()-UPD53.last>120000)apply53()},20000);
+setInterval(()=>{try{check38()}catch(e){}},120000);
+// después de actualizar, vuelve a la misma sección
+const _ab53=afterBoot;afterBoot=function(acct){_ab53(acct);try{const s=JSON.parse(sessionStorage.getItem('edupsi-upd-to')||'null');sessionStorage.removeItem('edupsi-upd-to');
+ if(s&&s.v&&VIEWS[s.v]){ui.view=s.v;ui.p=s.p;ui.tab=s.t;setTimeout(()=>{try{render()}catch(e){}},0)}}catch(e){}};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
