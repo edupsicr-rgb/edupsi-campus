@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-u5sGFJBotDXOma1sSwEpoD2esyQO/CMZMZFYz0gYyso='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-A1ZIv9xiPV2Ly9mIWpiWNQSlg0L6sjlBaSE+MvQnVvA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-02a';
+const BUILD38='2026-11-02b';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5296,7 +5296,8 @@ const _nc55=ACT.newcase;ACT.newcase=d=>{_nc55(d);if(!ui.modal||ui.modal.form!=='
   <div class="field"><label for="nx0">¿Quién acompaña al estudiante?</label><select id="nx0" name="xsel" class="inp" data-ch="nc55sel"><option value="">Nadie por ahora</option>${xs.map(u=>`<option value="${u.id}">${esc(u.name)}${u.org?' · '+esc(u.org):''}</option>`).join('')}<option value="__new">+ Nueva persona…</option></select></div>
   <div class="nc55new form" style="flex-direction:column;gap:12px"><div class="two"><div class="field"><label for="nx1">Nombre completo</label><input id="nx1" name="xname" class="inp"></div><div class="field"><label for="nx2">Correo</label><input id="nx2" name="xemail" type="email" class="inp"></div></div>
    <div class="two"><div class="field"><label for="nx3">Tipo</label><select id="nx3" name="xspec" class="inp"><option value="docente">Docente del centro educativo</option><option value="externo">Profesional externo (terapeuta, médico…)</option></select></div><div class="field"><label for="nx4">Centro educativo o lugar de trabajo</label><input id="nx4" name="xorg" class="inp" placeholder="Ej.: Escuela Los Ángeles"></div></div></div>
-  <p class="small muted" style="margin:0">Queda en el equipo del estudiante. Solo verá el proceso cuando la familia lo autorice (o cuando registres una autorización firmada).</p></div></details>`;
+  ${isAdminU(ui.user)?`<div class="field"><label>Acceso al proceso</label><div class="stack" style="gap:8px"><label class="check" style="align-items:flex-start"><input type="radio" name="xauth" value="fam" checked style="margin-top:4px"><span>Pedir autorización a la familia<br><span class="small muted">Verá el proceso cuando la familia lo apruebe en el campus.</span></span></label><label class="check" style="align-items:flex-start"><input type="radio" name="xauth" value="ok" style="margin-top:4px"><span>Dejarla autorizada desde ya<br><span class="small muted">La familia ya dio su permiso, por ejemplo firmado. Entra de inmediato.</span></span></label></div></div>`:''}
+  <p class="small muted" style="margin:0">Queda en el equipo del estudiante. Ve un resumen del proceso, los objetivos, los documentos que marques para compartir y lleva su registro de conducta; nunca ve la bitácora, los formularios de la familia ni los pagos.</p></div></details>`;
  b=b.replace('<div class="field"><label for="nr">Motivo de consulta</label>',sec+'<div class="field"><label for="nr">Motivo de consulta</label>');
  ui.modal.body=b;ui.modal.ok='Crear estudiante';render()};
 CH.nc55sel=el=>{const box=document.getElementById('nc55x');if(box)box.classList.toggle('isnew',el.value==='__new');const n=document.getElementById('nx1');if(el.value==='__new'&&n)n.focus()};
@@ -5311,6 +5312,7 @@ const _fnc55=FORMS.newcase;FORMS.newcase=fd_=>{const email=String(fd_.get('email
   const ex=S.users.find(u=>(u.email||'').toLowerCase()===xe);if(ex&&!isLimited(ex)){toast('El correo de la persona externa ya pertenece a otra cuenta de la plataforma');return}
   if(ex)xu=ex;else{xu={id:nid('u'),name:xn,email:xe,role:'teacher',spec:fd_.get('xspec')||'docente',org:String(fd_.get('xorg')||'').trim(),inst:'i1',status:'invitado',code:newCode(),last:''};xNew=true}}
  else if(xsel)xu=U(xsel);
+ const preOk=!!xsel&&isAdminU(ui.user)&&fd_.get('xauth')==='ok';
  const before=new Set(S.users.map(u=>u.id));let kid=null,g=null,gNew=false;
  if(email){const prevModal=ui.modal;_fnc55(fd_);kid=S.users.find(u=>!before.has(u.id)&&u.role==='student');if(!kid)return;
   g=famOf(kid.id)[0];gNew=!!(g&&!before.has(g.id));if(ui.modal===prevModal)return}
@@ -5323,8 +5325,9 @@ const _fnc55=FORMS.newcase;FORMS.newcase=fd_=>{const email=String(fd_.get('email
   notify(fd_.get('prof'),`Nuevo estudiante asignado: ${kid.name}`);log('Creó expediente (correo de la familia pendiente)',kid.name);save();ui.modal=null;go('case',kid.id)}
  // equipo externo
  if(xu){if(xNew){S.users.push(xu);log('Invitó al equipo externo',xu.name)}const c=CASE(kid.id);if(!(c.team||[]).includes(xu.id)){c.team=[...(c.team||[]),xu.id];
-   famOf(kid.id).filter(f=>f.email).forEach(f=>notify(f.id,`${xu.name} (${SPEC[xu.spec]||'Profesional externo'}${xu.org?', '+xu.org:''}) solicita acceso al proceso de ${short(kid.name)}. Entra a Inicio para autorizarlo o no.`));
-   log('Agregó al equipo externo',`${xu.name} · ${kid.name}`)}save()}
+   if(!preOk)famOf(kid.id).filter(f=>f.email).forEach(f=>notify(f.id,`${xu.name} (${SPEC[xu.spec]||'Profesional externo'}${xu.org?', '+xu.org:''}) solicita acceso al proceso de ${short(kid.name)}. Entra a Inicio para autorizarlo o no.`));
+   log('Agregó al equipo externo',`${xu.name} · ${kid.name}`)}save();
+  if(preOk)(async()=>{try{if(typeof syncNow==='function'){clearTimeout(SYNC.timer);await syncNow()}}catch(e){}const r=await setExtAuth(kid.id,xu.id,true);if(r){toast(`${short(xu.name)} quedó autorizada para ver el proceso`);render()}else toast('No se pudo dejar autorizada. Usa «Registrar autorización firmada» en el equipo de trabajo')})()}
  // invitaciones listas para enviar
  const inv=[];if(gNew&&g&&g.email&&g.code)inv.push(g);if(xNew)inv.push(xu);
  if(inv.length)openModal({title:inv.length>1?'Invitaciones listas':'Invitación lista',form:'none',ok:false,body:`<div class="stack">${inv.map(u=>{const t=invText55(u);return `<div class="stack" style="gap:8px"><p style="margin:0">Para <b>${esc(u.name)}</b> ${u.role==='guardian'?'(familia)':'('+esc(SPEC[u.spec]||'equipo externo')+')'}:</p><textarea class="inp" style="min-height:100px" readonly>${esc(t)}</textarea><div class="row"><button type="button" class="btn pri" data-a="copyinv" data-t="${esc(t)}">${ic('copy')}Copiar mensaje</button><span class="pill brand">Código: ${u.code}</span></div></div>`}).join('<hr style="border:0;border-top:1px solid var(--line);margin:4px 0">')}
@@ -5334,7 +5337,7 @@ const _fnc55=FORMS.newcase;FORMS.newcase=fd_=>{const email=String(fd_.get('email
 // ---------- completar el correo de la familia después ----------
 const _cv55=caseView;caseView=function(sid,family){const h=_cv55(sid,family);const u=ui.user;if(family||!u||isExtUser(u)||u.role==='guardian'||u.role==='student')return h;
  const miss=famOf(sid).filter(f=>!f.email);if(!miss.length)return h;const f=miss[0];
- const card=`<div class="card stack fam55"><div class="row" style="gap:10px;align-items:flex-start">${ic('mail')}<div class="grow"><h2 style="margin:0">Falta el correo de la familia</h2><p class="small muted" style="margin:4px 0 0">Cuando lo tengas, escríbelo aquí y te preparo la invitación para que la familia cree su cuenta y autorice al equipo externo.</p></div></div>
+ const card=`<div class="card stack fam55"><div class="row" style="gap:10px;align-items:flex-start">${ic('mail')}<div class="grow"><h2 style="margin:0">Falta el correo de la familia</h2><p class="small muted" style="margin:4px 0 0">Cuando lo tengas, escríbelo aquí y te preparo la invitación para que la familia cree su cuenta.</p></div></div>
   <form data-f="fam55" data-s="${sid}" data-g="${f.id}" class="form"><div class="two"><div class="field"><label for="fg55">Madre, padre o encargado</label><input id="fg55" name="g" class="inp" required value="${/^Familia de /.test(f.name)?'':esc(f.name)}"></div><div class="field"><label for="fe55">Correo de la familia</label><input id="fe55" name="email" type="email" class="inp" required></div></div><div class="row end"><button class="btn pri">${ic('send')}Guardar y crear invitación</button></div></form></div>`;
  return card+h};
 FORMS.fam55=(fd_,form)=>{const sid=form.dataset.s,g=U(form.dataset.g);if(!g)return;const email=String(fd_.get('email')||'').trim().toLowerCase(),name=String(fd_.get('g')||'').trim();
@@ -5344,10 +5347,10 @@ FORMS.fam55=(fd_,form)=>{const sid=form.dataset.s,g=U(form.dataset.g);if(!g)retu
   (S.guardians[other.id]=S.guardians[other.id]||[]);if(!S.guardians[other.id].includes(sid))S.guardians[other.id].push(sid);
   S.guardians[g.id]=(S.guardians[g.id]||[]).filter(x=>x!==sid);if(!S.guardians[g.id].length){delete S.guardians[g.id];S.users=S.users.filter(u=>u.id!==g.id)}
   notify(other.id,`Se agregó a ${UP(sid).name} a tu cuenta`);
-  (CASE(sid).team||[]).map(UP).filter(p=>p&&isLimited(p)).forEach(p=>notify(other.id,`${p.name} (${SPEC[p.spec]||'Profesional externo'}${p.org?', '+p.org:''}) solicita acceso al proceso de ${short(UP(sid).name)}. Entra a Inicio para autorizarlo o no.`));
+  (CASE(sid).team||[]).map(UP).filter(p=>p&&isLimited(p)&&extStatus(CASE(sid),p.id)!=='autorizado').forEach(p=>notify(other.id,`${p.name} (${SPEC[p.spec]||'Profesional externo'}${p.org?', '+p.org:''}) solicita acceso al proceso de ${short(UP(sid).name)}. Entra a Inicio para autorizarlo o no.`));
   log('Vinculó a la familia existente',`${other.name} · ${UP(sid).name}`);save();toast('El estudiante se agregó a la cuenta de esa familia');render();return}
  Object.assign(g,{name:name||g.name,email,status:'invitado',code:newCode()});
- (CASE(sid).team||[]).map(UP).filter(p=>p&&isLimited(p)).forEach(p=>notify(g.id,`${p.name} (${SPEC[p.spec]||'Profesional externo'}${p.org?', '+p.org:''}) solicita acceso al proceso de ${short(UP(sid).name)}. Entra a Inicio para autorizarlo o no.`));
+ (CASE(sid).team||[]).map(UP).filter(p=>p&&isLimited(p)&&extStatus(CASE(sid),p.id)!=='autorizado').forEach(p=>notify(g.id,`${p.name} (${SPEC[p.spec]||'Profesional externo'}${p.org?', '+p.org:''}) solicita acceso al proceso de ${short(UP(sid).name)}. Entra a Inicio para autorizarlo o no.`));
  log('Agregó el correo de la familia',`${g.name} · ${UP(sid).name}`);save();render();inviteModal(g)};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
