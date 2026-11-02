@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-SRqXtBG2jdW3BSq4kLGBTiQl7oFnlziiyGMVmzsK9Mg='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-WSZ5WJv1c0sUbWEcRgoH2wZ8UzY0gJPoBfPZ5QHt7ro='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-02e';
+const BUILD38='2026-11-02g';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5380,6 +5380,59 @@ const _fdoc56=FORMS.doc;FORMS.doc=async(fd_,form)=>{const sid=form.dataset.s,c=C
  const r=await _fdoc56(fd_,form);const nd=(CASE(sid).docs||[]).find(d=>!before.has(d.id));
  if(nd&&nd.type==='Material'&&fd_.get('ext')){nd.ext=true;const xs=(CASE(sid).team||[]).map(UP).filter(p=>p&&isLimited(p)&&extStatus(CASE(sid),p.id)==='autorizado');xs.forEach(p=>notify(p.id,`Nuevo material de ${short(UP(sid).name)}: ${nd.t}`));save();render()}
  return r};
+// ===== EduPsi Campus · parte 57: «Lo nuevo para ti» al entrar (novedades desde la última visita, con botón para revisar) =====
+(function(){const st=document.createElement('style');st.textContent=`
+.nw57{display:flex;flex-direction:column;gap:2px}.nw57 .it{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--line)}.nw57 .it:first-child{border-top:0}
+.nw57 .ic57{width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;flex:none;background:var(--surface-2);color:var(--brand-ink,#2E6DA4)}
+.nw57 .ic57.g{background:#EEF5DF;color:#5E7A12}.nw57 .ic57.b{background:#E6F0FA;color:#2E6DA4}.nw57 .ic57.o{background:#FFF4DE;color:#8A5A00}.nw57 .ic57.p{background:#F1E9FB;color:#5B2E91}
+.nw57 .tx{flex:1;min-width:0}.nw57 .tx b{font-weight:500;display:block}`;document.head.appendChild(st)})();
+var NEWS57={list:[],shown:false,t0:Date.now()};
+function kind57(t){t=String(t||'').toLowerCase();
+ if(/mensaje|te escribi/.test(t))return ['chat','b','messages'];
+ if(/material/.test(t))return ['library','g','docs'];
+ if(/documento|informe|acta|plan|valoraci/.test(t))return ['file','b','docs'];
+ if(/tarea|entrega|pendiente/.test(t))return ['task','g','tasks'];
+ if(/cita|sesi[oó]n|reserva|agenda/.test(t))return ['cal','o','cal'];
+ if(/pago|cobro|comprobante|factura/.test(t))return ['wallet','o','pay'];
+ if(/formulario|ficha|consentimiento/.test(t))return ['form','p','forms'];
+ if(/autoriz|acceso/.test(t))return ['lock','p','auth'];
+ return ['bell','b','home']}
+function dest57(n){const k=kind57(n.t)[2];const u=ui.user,r=u.role,ext=isExtUser(u);const has=v=>!!VIEWS[v];
+ if(n.link&&has(n.link))return n.link;
+ if(k==='messages')return 'messages';
+ if(ext)return k==='auth'?'home':'students';
+ if(r==='guardian')return k==='docs'&&has('fdocs')?'fdocs':k==='cal'&&has('citas')?'citas':k==='pay'&&has('finance')?'finance':k==='forms'&&has('ffor')?'ffor':k==='tasks'&&has('progress')?'progress':'home';
+ if(r==='student')return k==='tasks'&&has('pend')?'pend':'home';
+ return k==='tasks'&&has('entregas')?'entregas':k==='cal'&&has('agenda')?'agenda':'home'}
+function newsBody57(){const u=ui.user;const xs=S.notifs.filter(n=>n.u===u.id&&!n.read);NEWS57.list=xs.slice(0,8);
+ const m=typeof unreadConvs==='function'?unreadConvs(u.id):0;
+ const rows=NEWS57.list.map((n,i)=>{const [icn,c]=kind57(n.t);return `<div class="it"><span class="ic57 ${c}">${ic(icn)}</span><div class="tx"><b>${esc(n.t)}</b><span class="small muted">${n.at?fd(String(n.at).slice(0,10)):''}</span></div><button type="button" class="btn sm" data-a="news57go" data-i="${i}">Revisar</button></div>`}).join('');
+ const msg=m&&!NEWS57.list.some(n=>kind57(n.t)[2]==='messages')?`<div class="it"><span class="ic57 b">${ic('chat')}</span><div class="tx"><b>Tienes ${m} conversación${m===1?'':'es'} con mensajes sin leer</b></div><button type="button" class="btn sm" data-a="news57msg">Revisar</button></div>`:'';
+ const more=xs.length>NEWS57.list.length?`<p class="small muted" style="margin:8px 0 0">Y ${xs.length-NEWS57.list.length} más en la campana de notificaciones.</p>`:'';
+ return {html:`<div class="stack" style="gap:10px"><p class="muted" style="margin:0">Esto es lo que llegó desde tu última visita. Toca «Revisar» para ir directo.</p><div class="nw57">${msg}${rows}</div>${more}
+  <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:6px"><button type="button" class="btn ghost sm" data-a="news57all">Marcar todo como visto</button><button type="button" class="btn pri" data-a="news57close">Ver después</button></div></div>`,count:xs.length+(msg?1:0)}}
+function showNews57(force){if(!ui.user)return false;const b=newsBody57();if(!b.count){if(force)toast('No tienes novedades pendientes');return false}
+ openModal({title:'Lo nuevo para ti',form:'none',ok:false,body:b.html});return true}
+ACT.news57go=d=>{const n=NEWS57.list[+d.i];if(!n)return;n.read=true;save();ui.modal=null;const v=dest57(n);go(v)};
+ACT.news57msg=()=>{ui.modal=null;go('messages')};
+ACT.news57all=()=>{S.notifs.filter(n=>n.u===ui.user.id).forEach(n=>n.read=true);save();ui.modal=null;render();toast('Listo, todo marcado como visto')};
+ACT.news57close=()=>{ui.modal=null;render()};
+ACT.news57=()=>{ui.pop=null;showNews57(true)};
+// se muestra una vez por sesión, cuando ya no hay otra ventana, bloqueo ni consentimiento pendiente
+function tryNews57(){if(NEWS57.shown||!ui.user)return;if(Date.now()-NEWS57.t0>10*60*1000){NEWS57.shown=true;return}
+ if(ui.modal||ui.real||(typeof LOCK!=='undefined'&&LOCK.on)||document.hidden||document.getElementById('fv46'))return;
+ const k='edupsi-news57-'+ui.user.id;let seen=false;try{seen=sessionStorage.getItem(k)==='1'}catch(e){}
+ NEWS57.shown=true;if(seen)return;try{sessionStorage.setItem(k,'1')}catch(e){}showNews57(false)}
+const _ab57=afterBoot;afterBoot=function(acct){_ab57(acct);NEWS57.shown=false;NEWS57.t0=Date.now();setTimeout(tryNews57,1500)};
+setInterval(()=>{if(!NEWS57.shown)tryNews57()},2000);
+// acceso también desde la campana
+const _np57=notifPop;notifPop=function(){const h=_np57();return h.replace('<h3>Notificaciones</h3>','<h3>Notificaciones</h3><button class="btn ghost sm" data-a="news57">Ver lo nuevo</button>')};
+// listas en el celular: el título usa todo el ancho y los botones bajan a la siguiente línea
+(function(){const st=document.createElement('style');st.textContent=`@media (max-width:700px){
+.list .it{flex-wrap:wrap;row-gap:8px}
+.list .it>.grow{flex:1 1 calc(100% - 44px);min-width:0;overflow-wrap:anywhere}
+.list .it>.ico:first-child{align-self:flex-start;margin-top:3px}
+.list .it>.grow~*{flex:0 0 auto}}`;document.head.appendChild(st)})();
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
