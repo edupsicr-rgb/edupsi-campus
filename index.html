@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-h/jUlFj++e54/jSZT1nXqCIk5SMusic/azfLmb3vEM4='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-4Xy88g8YCvPB678N+P3HwdxxiYXCCobuo6wGbunL+P8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4422,7 +4422,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-02j';
+const BUILD38='2026-11-02k';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5499,65 +5499,6 @@ FORMS.snd58=async fd_=>{if(SND58.busy)return;const sid=fd_.get('s');const ids=fd
   ui.modal=null;delete SND58.hist[sid];render()}
  catch(e){toast(e.message||'No se pudo enviar')}finally{SND58.busy=false}};
 ACT.snd58cancel=async d=>{try{const {error}=await SB.from('doc_sends').update({status:'cancelado'}).eq('id',d.id).eq('status','programado');if(error)throw error;log('Canceló un envío programado',short(UP(d.s).name));save();toast('Envío cancelado');delete SND58.hist[d.s];render()}catch(e){toast('No se pudo cancelar')}};
-// ===== EduPsi Campus · parte 59: compartir documentos por WhatsApp (desde el WhatsApp de EduPsi, con enlaces de descarga) =====
-(function(){const st=document.createElement('style');st.textContent=`
-.btn.wa59{background:#25D366;border-color:#25D366;color:#fff;text-decoration:none}.btn.wa59:hover{filter:brightness(.95)}
-.wa59pre{white-space:pre-wrap;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;max-height:220px;overflow:auto}
-.wa59chips{display:flex;gap:6px;flex-wrap:wrap}.wa59chips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer;color:var(--fg)}`;document.head.appendChild(st)})();
-ICONS.wa59=ICONS.wa59||'<path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.3z"/><path d="M9 8.5c.2 2.6 2.4 5.2 5.5 6.2l1.3-1.3-1.8-1-1 .8a5 5 0 0 1-2.3-2.3l.8-1-1-1.8z"/>';
-var WA59={prep:null};
-function phones59(sid){const out=[];const add=(n,p,rol)=>{const d=String(p||'').replace(/\D/g,'');if(d.length>=8&&!out.some(x=>x.d===d))out.push({n:n||'',p:String(p),d,rol})};
- famOf(sid).forEach(f=>add(f.name,f.phone,'Familia'));
- ((CASE(sid)?.ficha?.contacts)||[]).forEach(c=>add(c.n,c.ph,c.rel||c.par||'Contacto'));
- (CASE(sid).team||[]).map(UP).filter(p=>p&&p.phone).forEach(p=>add(p.name,p.phone,isLimited(p)?'Equipo externo':'Profesional'));
- return out}
-function waNum59(v){let d=String(v||'').replace(/\D/g,'');if(d.length===8)d='506'+d;return d}
-// botón junto a «Enviar por correo»
-const _cv59=caseView;caseView=function(sid,family){let h=_cv59(sid,family);if(!['docs','materiales'].includes(ui.tab)||!canSend58(sid,family))return h;
- const n=docsAll58(sid).length;
- return h.replace(/(<button class="btn pri" data-a="snd58open" data-s="[^"]+"[^>]*>[\s\S]*?Enviar por correo<\/button>)/,`<div class="row" style="gap:8px;flex-wrap:wrap">$1<button class="btn wa59" data-a="wa59open" data-s="${sid}" ${n?'':'disabled'}>${ic('wa59')}WhatsApp</button></div>`)
-  .replace('Enviar documentos por correo</b>','Enviar documentos por correo o WhatsApp</b>')};
-ACT.wa59open=d=>{const sid=d.s,k=UP(sid)||{};const xs=docsAll58(sid);const mat=xs.filter(x=>x.type==='Material'),oth=xs.filter(x=>x.type!=='Material');
- const row=x=>`<label><input type="checkbox" name="doc" value="${x.id}"><span><b style="font-weight:500">${esc(x.t)}</b><br><span class="small muted">${esc(x.type||'Documento')} · ${fd(String(x.date).slice(0,10))}</span></span></label>`;
- const ph=phones59(sid);
- openModal({title:'Compartir por WhatsApp',form:'wa59',ok:'Preparar mensaje',wide:true,body:`<input type="hidden" name="s" value="${sid}"><div class="form snd58">
-  <div class="field"><label>Documentos</label><div class="dl">${oth.length?`<div class="small muted" style="padding:8px 0 2px">Informes y documentos</div>${oth.map(row).join('')}`:''}${mat.length?`<div class="small muted" style="padding:10px 0 2px">Materiales</div>${mat.map(row).join('')}`:''}</div></div>
-  <div class="field"><label for="w59n">Número de WhatsApp <span class="small muted" style="font-weight:400">(opcional)</span></label>
-   ${ph.length?`<div class="wa59chips" style="margin-bottom:6px">${ph.map(x=>`<button type="button" data-a="wa59pick" data-p="${esc(x.p)}">${esc(short(x.n)||x.rol)} · ${esc(x.p)}</button>`).join('')}</div>`:''}
-   <input id="w59n" name="num" class="inp" inputmode="tel" placeholder="8888-8888 o +506 8888 8888" autocomplete="off"><span class="small muted">Si lo dejas en blanco, WhatsApp te deja elegir el contacto o el grupo.</span></div>
-  <div class="field"><label for="w59m">Mensaje</label><textarea id="w59m" name="msg" class="inp" rows="3" maxlength="1200">Hola, le comparto los documentos de ${esc(short(k.name||'el estudiante'))}.</textarea></div>
-  <p class="small muted" style="margin:0">El mensaje lleva un enlace de descarga por documento, que vence en 7 días. Se abre WhatsApp en tu dispositivo (usa el número de EduPsi) y tú tocas Enviar.</p></div>`})};
-ACT.wa59pick=d=>{const i=document.getElementById('w59n');if(i){i.value=d.p;i.focus()}};
-FORMS.wa59=async fd_=>{if(SND58.busy)return;const sid=fd_.get('s');const ids=fd_.getAll('doc');if(!ids.length){toast('Marca al menos un documento');return}
- const raw=String(fd_.get('num')||'').trim();const num=raw?waNum59(raw):'';if(raw&&(num.length<10||num.length>15)){toast('Revisa el número de WhatsApp');return}
- const c=CASE(sid),k=UP(sid)||{};const docs=ids.map(id=>(c.docs||[]).find(x=>x.id===id)).filter(Boolean);
- SND58.busy=true;toast('Preparando los enlaces…');
- try{const out=[];
-  for(const [i,d] of docs.entries()){if(docs.length>1)toast(`Preparando ${i+1} de ${docs.length}…`);let path=d.path;
-   if(!path){let bytes=null;if(d.rep&&typeof reportPdf33==='function')bytes=reportPdf33(sid,d);else if(d.acta&&typeof actaPdf43==='function')bytes=actaPdf43(sid,d);
-    if(!bytes){toast(`«${d.t}» no tiene archivo para compartir`);continue}
-    path=`${sid}/envios/${d.id}-${Date.now().toString(36)}.pdf`;const {error}=await to58(SB.storage.from('docs').upload(path,new Blob([bytes],{type:'application/pdf'}),{contentType:'application/pdf',upsert:true}),30000,'Se tardó demasiado preparando «'+d.t+'». Revisa tu conexión e intenta de nuevo.');if(error)throw new Error('No se pudo preparar «'+d.t+'»')}
-   const {data,error}=await to58(SB.storage.from('docs').createSignedUrl(path,7*86400),20000,'Se tardó demasiado preparando «'+d.t+'». Revisa tu conexión e intenta de nuevo.');if(error||!data)throw new Error('No se pudo preparar «'+d.t+'»');
-   out.push({id:d.id,name:d.t,url:data.signedUrl})}
-  if(!out.length)return;
-  const msg=String(fd_.get('msg')||'').trim();
-  const txt=`${msg?msg+'\n\n':''}📄 *Documentos de ${k.name||'el estudiante'}*\n${out.map(x=>`• ${x.name}:\n${x.url}`).join('\n')}\n\nLos enlaces vencen en 7 días.\n— EduPsi · Servicios en Educación y Psicopedagogía`;
-  const url=`https://wa.me/${num}?text=${encodeURIComponent(txt)}`;
-  WA59.prep={sid,num,raw,docs:out.map(x=>x.name),txt,url};
-  openModal({title:'Mensaje listo',form:'none',ok:false,body:`<div class="stack"><p style="margin:0">${num?`Para <b>${esc(raw)}</b>. `:''}Toca <b>Abrir WhatsApp</b> y luego Enviar.</p><div class="wa59pre">${esc(txt)}</div>
-   <div class="row" style="gap:8px;flex-wrap:wrap"><a class="btn wa59" href="${esc(url)}" target="_blank" rel="noopener" data-wa59="1">${ic('wa59')}Abrir WhatsApp</a><button type="button" class="btn" data-a="wa59copy">${ic('copy')}Copiar mensaje</button></div>
-   <p class="small muted" style="margin:0">Si usas la computadora, se abre WhatsApp Web o la aplicación de escritorio. Por privacidad, envíalo solo a personas autorizadas por la familia.</p></div>`})}
- catch(e){console.warn('wa59',e);toast(e.message||'No se pudo preparar')}finally{SND58.busy=false}};
-function waLog59(how){const p=WA59.prep;if(!p||p.logged)return;p.logged=true;const c=CASE(p.sid);c.waSends=[{at:nowStr(),by:ui.user.id,to:p.raw||'(elegido en WhatsApp)',docs:p.docs,how},...(c.waSends||[])].slice(0,30);
- log('Compartió documentos por WhatsApp',`${p.docs.join(', ')} → ${p.raw||'contacto elegido en WhatsApp'} · ${short(UP(p.sid).name)}`);save()}
-document.addEventListener('click',e=>{if(e.target.closest('[data-wa59]'))ACT.wa59sent()},true);
-ACT.wa59sent=()=>{waLog59('whatsapp');setTimeout(()=>{ui.modal=null;render();toast('Listo. Revisa que el mensaje se haya enviado en WhatsApp')},400)};
-ACT.wa59copy=()=>{const p=WA59.prep;if(!p)return;try{navigator.clipboard.writeText(p.txt).then(()=>toast('Mensaje copiado'))}catch(e){toast('No se pudo copiar')}waLog59('copiado')};
-// historial: también los compartidos por WhatsApp
-const _hc59=histCard58;histCard58=function(sid){const h=_hc59(sid);const ws=(CASE(sid).waSends||[]).slice(0,10);if(!ws.length)return h;
- const rows=ws.map(x=>`<div class="it">${ic('wa59')}<div class="grow"><b style="font-weight:500">WhatsApp · ${esc(x.to)}</b><div class="small muted">${esc((x.docs||[]).join(' · '))}</div><div class="small muted">${esc(x.at||'')} · ${esc(short((UP(x.by)||{}).name||''))}</div></div><span class="pill good">${x.how==='copiado'?'Copiado':'Compartido'}</span></div>`).join('');
- if(h)return h.replace(/<\/div><\/div>$/,rows+'</div></div>');
- return `<div class="card stack snd58h"><h2 style="margin:0;font-size:17px">${ic('send')} Envíos</h2><div class="list">${rows}</div></div>`};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
