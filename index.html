@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-rQZbRktY9W0q2xLFxhr2c1SO3ceant8A3Xsg35ryw+s='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-rLROMDOWW5D3GtoSylwg0LJaqa7x74qUjJHC62X/38E='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-02c';
+const BUILD38='2026-11-02d';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5352,6 +5352,26 @@ FORMS.fam55=(fd_,form)=>{const sid=form.dataset.s,g=U(form.dataset.g);if(!g)retu
  Object.assign(g,{name:name||g.name,email,status:'invitado',code:newCode()});
  (CASE(sid).team||[]).map(UP).filter(p=>p&&isLimited(p)&&extStatus(CASE(sid),p.id)!=='autorizado').forEach(p=>notify(g.id,`${p.name} (${SPEC[p.spec]||'Profesional externo'}${p.org?', '+p.org:''}) solicita acceso al proceso de ${short(UP(sid).name)}. Entra a Inicio para autorizarlo o no.`));
  log('Agregó el correo de la familia',`${g.name} · ${UP(sid).name}`);save();render();inviteModal(g)};
+// ===== EduPsi Campus · parte 56: pestaña «Materiales» en el expediente (fichas, juegos, láminas y recursos del estudiante) =====
+function isMat56(d){return d&&d.type==='Material'}
+const _cv56=caseView;caseView=function(sid,family){const c=CASE(sid);if(!c||!Array.isArray(c.docs))return _cv56(sid,family);
+ const want=ui.tab==='materiales';const keepTab=ui.tab,keepDocs=c.docs;let h;
+ try{if(want)ui.tab='docs';if(want||ui.tab==='docs'){const xs=keepDocs.filter(d=>want?isMat56(d):!isMat56(d));c.docs=xs}h=_cv56(sid,family)}
+ finally{c.docs=keepDocs;ui.tab=keepTab}
+ // botón de la pestaña
+ const nMat=keepDocs.filter(d=>isMat56(d)&&(!family||d.vis)).length;
+ const btn=`<button class="${want?'on':''}" data-a="tab" data-t="materiales" role="tab">Materiales${nMat?` <span class="small muted">(${nMat})</span>`:''}</button>`;
+ h=h.replace(/(<button class="[^"]*" data-a="tab" data-t="docs" role="tab">[^<]*<\/button>)/,`$1${btn}`);
+ if(!want){h=h.replace('<option>Interno</option></select>','<option>Interno</option><option>Material</option></select>');return h}
+ h=h.replace('<button class="on" data-a="tab" data-t="docs" role="tab">','<button class="" data-a="tab" data-t="docs" role="tab">');
+ h=h.replace('<h2>Subir documento</h2>','<h2>Subir material</h2><p class="small muted" style="margin:-6px 0 0">Fichas, láminas, juegos, pictogramas, lecturas o audios para trabajar con el estudiante. Si lo marcas visible, la familia lo puede abrir o descargar.</p>')
+  .replace('placeholder="Informe de avance — octubre"','placeholder="Ej.: Láminas de emociones, juego de memoria"')
+  .replace(/<select id="dty" name="type" class="inp">[\s\S]*?<\/select>/,'<select id="dty" name="type" class="inp"><option selected>Material</option></select>')
+  .replace('<label for="df">Archivo PDF</label>','<label for="df">Archivo (PDF, Word, PowerPoint, imagen, audio o video, máx. 20 MB)</label>')
+  .replace('accept=".pdf,.doc,.docx"','accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg,.webp,.gif,.mp3,.m4a,.mp4,.mov"')
+  .replace('<button class="btn pri">Subir documento</button>','<button class="btn pri">Subir material</button>');
+ if(!nMat)h=h.replace(/Aún no hay documentos[^<]*/,'Aún no hay materiales para este estudiante.');
+ return h};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
