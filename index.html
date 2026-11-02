@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-SmX5WiUkLmrj61WKk/V+Txx2ot9ESx2/1QKXip2OuxE='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-h/jUlFj++e54/jSZT1nXqCIk5SMusic/azfLmb3vEM4='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -1723,7 +1723,9 @@ function APP_URL(){return location.origin+location.pathname.replace(/index\.html
 var RECOVERY_URL=/type=recovery/.test(location.hash+location.search);
 var SB=null, SYNC={on:false,snap:{},timer:null,busy:false,again:false,errShown:false};
 const CFG=window.EDUPSI_CFG;
-SB=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+// candado de sesión con tiempo límite: si otra pestaña lo retiene (p. ej. dormida), no se queda pegado
+async function lockEP(name,acq,fn){if(!(globalThis.navigator&&navigator.locks&&navigator.locks.request))return await fn();const ac=new AbortController();const t=setTimeout(()=>ac.abort(),5000);try{return await navigator.locks.request(name,{mode:'exclusive',signal:ac.signal},async()=>{clearTimeout(t);return await fn()})}catch(e){clearTimeout(t);if(e&&e.name==='AbortError')return await fn();throw e}}
+SB=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:lockEP}});
 
 // ---------- correspondencia entre la memoria de la app y las tablas ----------
 const pick=(o,ks)=>{const r={};ks.forEach(k=>{if(o[k]!==undefined)r[k]=o[k]});return r};
@@ -4420,7 +4422,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-02i';
+const BUILD38='2026-11-02j';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5440,6 +5442,8 @@ const _np57=notifPop;notifPop=function(){const h=_np57();return h.replace('<h3>N
 .snd58 .dl input{margin-top:4px}.snd58 .when{display:flex;gap:8px;flex-wrap:wrap}
 .snd58h .it{flex-wrap:wrap}`;document.head.appendChild(st)})();
 var SND58={hist:{},busy:false};
+function to58(p,ms,msg){let t;return Promise.race([Promise.resolve(p).finally(()=>clearTimeout(t)),new Promise((_,r)=>{t=setTimeout(()=>r(new Error(msg)),ms)})])}
+
 function canSend58(sid,family){const u=ui.user;return !family&&u&&!isExtUser(u)&&u.role!=='guardian'&&u.role!=='student'&&typeof canEditCase==='function'&&canEditCase(sid)}
 function docsAll58(sid){return [...(CASE(sid).docs||[])].filter(d=>d.path||d.rep||d.acta)}
 function fname58(s,ext){return String(s||'Documento').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\- .]+/g,'').trim().replace(/\s+/g,'-').slice(0,80)+(ext||'')}
@@ -5482,14 +5486,14 @@ FORMS.snd58=async fd_=>{if(SND58.busy)return;const sid=fd_.get('s');const ids=fd
    else{let bytes=null;if(d.rep&&typeof reportPdf33==='function')bytes=reportPdf33(sid,d);else if(d.acta&&typeof actaPdf43==='function')bytes=actaPdf43(sid,d);
     if(!bytes){toast(`«${d.t}» no tiene archivo para enviar`);continue}
     file=fname58(d.t,'.pdf');path=`${sid}/envios/${d.id}-${Date.now().toString(36)}.pdf`;
-    const {error}=await SB.storage.from('docs').upload(path,new Blob([bytes],{type:'application/pdf'}),{contentType:'application/pdf',upsert:true});if(error)throw new Error('No se pudo preparar «'+d.t+'»')}
-   const {data,error}=await SB.storage.from('docs').createSignedUrl(path,ttl);if(error||!data)throw new Error('No se pudo preparar «'+d.t+'»');
+    const {error}=await to58(SB.storage.from('docs').upload(path,new Blob([bytes],{type:'application/pdf'}),{contentType:'application/pdf',upsert:true}),30000,'Se tardó demasiado preparando «'+d.t+'». Revisa tu conexión e intenta de nuevo.');if(error)throw new Error('No se pudo preparar «'+d.t+'»')}
+   const {data,error}=await to58(SB.storage.from('docs').createSignedUrl(path,ttl),20000,'Se tardó demasiado preparando «'+d.t+'». Revisa tu conexión e intenta de nuevo.');if(error||!data)throw new Error('No se pudo preparar «'+d.t+'»');
    out.push({id:d.id,name:d.t,type:d.type||'',file:file||fname58(d.t),url:data.signedUrl})}
   if(!out.length){toast('No hay documentos con archivo para enviar');return}
   const big=docs.reduce((a,d)=>a+size58(d),0)>25;
   const row={id:'ds_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),student_id:sid,to_list:to,copy_me:!!fd_.get('copy'),subject:String(fd_.get('sub')||'Documentos · EduPsi').slice(0,140),message:String(fd_.get('msg')||'').slice(0,2000),docs:out,attach:!big,send_at:at.toISOString()};
-  const {error}=await SB.from('doc_sends').insert(row);if(error)throw new Error(error.message);
-  if(!later){const r=await SB.rpc('doc_send_now',{p_id:row.id});if(r.error)throw new Error(r.error.message);if(r.data==='error'){toast('No se pudo enviar. Revisa el historial de envíos');}else toast(`Enviado a ${to.join(', ')}`)}
+  const {error}=await to58(SB.from('doc_sends').insert(row),20000,'No se pudo guardar el envío. Intenta de nuevo.');if(error)throw new Error(error.message);
+  if(!later){const r=await to58(SB.rpc('doc_send_now',{p_id:row.id}),25000,'El envío quedó guardado; se enviará en los próximos 5 minutos.');if(r.error)throw new Error(r.error.message);if(r.data==='error'){toast('No se pudo enviar. Revisa el historial de envíos');}else toast(`Enviado a ${to.join(', ')}`)}
   else toast(`Programado para el ${when58(at)}`);
   log(later?'Programó envío de documentos por correo':'Envió documentos por correo',`${out.map(x=>x.name).join(', ')} → ${to.join(', ')} · ${short(UP(sid).name)}`);save();
   ui.modal=null;delete SND58.hist[sid];render()}
@@ -5529,11 +5533,11 @@ FORMS.wa59=async fd_=>{if(SND58.busy)return;const sid=fd_.get('s');const ids=fd_
  const c=CASE(sid),k=UP(sid)||{};const docs=ids.map(id=>(c.docs||[]).find(x=>x.id===id)).filter(Boolean);
  SND58.busy=true;toast('Preparando los enlaces…');
  try{const out=[];
-  for(const d of docs){let path=d.path;
+  for(const [i,d] of docs.entries()){if(docs.length>1)toast(`Preparando ${i+1} de ${docs.length}…`);let path=d.path;
    if(!path){let bytes=null;if(d.rep&&typeof reportPdf33==='function')bytes=reportPdf33(sid,d);else if(d.acta&&typeof actaPdf43==='function')bytes=actaPdf43(sid,d);
     if(!bytes){toast(`«${d.t}» no tiene archivo para compartir`);continue}
-    path=`${sid}/envios/${d.id}-${Date.now().toString(36)}.pdf`;const {error}=await SB.storage.from('docs').upload(path,new Blob([bytes],{type:'application/pdf'}),{contentType:'application/pdf',upsert:true});if(error)throw new Error('No se pudo preparar «'+d.t+'»')}
-   const {data,error}=await SB.storage.from('docs').createSignedUrl(path,7*86400);if(error||!data)throw new Error('No se pudo preparar «'+d.t+'»');
+    path=`${sid}/envios/${d.id}-${Date.now().toString(36)}.pdf`;const {error}=await to58(SB.storage.from('docs').upload(path,new Blob([bytes],{type:'application/pdf'}),{contentType:'application/pdf',upsert:true}),30000,'Se tardó demasiado preparando «'+d.t+'». Revisa tu conexión e intenta de nuevo.');if(error)throw new Error('No se pudo preparar «'+d.t+'»')}
+   const {data,error}=await to58(SB.storage.from('docs').createSignedUrl(path,7*86400),20000,'Se tardó demasiado preparando «'+d.t+'». Revisa tu conexión e intenta de nuevo.');if(error||!data)throw new Error('No se pudo preparar «'+d.t+'»');
    out.push({id:d.id,name:d.t,url:data.signedUrl})}
   if(!out.length)return;
   const msg=String(fd_.get('msg')||'').trim();
@@ -5543,7 +5547,7 @@ FORMS.wa59=async fd_=>{if(SND58.busy)return;const sid=fd_.get('s');const ids=fd_
   openModal({title:'Mensaje listo',form:'none',ok:false,body:`<div class="stack"><p style="margin:0">${num?`Para <b>${esc(raw)}</b>. `:''}Toca <b>Abrir WhatsApp</b> y luego Enviar.</p><div class="wa59pre">${esc(txt)}</div>
    <div class="row" style="gap:8px;flex-wrap:wrap"><a class="btn wa59" href="${esc(url)}" target="_blank" rel="noopener" data-wa59="1">${ic('wa59')}Abrir WhatsApp</a><button type="button" class="btn" data-a="wa59copy">${ic('copy')}Copiar mensaje</button></div>
    <p class="small muted" style="margin:0">Si usas la computadora, se abre WhatsApp Web o la aplicación de escritorio. Por privacidad, envíalo solo a personas autorizadas por la familia.</p></div>`})}
- catch(e){toast(e.message||'No se pudo preparar')}finally{SND58.busy=false}};
+ catch(e){console.warn('wa59',e);toast(e.message||'No se pudo preparar')}finally{SND58.busy=false}};
 function waLog59(how){const p=WA59.prep;if(!p||p.logged)return;p.logged=true;const c=CASE(p.sid);c.waSends=[{at:nowStr(),by:ui.user.id,to:p.raw||'(elegido en WhatsApp)',docs:p.docs,how},...(c.waSends||[])].slice(0,30);
  log('Compartió documentos por WhatsApp',`${p.docs.join(', ')} → ${p.raw||'contacto elegido en WhatsApp'} · ${short(UP(p.sid).name)}`);save()}
 document.addEventListener('click',e=>{if(e.target.closest('[data-wa59]'))ACT.wa59sent()},true);
