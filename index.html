@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-rLROMDOWW5D3GtoSylwg0LJaqa7x74qUjJHC62X/38E='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-SRqXtBG2jdW3BSq4kLGBTiQl7oFnlziiyGMVmzsK9Mg='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-02d';
+const BUILD38='2026-11-02e';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5359,7 +5359,7 @@ const _cv56=caseView;caseView=function(sid,family){const c=CASE(sid);if(!c||!Arr
  try{if(want)ui.tab='docs';if(want||ui.tab==='docs'){const xs=keepDocs.filter(d=>want?isMat56(d):!isMat56(d));c.docs=xs}h=_cv56(sid,family)}
  finally{c.docs=keepDocs;ui.tab=keepTab}
  // botón de la pestaña
- const nMat=keepDocs.filter(d=>isMat56(d)&&(!family||d.vis)).length;
+ const nMat=keepDocs.filter(d=>isMat56(d)&&(!family||d.vis)&&(!isExtUser(ui.user)||d.ext)).length;
  const btn=`<button class="${want?'on':''}" data-a="tab" data-t="materiales" role="tab">Materiales${nMat?` <span class="small muted">(${nMat})</span>`:''}</button>`;
  h=h.replace(/(<button class="[^"]*" data-a="tab" data-t="docs" role="tab">[^<]*<\/button>)/,`$1${btn}`);
  if(!want){h=h.replace('<option>Interno</option></select>','<option>Interno</option><option>Material</option></select>');return h}
@@ -5372,6 +5372,14 @@ const _cv56=caseView;caseView=function(sid,family){const c=CASE(sid);if(!c||!Arr
   .replace('<button class="btn pri">Subir documento</button>','<button class="btn pri">Subir material</button>');
  if(!nMat)h=h.replace(/Aún no hay documentos[^<]*/,'Aún no hay materiales para este estudiante.');
  return h};
+// los materiales también los ve la docente o el equipo externo (marcado por defecto)
+const _cv56b=caseView;caseView=function(sid,family){let h=_cv56b(sid,family);if(ui.tab!=='materiales')return h;
+ if(!family&&!isExtUser(ui.user))h=h.replace(/(<label class="check"><input type="checkbox" name="vis" checked> Visible para la familia<\/label>)/,'$1<label class="check"><input type="checkbox" name="ext" value="1" checked> Visible para la docente o el equipo externo</label>');
+ return h.replace('EduPsi todavía no ha compartido documentos contigo.','EduPsi todavía no ha compartido materiales contigo.')};
+const _fdoc56=FORMS.doc;FORMS.doc=async(fd_,form)=>{const sid=form.dataset.s,c=CASE(sid);const before=new Set((c.docs||[]).map(d=>d.id));
+ const r=await _fdoc56(fd_,form);const nd=(CASE(sid).docs||[]).find(d=>!before.has(d.id));
+ if(nd&&nd.type==='Material'&&fd_.get('ext')){nd.ext=true;const xs=(CASE(sid).team||[]).map(UP).filter(p=>p&&isLimited(p)&&extStatus(CASE(sid),p.id)==='autorizado');xs.forEach(p=>notify(p.id,`Nuevo material de ${short(UP(sid).name)}: ${nd.t}`));save();render()}
+ return r};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
