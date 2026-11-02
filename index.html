@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-WSZ5WJv1c0sUbWEcRgoH2wZ8UzY0gJPoBfPZ5QHt7ro='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
+<html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-vp7HiksqHBmN0XWRDPdxPEZ+Lr6X1hFe4jlfnn5WV+U=' 'sha256-Rrc1MKtAZR9GEz86IwFhWx9I3Hx6YziZQylBhDcyT9E='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://nzmxbmrjosxucptfeocf.supabase.co wss://nzmxbmrjosxucptfeocf.supabase.co; frame-src blob: https://nzmxbmrjosxucptfeocf.supabase.co https://www.youtube-nocookie.com https://player.vimeo.com https://drive.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>EduPsi Campus</title><meta name="theme-color" content="#4F93C7"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="emblem.png"><link rel="apple-touch-icon" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@500;600&display=swap">
@@ -4420,7 +4420,7 @@ const _render37=render;render=function(){_render37();try{track37();backBtn37()}c
 .top .back37 .ico{width:18px;height:18px}
 @media (max-width:700px){.top .back37 span{display:none}.top .back37{padding:0;width:40px;justify-content:center}}`;document.head.appendChild(st)})();
 // ===== EduPsi Campus · parte 38: aviso de versión nueva =====
-const BUILD38='2026-11-02g';
+const BUILD38='2026-11-02h';
 let upd38=false;
 async function check38(){if(upd38||document.hidden)return;try{const t=await (await fetch('./index.html?u='+Date.now(),{cache:'no-store'})).text();const m=t.match(/BUILD38='([^']+)'/);if(m&&m[1]!==BUILD38){upd38=true;if(!ui.user){location.reload();return}show38()}}catch(e){}}
 function show38(){if(document.getElementById('upd38'))return;document.body.insertAdjacentHTML('beforeend',`<div id="upd38" role="status"><span>${ic('spark')}Hay una versión nueva del campus.</span><button type="button" class="btn pri sm" id="upd38b">Actualizar</button></div>`);
@@ -5433,6 +5433,68 @@ const _np57=notifPop;notifPop=function(){const h=_np57();return h.replace('<h3>N
 .list .it>.grow{flex:1 1 calc(100% - 44px);min-width:0;overflow-wrap:anywhere}
 .list .it>.ico:first-child{align-self:flex-start;margin-top:3px}
 .list .it>.grow~*{flex:0 0 auto}}`;document.head.appendChild(st)})();
+// ===== EduPsi Campus · parte 58: enviar documentos del expediente por correo (ahora o programado) =====
+(function(){const st=document.createElement('style');st.textContent=`
+.snd58 .dl{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:4px 12px}
+.snd58 .dl label{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}.snd58 .dl label:first-child{border-top:0}
+.snd58 .dl input{margin-top:4px}.snd58 .when{display:flex;gap:8px;flex-wrap:wrap}
+.snd58h .it{flex-wrap:wrap}`;document.head.appendChild(st)})();
+var SND58={hist:{},busy:false};
+function canSend58(sid,family){const u=ui.user;return !family&&u&&!isExtUser(u)&&u.role!=='guardian'&&u.role!=='student'&&typeof canEditCase==='function'&&canEditCase(sid)}
+function docsAll58(sid){return [...(CASE(sid).docs||[])].filter(d=>d.path||d.rep||d.acta)}
+function fname58(s,ext){return String(s||'Documento').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w\- .]+/g,'').trim().replace(/\s+/g,'-').slice(0,80)+(ext||'')}
+async function loadHist58(sid){try{const {data,error}=await SB.from('doc_sends').select('id,to_list,subject,docs,send_at,status,sent_at,error,created_at').eq('student_id',sid).order('created_at',{ascending:false}).limit(15);SND58.hist[sid]=error?[]:(data||[])}catch(e){SND58.hist[sid]=[]}render()}
+function when58(t){try{return new Date(t).toLocaleString('es-CR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
+function histCard58(sid){const xs=SND58.hist[sid];if(xs===undefined){SND58.hist[sid]=null;setTimeout(()=>loadHist58(sid),0);return ''}if(!xs||!xs.length)return '';
+ const pill=s=>s==='programado'?'<span class="pill warn">Programado</span>':s==='enviado'?'<span class="pill good">Enviado</span>':s==='cancelado'?'<span class="pill">Cancelado</span>':'<span class="pill bad">No se envió</span>';
+ return `<div class="card stack snd58h"><h2 style="margin:0;font-size:17px">${ic('send')} Envíos por correo</h2><div class="list">${xs.map(x=>`<div class="it">${ic('mail')}<div class="grow"><b style="font-weight:500">${esc((x.to_list||[]).join(', '))}</b><div class="small muted">${esc((x.docs||[]).map(d=>d.name).join(' · '))}</div><div class="small muted">${x.status==='enviado'?'Enviado el '+when58(x.sent_at):x.status==='programado'?'Se enviará el '+when58(x.send_at):x.status==='error'?esc(x.error||'Error'):'Cancelado'}</div></div>${pill(x.status)}${x.status==='programado'?`<button class="btn sm" data-a="snd58cancel" data-s="${sid}" data-id="${x.id}">Cancelar</button>`:''}</div>`).join('')}</div></div>`}
+// botón y lista en «Informes y documentos» y «Materiales»
+const _cv58=caseView;caseView=function(sid,family){let h=_cv58(sid,family);if(!['docs','materiales'].includes(ui.tab)||!canSend58(sid,family))return h;
+ const n=docsAll58(sid).length;
+ const bar=`<div class="card row" style="justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="min-width:220px;flex:1"><b>${ic('send')} Enviar documentos por correo</b><div class="small muted">Elige uno o varios documentos y envíalos ahora o programa la fecha y la hora.</div></div><button class="btn pri" data-a="snd58open" data-s="${sid}" ${n?'':'disabled'}>${ic('mail')}Enviar por correo</button></div>`;
+ const i=h.indexOf('<form class="card stack" data-f="doc"');h=i>=0?h.slice(0,i)+bar+h.slice(i):h+bar;
+ return h+histCard58(sid)};
+ACT.snd58open=d=>{const sid=d.s,k=UP(sid)||{};const xs=docsAll58(sid);const mat=xs.filter(x=>x.type==='Material'),oth=xs.filter(x=>x.type!=='Material');
+ const pre=ui.tab==='materiales'?'Material':null;
+ const row=x=>`<label><input type="checkbox" name="doc" value="${x.id}" ${pre&&x.type===pre&&xs.length<=3?'checked':''}><span><b style="font-weight:500">${esc(x.t)}</b><br><span class="small muted">${esc(x.type||'Documento')} · ${fd(String(x.date).slice(0,10))}${x.size&&x.size!=='—'?' · '+esc(x.size):''}</span></span></label>`;
+ const now=new Date(Date.now()+60*60*1000);now.setMinutes(0,0,0);const loc=new Date(now.getTime()-now.getTimezoneOffset()*6e4).toISOString().slice(0,16);
+ openModal({title:'Enviar documentos por correo',form:'snd58',ok:'Enviar',wide:true,body:`<input type="hidden" name="s" value="${sid}"><div class="form snd58">
+  <div class="field"><label>Documentos</label><div class="dl">${oth.length?`<div class="small muted" style="padding:8px 0 2px">Informes y documentos</div>${oth.map(row).join('')}`:''}${mat.length?`<div class="small muted" style="padding:10px 0 2px">Materiales</div>${mat.map(row).join('')}`:''}</div></div>
+  <div class="field"><label for="s58to">Para</label><input id="s58to" name="to" class="inp" required placeholder="correo@ejemplo.com (varios separados por coma)" autocomplete="off"></div>
+  <div class="field"><label for="s58sub">Asunto</label><input id="s58sub" name="sub" class="inp" required maxlength="140" value="${esc(`Documentos de ${k.name||'el estudiante'} · EduPsi`)}"></div>
+  <div class="field"><label for="s58msg">Mensaje <span class="small muted" style="font-weight:400">(opcional)</span></label><textarea id="s58msg" name="msg" class="inp" rows="4" maxlength="2000" placeholder="Hola, le comparto los documentos de esta semana…"></textarea></div>
+  <div class="field"><label>¿Cuándo?</label><div class="when"><label class="check"><input type="radio" name="when" value="now" checked data-ch="snd58when"> Enviar ahora</label><label class="check"><input type="radio" name="when" value="later" data-ch="snd58when"> Programar</label></div>
+   <input type="datetime-local" name="at" id="s58at" class="inp" value="${loc}" style="display:none;max-width:260px;margin-top:8px"></div>
+  <label class="check"><input type="checkbox" name="copy" checked> Enviarme una copia</label>
+  <p class="small muted" style="margin:0">Sale desde ${esc(S.settings.name||'EduPsi')} con «Responder a» tu correo, así las respuestas te llegan directo. Los documentos van adjuntos (o con enlace de descarga si son muy pesados) y los enlaces vencen 7 días después del envío.</p></div>`})};
+CH.snd58when=el=>{const a=document.getElementById('s58at');if(a)a.style.display=el.value==='later'&&el.checked?'block':'none';const b=document.querySelector('.modal [type=submit],.modal .btn.pri[data-a="modalok"]');if(b)b.textContent=el.value==='later'?'Programar envío':'Enviar'};
+function size58(d){const m=String(d.size||'').match(/([\d.,]+)\s*MB/i);return m?parseFloat(m[1].replace(',','.')):1}
+FORMS.snd58=async fd_=>{if(SND58.busy)return;const sid=fd_.get('s');const ids=fd_.getAll('doc');if(!ids.length){toast('Marca al menos un documento');return}
+ const to=[...new Set(String(fd_.get('to')||'').split(/[,;\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
+ if(!to.length||to.some(x=>!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x))){toast('Revisa los correos: uno o varios, separados por coma');return}if(to.length>10){toast('Máximo 10 destinatarios por envío');return}
+ const later=fd_.get('when')==='later';let at=new Date();if(later){const v=fd_.get('at');at=v?new Date(v):null;if(!at||isNaN(at)||at.getTime()<Date.now()+60*1000){toast('Elige una fecha y hora futuras');return}}
+ const c=CASE(sid);const docs=ids.map(id=>(c.docs||[]).find(x=>x.id===id)).filter(Boolean);
+ const ttl=Math.max(7*86400,Math.ceil((at.getTime()-Date.now())/1000)+7*86400);
+ SND58.busy=true;toast(later?'Preparando el envío programado…':'Preparando el envío…');
+ try{const out=[];
+  for(const d of docs){let path=d.path,file;
+   if(path){file=path.split('/').pop().replace(/^d_[a-z0-9]+-/,'')}
+   else{let bytes=null;if(d.rep&&typeof reportPdf33==='function')bytes=reportPdf33(sid,d);else if(d.acta&&typeof actaPdf43==='function')bytes=actaPdf43(sid,d);
+    if(!bytes){toast(`«${d.t}» no tiene archivo para enviar`);continue}
+    file=fname58(d.t,'.pdf');path=`${sid}/envios/${d.id}-${Date.now().toString(36)}.pdf`;
+    const {error}=await SB.storage.from('docs').upload(path,new Blob([bytes],{type:'application/pdf'}),{contentType:'application/pdf',upsert:true});if(error)throw new Error('No se pudo preparar «'+d.t+'»')}
+   const {data,error}=await SB.storage.from('docs').createSignedUrl(path,ttl);if(error||!data)throw new Error('No se pudo preparar «'+d.t+'»');
+   out.push({id:d.id,name:d.t,type:d.type||'',file:file||fname58(d.t),url:data.signedUrl})}
+  if(!out.length){toast('No hay documentos con archivo para enviar');return}
+  const big=docs.reduce((a,d)=>a+size58(d),0)>25;
+  const row={id:'ds_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),student_id:sid,to_list:to,copy_me:!!fd_.get('copy'),subject:String(fd_.get('sub')||'Documentos · EduPsi').slice(0,140),message:String(fd_.get('msg')||'').slice(0,2000),docs:out,attach:!big,send_at:at.toISOString()};
+  const {error}=await SB.from('doc_sends').insert(row);if(error)throw new Error(error.message);
+  if(!later){const r=await SB.rpc('doc_send_now',{p_id:row.id});if(r.error)throw new Error(r.error.message);if(r.data==='error'){toast('No se pudo enviar. Revisa el historial de envíos');}else toast(`Enviado a ${to.join(', ')}`)}
+  else toast(`Programado para el ${when58(at)}`);
+  log(later?'Programó envío de documentos por correo':'Envió documentos por correo',`${out.map(x=>x.name).join(', ')} → ${to.join(', ')} · ${short(UP(sid).name)}`);save();
+  ui.modal=null;delete SND58.hist[sid];render()}
+ catch(e){toast(e.message||'No se pudo enviar')}finally{SND58.busy=false}};
+ACT.snd58cancel=async d=>{try{const {error}=await SB.from('doc_sends').update({status:'cancelado'}).eq('id',d.id).eq('status','programado');if(error)throw error;log('Canceló un envío programado',short(UP(d.s).name));save();toast('Envío cancelado');delete SND58.hist[d.s];render()}catch(e){toast('No se pudo cancelar')}};
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
